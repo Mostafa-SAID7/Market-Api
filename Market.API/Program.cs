@@ -49,6 +49,10 @@ if (app.Environment.IsDevelopment())
 // Enable static files (wwwroot)
 app.UseStaticFiles();
 
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
 // Redirect root to index.html
 app.MapGet("/", context =>
 {
@@ -56,31 +60,21 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
 
-// Fallback for 404 - only for non-existent files
+// Fallback for 404 - only for non-existent routes (must be last)
 app.MapFallback(async context =>
 {
     var path = context.Request.Path.Value;
     
-    // Don't handle API or Swagger routes
-    if (path.StartsWith("/api") || path.StartsWith("/swagger"))
+    // Don't handle API or Swagger routes - let them 404 naturally
+    if (path?.StartsWith("/api") == true || path?.StartsWith("/swagger") == true)
     {
+        context.Response.StatusCode = 404;
         return;
     }
     
-    // Don't handle existing static files
-    var fileInfo = app.Environment.WebRootFileProvider.GetFileInfo(path.TrimStart('/'));
-    if (fileInfo.Exists)
-    {
-        return;
-    }
-    
-    // Show 404 page for non-existent routes
+    // Show 404 page for all other non-existent routes
     context.Response.StatusCode = 404;
     context.Response.ContentType = "text/html";
     await context.Response.SendFileAsync("wwwroot/404.html");
