@@ -277,6 +277,7 @@ nav .nav-links a.active::after {
     border: 2px solid transparent;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .btn::before {
@@ -296,12 +297,20 @@ nav .nav-links a.active::after {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
     border-color: var(--accent-gold);
+    color: var(--text-primary);
 }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-brown) 100%);
+    color: var(--dark-bg);
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    color: var(--dark-bg);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.6);
 }
 
 /* Status Badge */
@@ -586,25 +595,29 @@ pre code {
     top: 0.5rem;
     right: 0.5rem;
     background: var(--accent-brown);
-    color: var(--text-primary);
+    color: #ffffff;
     border: 1px solid var(--accent-gold);
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .copy-button:hover {
     background: var(--accent-gold);
     color: var(--dark-bg);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
 }
 
 .copy-button.copied {
     background: var(--success);
     border-color: var(--success);
+    color: #ffffff;
 }
 
 /* Inline links styling */
