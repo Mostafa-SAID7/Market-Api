@@ -44,7 +44,7 @@ curl http://localhost:5000/api/products/{id}
 # Create a new product
 curl -X POST http://localhost:5000/api/products \
   -H "Content-Type: application/json" \
-  -d '{"name":"Sample Product","price":29.99,"category":"Electronics"}'
+  -d '{"name":"Sample Product","price":29.99}'
 ```
 
 ## Docker Configuration Details
