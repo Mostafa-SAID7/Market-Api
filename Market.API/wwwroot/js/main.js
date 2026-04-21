@@ -1,6 +1,9 @@
 // Market API - Main JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Set active navigation link based on current page
+    setActiveNavLink();
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -41,6 +44,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check API status
     checkApiStatus();
 });
+
+// Set active navigation link
+function setActiveNavLink() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-links a');
+    
+    navLinks.forEach(link => {
+        const linkPath = new URL(link.href).pathname;
+        
+        // Exact match or home page
+        if (linkPath === currentPath || 
+            (currentPath === '/' && linkPath === '/') ||
+            (currentPath === '/index.html' && linkPath === '/')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
 
 // Check if API is running
 async function checkApiStatus() {

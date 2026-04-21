@@ -59,16 +59,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Custom 404 handling for non-API routes
-app.Use(async (context, next) =>
+// Custom 404 handling - must be before app.Run()
+app.MapFallback(async context =>
 {
-    await next();
-    
-    // If the response is 404 and it's not an API call
-    if (context.Response.StatusCode == 404 && !context.Request.Path.StartsWithSegments("/api"))
+    // Only handle non-API routes
+    if (!context.Request.Path.StartsWithSegments("/api") && 
+        !context.Request.Path.StartsWithSegments("/swagger"))
     {
-        context.Request.Path = "/404.html";
-        await next();
+        context.Response.StatusCode = 404;
+        context.Response.ContentType = "text/html";
+        await context.Response.SendFileAsync("wwwroot/404.html");
     }
 });
 
