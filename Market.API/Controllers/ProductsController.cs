@@ -1,9 +1,9 @@
-﻿using ASP.MongoDb.API.Entities;
-using ASP.MongoDb.API.Repository;
+﻿using Market.API.Entities;
+using Market.API.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ASP.MongoDb.API.Controllers
+namespace Market.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

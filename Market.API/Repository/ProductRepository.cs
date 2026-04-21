@@ -1,9 +1,9 @@
-﻿using ASP.MongoDb.API.Entities;
-using ASP.MongoDb.API.Settings;
+﻿using Market.API.Entities;
+using Market.API.Settings;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ASP.MongoDb.API.Repository
+namespace Market.API.Repository
 {
     public interface IProductRepository: IRepository<Product>
     {

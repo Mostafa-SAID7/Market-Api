@@ -1,4 +1,4 @@
-﻿namespace ASP.MongoDb.API.Settings
+﻿namespace Market.API.Settings
 {
     public class MongoDbSettings
     {

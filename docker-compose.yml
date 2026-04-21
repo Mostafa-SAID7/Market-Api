@@ -15,11 +15,11 @@ services:
     networks:
       - aspnet-mongodb-network
 
-  aspnet-api:
+  market-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aspnet-mongodb-api
+    container_name: market-api
     restart: always
     ports:
       - "5000:8080"

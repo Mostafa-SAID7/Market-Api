@@ -1,6 +1,6 @@
-using ASP.MongoDb.API.Entities;
-using ASP.MongoDb.API.Repository;
-using ASP.MongoDb.API.Settings;
+using Market.API.Entities;
+using Market.API.Repository;
+using Market.API.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 

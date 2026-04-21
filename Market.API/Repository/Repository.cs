@@ -1,10 +1,10 @@
 ﻿
-using ASP.MongoDb.API.Settings;
+using Market.API.Settings;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace ASP.MongoDb.API.Repository
+namespace Market.API.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {

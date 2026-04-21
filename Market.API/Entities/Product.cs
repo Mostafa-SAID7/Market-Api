@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace ASP.MongoDb.API.Entities
+namespace Market.API.Entities
 {
     public class Product
     {

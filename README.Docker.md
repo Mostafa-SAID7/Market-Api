@@ -1,6 +1,6 @@
-# Docker Setup for ASP.NET Core 9 MongoDB Repository Pattern
+# Docker Setup for Market API
 
-This guide explains how to run the application using Docker and Docker Compose.
+This guide explains how to run the Market API application using Docker and Docker Compose.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ docker-compose up --build
 ```
 
 This command will:
-- Build the ASP.NET Core 9 application Docker image
+- Build the Market API Docker image
 - Pull the MongoDB image
 - Start both containers
 - Create a network for communication between containers
@@ -57,7 +57,7 @@ curl -X POST http://localhost:5000/api/products \
    - Credentials: admin/password123
    - Data persistence: mongodb_data volume
 
-2. **aspnet-api**
+2. **market-api**
    - Built from Dockerfile
    - Ports: 5000 (HTTP), 5001 (HTTPS)
    - Environment: Development
@@ -95,7 +95,7 @@ docker-compose down -v
 docker-compose logs -f
 
 # Specific service
-docker-compose logs -f aspnet-api
+docker-compose logs -f market-api
 docker-compose logs -f mongodb
 ```
 
@@ -123,7 +123,7 @@ ports:
 ### Container Won't Start
 Check logs for errors:
 ```bash
-docker-compose logs aspnet-api
+docker-compose logs market-api
 ```
 
 ### MongoDB Connection Issues
@@ -157,7 +157,7 @@ For production deployment, consider:
 │   Docker Network (bridge)           │
 │                                     │
 │  ┌──────────────┐  ┌─────────────┐ │
-│  │  ASP.NET API │  │   MongoDB   │ │
+│  │  Market API  │  │   MongoDB   │ │
 │  │  Port: 8080  │──│  Port: 27017│ │
 │  └──────────────┘  └─────────────┘ │
 │         │                           │

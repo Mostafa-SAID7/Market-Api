@@ -1,4 +1,4 @@
-﻿namespace ASP.MongoDb.API.Repository
+﻿namespace Market.API.Repository
 {
     public interface IRepository<T> where T : class
     {
