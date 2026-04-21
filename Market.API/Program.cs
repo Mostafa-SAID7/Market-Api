@@ -59,17 +59,28 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Custom 404 handling - must be before app.Run()
+// Fallback for 404 - only for non-existent files
 app.MapFallback(async context =>
 {
-    // Only handle non-API routes
-    if (!context.Request.Path.StartsWithSegments("/api") && 
-        !context.Request.Path.StartsWithSegments("/swagger"))
+    var path = context.Request.Path.Value;
+    
+    // Don't handle API or Swagger routes
+    if (path.StartsWith("/api") || path.StartsWith("/swagger"))
     {
-        context.Response.StatusCode = 404;
-        context.Response.ContentType = "text/html";
-        await context.Response.SendFileAsync("wwwroot/404.html");
+        return;
     }
+    
+    // Don't handle existing static files
+    var fileInfo = app.Environment.WebRootFileProvider.GetFileInfo(path.TrimStart('/'));
+    if (fileInfo.Exists)
+    {
+        return;
+    }
+    
+    // Show 404 page for non-existent routes
+    context.Response.StatusCode = 404;
+    context.Response.ContentType = "text/html";
+    await context.Response.SendFileAsync("wwwroot/404.html");
 });
 
 app.Run();

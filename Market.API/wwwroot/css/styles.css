@@ -536,8 +536,98 @@ html {
 /* Remove all default link underlines */
 a {
     text-decoration: none;
+    cursor: pointer;
 }
 
 a:hover {
     text-decoration: none;
+}
+
+/* Code blocks and examples */
+pre {
+    background: var(--dark-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid rgba(139, 111, 71, 0.3);
+    position: relative;
+}
+
+pre code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    display: block;
+}
+
+code {
+    background: rgba(139, 111, 71, 0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--accent-gold);
+}
+
+pre code {
+    background: transparent;
+    padding: 0;
+}
+
+/* Copy button for code blocks */
+.code-block-wrapper {
+    position: relative;
+}
+
+.copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--accent-brown);
+    color: var(--text-primary);
+    border: 1px solid var(--accent-gold);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.copy-button:hover {
+    background: var(--accent-gold);
+    color: var(--dark-bg);
+    transform: translateY(-2px);
+}
+
+.copy-button.copied {
+    background: var(--success);
+    border-color: var(--success);
+}
+
+/* Inline links styling */
+.card a,
+.endpoints a,
+footer a {
+    color: var(--accent-gold);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card a:hover,
+.endpoints a:hover,
+footer a:hover {
+    color: var(--light-brown);
+}
+
+/* List links */
+ul li a {
+    color: var(--accent-gold);
+    transition: color 0.3s ease;
+}
+
+ul li a:hover {
+    color: var(--light-brown);
 }

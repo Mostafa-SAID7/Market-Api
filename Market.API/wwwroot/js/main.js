@@ -96,34 +96,40 @@ window.addEventListener('scroll', function() {
 
 // Copy code to clipboard functionality
 document.querySelectorAll('pre code').forEach(block => {
-    block.style.position = 'relative';
-    block.style.cursor = 'pointer';
+    const pre = block.parentElement;
     
-    block.addEventListener('click', function() {
-        const text = this.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            // Show copied notification
-            const notification = document.createElement('div');
-            notification.textContent = 'Copied!';
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--accent-gold);
-                color: var(--dark-bg);
-                padding: 1rem 2rem;
-                border-radius: 8px;
-                font-weight: 600;
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            `;
-            document.body.appendChild(notification);
+    // Create copy button
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-button';
+    copyButton.textContent = 'Copy';
+    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+    
+    // Insert button
+    pre.style.position = 'relative';
+    pre.appendChild(copyButton);
+    
+    copyButton.addEventListener('click', async function() {
+        const text = block.textContent;
+        
+        try {
+            await navigator.clipboard.writeText(text);
             
+            // Show success state
+            copyButton.textContent = 'Copied!';
+            copyButton.classList.add('copied');
+            
+            // Reset after 2 seconds
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
+                copyButton.textContent = 'Copy';
+                copyButton.classList.remove('copied');
             }, 2000);
-        });
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            copyButton.textContent = 'Failed';
+            setTimeout(() => {
+                copyButton.textContent = 'Copy';
+            }, 2000);
+        }
     });
 });
 
