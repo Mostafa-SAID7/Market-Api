@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b6f47;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#2a1f17" stroke="url(#goldGradient)" stroke-width="2"/>
+  
+  <!-- Shopping Cart Icon -->
+  <path d="M 20 18 L 24 18 L 28 38 L 46 38 L 50 24 L 26 24" 
+        fill="none" 
+        stroke="url(#goldGradient)" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Cart Wheels -->
+  <circle cx="30" cy="44" r="3" fill="url(#goldGradient)"/>
+  <circle cx="44" cy="44" r="3" fill="url(#goldGradient)"/>
+  
+  <!-- API Symbol (brackets) -->
+  <path d="M 14 28 L 10 32 L 14 36" 
+        fill="none" 
+        stroke="#d4af37" 
+        stroke-width="2" 
+        stroke-linecap="round"/>
+  <path d="M 50 28 L 54 32 L 50 36" 
+        fill="none" 
+        stroke="#d4af37" 
+        stroke-width="2" 
+        stroke-linecap="round"/>
+</svg>

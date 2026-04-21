@@ -54,7 +54,8 @@ nav {
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 20px var(--shadow);
-    border-bottom: 1px solid var(--accent-brown);
+    border: none;
+    border-bottom: 1px solid rgba(139, 111, 71, 0.3);
 }
 
 nav .container {
@@ -190,7 +191,7 @@ nav .nav-links a:hover::after {
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 8px 32px var(--shadow);
-    border: 1px solid var(--secondary-brown);
+    border: 1px solid rgba(92, 61, 46, 0.5);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
@@ -210,7 +211,7 @@ nav .nav-links a:hover::after {
 
 .card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 16px 48px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 16px 48px rgba(212, 175, 55, 0.3);
     border-color: var(--accent-gold);
 }
 
@@ -307,7 +308,7 @@ nav .nav-links a:hover::after {
     border-radius: 16px;
     padding: 2rem;
     margin: 3rem 0;
-    border: 1px solid var(--secondary-brown);
+    border: 1px solid rgba(92, 61, 46, 0.5);
 }
 
 .endpoints h2 {
@@ -318,16 +319,17 @@ nav .nav-links a:hover::after {
 
 .endpoint {
     background: var(--dark-bg);
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 1rem;
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-brown);
+    border-radius: 12px;
+    border: 1px solid rgba(92, 61, 46, 0.3);
     transition: all 0.3s ease;
 }
 
 .endpoint:hover {
-    border-left-color: var(--accent-gold);
-    transform: translateX(5px);
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
 }
 
 .method {
@@ -349,7 +351,8 @@ footer {
     text-align: center;
     padding: 3rem 2rem;
     background: var(--card-bg);
-    border-top: 1px solid var(--secondary-brown);
+    border: none;
+    border-top: 1px solid rgba(92, 61, 46, 0.3);
     margin-top: 4rem;
 }
 
