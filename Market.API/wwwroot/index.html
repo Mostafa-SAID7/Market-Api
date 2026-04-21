@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market API - Home</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <span>🛍️</span>
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="status">
+            <span class="status-dot"></span>
+            <span>API Running</span>
+        </div>
+        <h1>Market API</h1>
+        <p>A Modern RESTful API for Product Management</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <a href="/swagger" class="btn btn-primary">Try API</a>
+            <a href="/docs.html" class="btn">View Docs</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card">
+                <span class="card-icon">🚀</span>
+                <h3>Fast & Scalable</h3>
+                <p>Built with ASP.NET Core 9 and MongoDB for high-performance operations</p>
+                <a href="/swagger" class="btn">Explore API</a>
+            </div>
+
+            <div class="card">
+                <span class="card-icon">📚</span>
+                <h3>Well Documented</h3>
+                <p>Comprehensive documentation with examples and interactive Swagger UI</p>
+                <a href="/docs.html" class="btn">Read Docs</a>
+            </div>
+
+            <div class="card">
+                <span class="card-icon">🔒</span>
+                <h3>Secure & Reliable</h3>
+                <p>Repository pattern with best practices for data access and security</p>
+                <a href="/swagger" class="btn">Get Started</a>
+            </div>
+        </div>
+
+        <div class="endpoints">
+            <h2>📡 API Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all products</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get product by ID</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products/GetByPriceRange/{minPrice}/{maxPrice}</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get products by price range</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/products</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create a new product</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Update a product</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Delete a product</p>
+            </div>
+        </div>
+
+        <div class="cards" style="margin-top: 3rem;">
+            <div class="card">
+                <h3>🔗 Quick Links</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="http://localhost:5000/api/products" style="color: var(--accent-gold);">→ API Endpoint</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/swagger" style="color: var(--accent-gold);">→ Swagger UI</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/docs.html" style="color: var(--accent-gold);">→ Documentation</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>💡 Tech Stack</h3>
+                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                    <li>✓ ASP.NET Core 9</li>
+                    <li>✓ MongoDB 8.2</li>
+                    <li>✓ Repository Pattern</li>
+                    <li>✓ Swagger/OpenAPI</li>
+                    <li>✓ Docker Support</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📊 Database Info</h3>
+                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                    <li><strong>Database:</strong> MongoDbDemo</li>
+                    <li><strong>Collection:</strong> Products</li>
+                    <li><strong>Port:</strong> 27017</li>
+                    <li><strong>Status:</strong> <span style="color: var(--success);">Connected</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
+        <p style="margin-top: 0.5rem; color: var(--accent-brown);">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold); text-decoration: none;">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

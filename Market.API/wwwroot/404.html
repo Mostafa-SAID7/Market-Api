@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Market API</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <span>🛍️</span>
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="error-page">
+        <div class="error-code">404</div>
+        <h2 class="error-message">Page Not Found</h2>
+        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px;">
+            The page you're looking for doesn't exist or has been moved.
+        </p>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/" class="btn btn-primary">Go Home</a>
+            <a href="/swagger" class="btn">Try API</a>
+            <a href="/docs.html" class="btn">View Docs</a>
+        </div>
+
+        <div class="card" style="margin-top: 4rem; max-width: 600px; text-align: left;">
+            <h3>🔍 Looking for something?</h3>
+            <p style="margin-bottom: 1rem;">Here are some helpful links:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.8rem;">
+                    <a href="/" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
+                        🏠 Home Page
+                    </a>
+                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                        Overview and quick links
+                    </p>
+                </li>
+                <li style="margin-bottom: 0.8rem;">
+                    <a href="/swagger" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
+                        📚 Swagger UI
+                    </a>
+                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                        Interactive API documentation
+                    </p>
+                </li>
+                <li style="margin-bottom: 0.8rem;">
+                    <a href="/docs.html" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
+                        📖 Documentation
+                    </a>
+                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                        Complete API reference and examples
+                    </p>
+                </li>
+                <li style="margin-bottom: 0.8rem;">
+                    <a href="/api/products" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
+                        🛍️ Products API
+                    </a>
+                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                        Direct API endpoint
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card" style="margin-top: 2rem; max-width: 600px; background: rgba(244, 67, 54, 0.1); border-color: var(--error);">
+            <h3 style="color: var(--error);">⚠️ Common Mistakes</h3>
+            <ul style="color: var(--text-secondary); margin-top: 1rem;">
+                <li style="margin-bottom: 0.5rem;">
+                    ❌ Don't try to access <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">http://localhost:27017</code>
+                    <br><span style="font-size: 0.9rem;">That's the MongoDB port, not a web interface</span>
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    ✅ Use <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">http://localhost:5000</code>
+                    <br><span style="font-size: 0.9rem;">This is the correct API port</span>
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    ✅ API endpoints start with <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">/api/</code>
+                    <br><span style="font-size: 0.9rem;">Example: /api/products</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="margin-top: 4rem;">
+        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
+        <p style="margin-top: 0.5rem; color: var(--accent-brown);">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold); text-decoration: none;">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

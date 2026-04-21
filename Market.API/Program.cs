@@ -46,10 +46,30 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Enable static files (wwwroot)
+var defaultFilesOptions = new DefaultFilesOptions();
+defaultFilesOptions.DefaultFileNames.Clear();
+defaultFilesOptions.DefaultFileNames.Add("index.html");
+app.UseDefaultFiles(defaultFilesOptions);
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Custom 404 handling for non-API routes
+app.Use(async (context, next) =>
+{
+    await next();
+    
+    // If the response is 404 and it's not an API call
+    if (context.Response.StatusCode == 404 && !context.Request.Path.StartsWithSegments("/api"))
+    {
+        context.Request.Path = "/404.html";
+        await next();
+    }
+});
 
 app.Run();

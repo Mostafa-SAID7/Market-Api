@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market API - Documentation</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">
+                <span>🛍️</span>
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 4rem;">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h1 style="font-size: 3.5rem; background: linear-gradient(135deg, var(--accent-gold) 0%, var(--light-brown) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                📚 API Documentation
+            </h1>
+            <p style="font-size: 1.3rem; color: var(--text-secondary); margin-top: 1rem;">
+                Complete guide to using the Market API
+            </p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>🚀 Getting Started</h3>
+                <p>The Market API is a RESTful service for managing products. All responses are in JSON format.</p>
+                <p style="margin-top: 1rem;"><strong>Base URL:</strong></p>
+                <code style="background: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 4px; display: block; margin-top: 0.5rem;">
+                    http://localhost:5000/api
+                </code>
+            </div>
+
+            <div class="card">
+                <h3>🔑 Authentication</h3>
+                <p>Currently, the API does not require authentication. All endpoints are publicly accessible.</p>
+                <p style="margin-top: 1rem; color: var(--accent-gold);">
+                    <strong>Note:</strong> Authentication will be added in future versions.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📦 Response Format</h3>
+                <p>All API responses follow standard HTTP status codes:</p>
+                <ul style="margin-top: 1rem; color: var(--text-secondary);">
+                    <li>✓ 200 - Success</li>
+                    <li>✓ 201 - Created</li>
+                    <li>✓ 204 - No Content</li>
+                    <li>✗ 400 - Bad Request</li>
+                    <li>✗ 404 - Not Found</li>
+                    <li>✗ 500 - Server Error</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="endpoints" style="margin-top: 3rem;">
+            <h2>📡 Endpoints Reference</h2>
+
+            <!-- GET All Products -->
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Retrieve all products</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Response:</strong></p>
+                <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+[
+  {
+    "id": "69e7b3d5d118f954bb63265b",
+    "name": "Laptop",
+    "price": 999.99
+  }
+]</pre>
+            </div>
+
+            <!-- GET Product by ID -->
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Retrieve a specific product by ID</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Parameters:</strong></p>
+                <ul style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    <li><code>id</code> (string) - Product ID</li>
+                </ul>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Example:</strong></p>
+                <code style="background: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 4px; display: block; margin-top: 0.5rem;">
+                    GET /api/products/69e7b3d5d118f954bb63265b
+                </code>
+            </div>
+
+            <!-- GET by Price Range -->
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/products/GetByPriceRange/{minPrice}/{maxPrice}</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Get products within a price range</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Parameters:</strong></p>
+                <ul style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    <li><code>minPrice</code> (decimal) - Minimum price</li>
+                    <li><code>maxPrice</code> (decimal) - Maximum price</li>
+                </ul>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Example:</strong></p>
+                <code style="background: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 4px; display: block; margin-top: 0.5rem;">
+                    GET /api/products/GetByPriceRange/100/1000
+                </code>
+            </div>
+
+            <!-- POST Create Product -->
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/products</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Create a new product</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Request Body:</strong></p>
+                <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+{
+  "name": "Laptop",
+  "price": 999.99
+}</pre>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Response:</strong> 201 Created with product object</p>
+            </div>
+
+            <!-- PUT Update Product -->
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Update an existing product</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Parameters:</strong></p>
+                <ul style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    <li><code>id</code> (string) - Product ID</li>
+                </ul>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Request Body:</strong></p>
+                <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+{
+  "id": "69e7b3d5d118f954bb63265b",
+  "name": "Gaming Laptop",
+  "price": 1299.99
+}</pre>
+            </div>
+
+            <!-- DELETE Product -->
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <code>/api/products/{id}</code>
+                <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Description:</strong> Delete a product</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Parameters:</strong></p>
+                <ul style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    <li><code>id</code> (string) - Product ID</li>
+                </ul>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);"><strong>Response:</strong> 204 No Content</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 3rem;">
+            <h3>💻 Code Examples</h3>
+            <p style="margin-bottom: 1rem;">Here are some examples of how to use the API:</p>
+            
+            <h4 style="color: var(--accent-gold); margin-top: 2rem;">JavaScript (Fetch API)</h4>
+            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+// Get all products
+fetch('http://localhost:5000/api/products')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+// Create a product
+fetch('http://localhost:5000/api/products', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Laptop', price: 999.99 })
+})
+  .then(response => response.json())
+  .then(data => console.log(data));</pre>
+
+            <h4 style="color: var(--accent-gold); margin-top: 2rem;">cURL</h4>
+            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+# Get all products
+curl http://localhost:5000/api/products
+
+# Create a product
+curl -X POST http://localhost:5000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Laptop","price":999.99}'</pre>
+        </div>
+
+        <div class="cards" style="margin-top: 3rem;">
+            <div class="card">
+                <h3>🔗 Try It Now</h3>
+                <p>Use our interactive Swagger UI to test all endpoints</p>
+                <a href="/swagger" class="btn btn-primary" style="margin-top: 1rem;">Open Swagger UI</a>
+            </div>
+
+            <div class="card">
+                <h3>📖 More Resources</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/" style="color: var(--accent-gold);">→ Home</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold);">→ GitHub Repository</a>
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <a href="/swagger" style="color: var(--accent-gold);">→ API Reference</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
