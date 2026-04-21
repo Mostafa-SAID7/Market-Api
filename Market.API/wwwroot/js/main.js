@@ -53,10 +53,10 @@ function setActiveNavLink() {
     navLinks.forEach(link => {
         const linkPath = new URL(link.href).pathname;
         
-        // Exact match or home page
+        // Exact match or home page (handle both / and /index.html as home)
         if (linkPath === currentPath || 
-            (currentPath === '/' && linkPath === '/') ||
-            (currentPath === '/index.html' && linkPath === '/')) {
+            (currentPath === '/' && linkPath === '/index.html') ||
+            (currentPath === '/index.html' && linkPath === '/index.html')) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');

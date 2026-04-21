@@ -47,11 +47,14 @@ if (app.Environment.IsDevelopment())
 }
 
 // Enable static files (wwwroot)
-var defaultFilesOptions = new DefaultFilesOptions();
-defaultFilesOptions.DefaultFileNames.Clear();
-defaultFilesOptions.DefaultFileNames.Add("index.html");
-app.UseDefaultFiles(defaultFilesOptions);
 app.UseStaticFiles();
+
+// Redirect root to index.html
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/index.html", permanent: false);
+    return Task.CompletedTask;
+});
 
 app.UseHttpsRedirection();
 
