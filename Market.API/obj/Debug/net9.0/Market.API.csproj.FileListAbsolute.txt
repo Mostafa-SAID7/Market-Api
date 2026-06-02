@@ -49,3 +49,5 @@ C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\Market
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\Market.API.genruntimeconfig.cache
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\ref\Market.API.dll
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\MediatR.dll
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\MediatR.Contracts.dll
