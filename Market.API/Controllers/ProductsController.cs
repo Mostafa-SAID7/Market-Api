@@ -1,7 +1,5 @@
-﻿using Market.API.Entities;
-using Market.API.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Market.API.Models.Entities;
+using Market.API.Services.Interfaces;
 
 namespace Market.API.Controllers
 {
@@ -9,53 +7,88 @@ namespace Market.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductService _productService;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductService productService, ILogger<ProductsController> logger)
         {
-            _repository = productRepository;
+            _productService = productService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _repository.GetAllAsync();
+            var products = await _productService.GetAllProductsAsync();
             return Ok(products);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null)
+                return NotFound();
+
             return Ok(product);
         }
 
         [HttpGet("GetByPriceRange/{minPrice}/{maxPrice}")]
         public async Task<IActionResult> GetByPriceRange(decimal minPrice, decimal maxPrice)
         {
-            var product = await _repository.GetByPriceRange(minPrice, maxPrice);
-            return Ok(product);
+            var products = await _productService.GetProductsByPriceRangeAsync(minPrice, maxPrice);
+            return Ok(products);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            await _repository.CreateAsync(product);
-            return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var createdProduct = await _productService.CreateProductAsync(product);
+                return CreatedAtAction(nameof(Get), new { id = createdProduct.Id }, createdProduct);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning("Invalid product data: {Message}", ex.Message);
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Product product)
         {
-            await _repository.UpdateAsync(id, product);
-            return Ok(product);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var updatedProduct = await _productService.UpdateProductAsync(id, product);
+                return Ok(updatedProduct);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning("Product not found: {Message}", ex.Message);
+                return NotFound(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _repository.DeleteAsync(id);
-            return Ok(new { Success = true, Message = "Product deleted" });
+            try
+            {
+                await _productService.DeleteProductAsync(id);
+                return Ok(new { success = true, message = "Product deleted" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning("Product not found: {Message}", ex.Message);
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }
