@@ -23,15 +23,18 @@ A modern RESTful API built with ASP.NET Core 9 and MongoDB, implementing the Rep
 
 ## ✨ Features
 
-- ✅ RESTful API with CRUD operations
-- ✅ Repository Pattern implementation
-- ✅ MongoDB integration with async operations
-- ✅ Generic repository for code reusability
-- ✅ Dependency Injection
-- ✅ OpenAPI/Swagger documentation
-- ✅ Docker support with Docker Compose
-- ✅ Clean Architecture principles
-- ✅ ASP.NET Core 9 with minimal APIs
+- ✅ **MediatR Pattern** - CQRS architecture with commands and queries
+- ✅ **Complete REST API** - CRUD operations for 7 entities
+- ✅ **Validation Framework** - Strong entity validation
+- ✅ **Service Layer** - Business logic with logging
+- ✅ **Repository Pattern** - Clean data access abstraction
+- ✅ **Unit of Work** - Coordinated data operations
+- ✅ **MongoDB Integration** - Async NoSQL operations
+- ✅ **Dependency Injection** - Full DI support
+- ✅ **Swagger/OpenAPI** - Interactive API documentation
+- ✅ **Docker Support** - Docker & Docker Compose ready
+- ✅ **Clean Architecture** - SOLID principles throughout
+- ✅ **Comprehensive Logging** - Serilog integration ready
 
 ## 🛠 Tech Stack
 
@@ -109,40 +112,73 @@ Access the API at `http://localhost:5000`
 
 ## 📚 API Documentation
 
-### Endpoints
+### Quick API Reference
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/products` | Get all products |
-| GET | `/api/products/{id}` | Get product by ID |
-| GET | `/api/products/GetByPriceRange/{minPrice}/{maxPrice}` | Get products by price range |
-| POST | `/api/products` | Create a new product |
-| PUT | `/api/products/{id}` | Update a product |
-| DELETE | `/api/products/{id}` | Delete a product |
+| Entity | Create | Read | Update | Delete | Special |
+|--------|--------|------|--------|--------|---------|
+| Products | POST | GET | PUT | DELETE | GetByCategory |
+| Categories | POST | GET | PUT | DELETE | - |
+| Users | POST | GET | PUT | DELETE | - |
+| Vendors | POST | GET | PUT | DELETE | Approve |
+| Orders | POST | GET | PUT | DELETE | - |
+| Carts | - | GET | - | - | Add, Remove, Clear |
+| Reviews | POST | GET | PUT | DELETE | GetByProduct |
+
+### Documentation Files
+
+- **[API Reference](docs/API.md)** - Complete endpoint documentation with examples
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
+- **[Implementation Guide](docs/IMPLEMENTATION.md)** - Detailed implementation details
+- **[Docker Setup](docs/DOCKER.md)** - Containerization instructions
+- **[Contributing](docs/CONTRIBUTING.md)** - Development guidelines
 
 ### Example Requests
-
-**Create a Product**
-```bash
-curl -X POST http://localhost:5000/api/products \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Laptop",
-    "price": 999.99
-  }'
-```
 
 **Get All Products**
 ```bash
 curl http://localhost:5000/api/products
 ```
 
-**Get Products by Price Range**
+**Create Product**
 ```bash
-curl http://localhost:5000/api/products/GetByPriceRange/100/1000
+curl -X POST http://localhost:5000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Gaming Laptop",
+    "description": "High performance laptop",
+    "category": "Electronics",
+    "vendorId": "507f1f77bcf86cd799439000",
+    "price": 1299.99,
+    "quantity": 10
+  }'
 ```
 
-For more detailed API documentation, see [API Reference](docs/API.md).
+**Get User by ID**
+```bash
+curl http://localhost:5000/api/users/507f1f77bcf86cd799439001
+```
+
+**Create Order**
+```bash
+curl -X POST http://localhost:5000/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerId": "507f1f77bcf86cd799439001",
+    "items": [...],
+    "shippingAddress": "123 Main St",
+    "shippingCost": 50.00,
+    "tax": 100.00
+  }'
+```
+
+### Swagger UI
+
+Access interactive API documentation in development:
+
+```
+Development: https://localhost:7294/swagger
+Docker: http://localhost:5000/swagger
+```
 
 ## 📁 Project Structure
 

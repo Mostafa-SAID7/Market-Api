@@ -63,16 +63,69 @@ The Repository Pattern abstracts the data access layer, providing a collection-l
 ```
 Market.API/
 ├── Controllers/              # HTTP Request Handlers
-│   └── ProductsController.cs
+│   ├── ProductsController.cs
+│   ├── CategoriesController.cs
+│   ├── UsersController.cs
+│   ├── VendorsController.cs
+│   ├── OrdersController.cs
+│   ├── CartsController.cs
+│   └── ReviewsController.cs
 │
-├── Entities/                 # Domain Models
-│   └── Product.cs
+├── Features/                 # MediatR Commands & Queries
+│   ├── Products/
+│   │   ├── Commands/        # Create, Update, Delete
+│   │   ├── Queries/         # GetAll, GetById, GetByCategory
+│   │   └── ProductResponse.cs
+│   ├── Categories/
+│   │   ├── Commands/
+│   │   ├── Queries/
+│   │   └── CategoryResponse.cs
+│   ├── Users, Vendors, Orders, Carts, Reviews/  # Same structure
+│   └── (Similar for all 7 entities)
 │
-├── Repository/               # Data Access Abstraction
-│   ├── IRepository.cs       # Generic Repository Interface
-│   ├── Repository.cs        # Generic Repository Implementation
-│   ├── IProductRepository.cs # Product-Specific Interface
-│   └── ProductRepository.cs  # Product-Specific Implementation
+├── Models/
+│   ├── Entities/             # Domain Models
+│   │   ├── Product.cs
+│   │   ├── Category.cs
+│   │   ├── User.cs
+│   │   ├── Vendor.cs
+│   │   ├── Order.cs
+│   │   ├── Cart.cs
+│   │   └── Review.cs
+│   └── Enums/                # OrderStatus, PaymentStatus, UserRole
+│
+├── Data/
+│   ├── Repositories/         # Data Access Implementation
+│   │   ├── Repository.cs     # Generic implementation
+│   │   └── (Specific repos for each entity)
+│   ├── Interfaces/           # Repository Contracts
+│   │   ├── IRepository.cs    # Generic interface
+│   │   └── (Specific interfaces)
+│   ├── UnitOfWork/           # Coordinated repository access
+│   └── MongoDbContext.cs    # MongoDB connection & indexes
+│
+├── Services/                 # Business Logic Layer
+│   ├── ProductService.cs
+│   ├── Interfaces/
+│   │   └── IProductService.cs
+│   └── (Similar for all entities)
+│
+├── Validators/               # Validation Framework
+│   ├── ProductValidator.cs
+│   ├── ValidationResult.cs
+│   ├── ValidationError.cs
+│   └── (Similar for all entities)
+│
+├── Configurations/           # DI Setup & Middleware
+│   ├── ServiceConfiguration.cs
+│   ├── DataConfiguration.cs
+│   ├── ValidatorConfiguration.cs
+│   ├── MediatRConfiguration.cs
+│   ├── SwaggerConfiguration.cs
+│   └── MiddlewareConfiguration.cs
+│
+├── Middleware/               # Request Processing
+│   └── ValidationMiddleware.cs
 │
 ├── Settings/                 # Configuration Models
 │   └── MongoDbSettings.cs
@@ -135,41 +188,86 @@ public class MongoDbSettings
 
 ## Data Flow
 
-### Request Flow
+### Request Flow with MediatR
 
 ```
 1. HTTP Request
    ↓
-2. Controller (ProductsController)
+2. Controller (e.g., ProductsController)
    ↓
-3. Repository (IProductRepository)
+3. MediatR.Send(Command or Query)
    ↓
-4. MongoDB Driver
+4. Command/Query Handler
+   ├─ Validates request
+   ├─ Calls Service (if needed)
+   └─ Calls Repository
+      ↓
+5. Service Layer (optional business logic)
+   ├─ Validates entity
+   ├─ Applies business rules
+   └─ Calls Repository
+      ↓
+6. Repository Layer
+   ├─ Applies MongoDB operations
+   └─ Calls MongoDB Driver
+      ↓
+7. MongoDB Database
    ↓
-5. MongoDB Database
+8. Handler returns Response DTO
    ↓
-6. Response (JSON)
+9. HTTP Response (JSON)
 ```
 
-### Example: Create Product
+### Example: Create Product Request
 
 ```csharp
-// 1. Controller receives request
-[HttpPost]
-public async Task<IActionResult> Create(Product product)
+// 1. HTTP POST request
+POST /api/products
 {
-    // 2. Calls repository
-    await _repository.CreateAsync(product);
-    
-    // 3. Returns response
-    return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+  "name": "Laptop",
+  "price": 999.99
 }
 
-// 4. Repository implementation
-public async Task CreateAsync(T entity)
+// 2. Controller receives request
+[HttpPost]
+public async Task<IActionResult> Create(CreateProductCommand command)
 {
-    // 5. MongoDB operation
-    await _collection.InsertOneAsync(entity);
+    // 3. Send to MediatR
+    var result = await _mediator.Send(command);
+    return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+}
+
+// 4. Handler processes command
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
+{
+    public async Task<ProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    {
+        // 5. Create entity
+        var product = new Product 
+        { 
+            Name = request.Name, 
+            Price = request.Price 
+        };
+        
+        // 6. Call repository
+        await _repository.CreateAsync(product);
+        
+        // 7. Return response DTO
+        return new ProductResponse 
+        { 
+            Id = product.Id, 
+            Name = product.Name, 
+            Price = product.Price 
+        };
+    }
+}
+
+// 8. Response sent back
+201 Created
+{
+  "id": "507f1f77bcf86cd799439011",
+  "name": "Laptop",
+  "price": 999.99
 }
 ```
 
@@ -177,7 +275,7 @@ public async Task CreateAsync(T entity)
 
 ### 1. Controllers
 
-**Responsibility**: Handle HTTP requests and responses
+**Responsibility**: Handle HTTP requests and route to MediatR
 
 **Example**:
 ```csharp
@@ -185,54 +283,165 @@ public async Task CreateAsync(T entity)
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly IProductRepository _repository;
+    private readonly IMediator _mediator;
     
-    public ProductsController(IProductRepository repository)
+    public ProductsController(IMediator mediator)
     {
-        _repository = repository;
+        _mediator = mediator;
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _mediator.Send(new GetAllProductsQuery());
+        return Ok(result);
     }
 }
 ```
 
-### 2. Entities
+### 2. MediatR Commands & Queries
+
+**Responsibility**: Encapsulate request/response logic with handlers
+
+**Commands** (Create, Update, Delete):
+```csharp
+public class CreateProductCommand : IRequest<ProductResponse>
+{
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+}
+
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
+{
+    // Handle business logic
+}
+```
+
+**Queries** (Read):
+```csharp
+public class GetAllProductsQuery : IRequest<List<ProductResponse>> { }
+
+public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductResponse>>
+{
+    // Handle query logic
+}
+```
+
+### 3. Response DTOs
+
+**Responsibility**: Define API response contracts
+
+**Example**:
+```csharp
+public class ProductResponse
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
+```
+
+### 4. Services
+
+**Responsibility**: Business logic layer with validation and logging
+
+**Example**:
+```csharp
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _repository;
+    private readonly IValidator<Product> _validator;
+    
+    public async Task<Product> CreateAsync(Product product)
+    {
+        // Validate
+        var validationResult = await _validator.ValidateAsync(product);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+        
+        // Create
+        await _repository.CreateAsync(product);
+        return product;
+    }
+}
+```
+
+### 5. Validators
+
+**Responsibility**: Validate entities before processing
+
+**Example**:
+```csharp
+public class ProductValidator : IValidator<Product>
+{
+    public async Task<ValidationResult> ValidateAsync(Product entity)
+    {
+        var errors = new List<ValidationError>();
+        
+        if (string.IsNullOrWhiteSpace(entity.Name))
+            errors.Add(new ValidationError("Name", "Product name is required"));
+            
+        if (entity.Price <= 0)
+            errors.Add(new ValidationError("Price", "Price must be positive"));
+        
+        return new ValidationResult { Errors = errors, IsValid = errors.Count == 0 };
+    }
+}
+```
+
+### 6. Repositories
+
+**Responsibility**: Abstract data access logic
+
+**Generic Repository**:
+```csharp
+public interface IRepository<T> where T : class
+{
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<T> GetByIdAsync(string id);
+    Task CreateAsync(T entity);
+    Task UpdateAsync(string id, T entity);
+    Task DeleteAsync(string id);
+}
+```
+
+**Specific Repository**:
+```csharp
+public interface IProductRepository : IRepository<Product>
+{
+    Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal min, decimal max);
+}
+```
+
+### 7. Entities
 
 **Responsibility**: Define domain models
 
 **Example**:
 ```csharp
-public class Product
+[BsonIgnoreExtraElements]
+public class Product : BaseEntity
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-    
     public string Name { get; set; }
     public decimal Price { get; set; }
+    public string Category { get; set; }
 }
 ```
 
-### 3. Repositories
+### 8. Unit of Work
 
-**Responsibility**: Abstract data access logic
-
-**Generic Repository**:
-- Provides common CRUD operations
-- Reusable across different entities
-
-**Specific Repository**:
-- Extends generic repository
-- Adds entity-specific operations
-
-### 4. Settings
-
-**Responsibility**: Configuration management
+**Responsibility**: Coordinate multiple repositories
 
 **Example**:
 ```csharp
-public class MongoDbSettings
+public interface IUnitOfWork
 {
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
+    IProductRepository Products { get; }
+    IUserRepository Users { get; }
+    IVendorRepository Vendors { get; }
+    // ... other repositories
+    Task<int> SaveAsync();
 }
 ```
 
