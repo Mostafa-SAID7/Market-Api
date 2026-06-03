@@ -16,6 +16,7 @@ A modern RESTful API built with ASP.NET Core 9 and MongoDB, implementing the Rep
   - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
+- [Documentation Guide](#documentation-guide)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
@@ -124,13 +125,16 @@ Access the API at `http://localhost:5000`
 | Carts | - | GET | - | - | Add, Remove, Clear |
 | Reviews | POST | GET | PUT | DELETE | GetByProduct |
 
-### Documentation Files
+### Complete Documentation
 
-- **[API Reference](docs/API.md)** - Complete endpoint documentation with examples
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
-- **[Implementation Guide](docs/IMPLEMENTATION.md)** - Detailed implementation details
-- **[Docker Setup](docs/DOCKER.md)** - Containerization instructions
-- **[Contributing](docs/CONTRIBUTING.md)** - Development guidelines
+For detailed documentation and guides, see **[docs/DOCUMENTATION.md](docs/DOCUMENTATION.md)** which provides:
+
+- **[API Reference](docs/API.md)** - Complete endpoint documentation with all 7 entities
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - System design, patterns, and structure
+- **[Implementation Guide](docs/IMPLEMENTATION.md)** - Detailed code patterns and examples
+- **[Docker Setup](docs/DOCKER.md)** - Containerization and deployment instructions
+- **[Contributing Guidelines](docs/CONTRIBUTING.md)** - Development workflow and standards
+- **[Changelog](docs/CHANGELOG.md)** - Version history and updates
 
 ### Example Requests
 
@@ -180,6 +184,25 @@ Development: https://localhost:7294/swagger
 Docker: http://localhost:5000/swagger
 ```
 
+---
+
+## 📖 Documentation Guide
+
+**New to the project?** Start with **[docs/DOCUMENTATION.md](docs/DOCUMENTATION.md)** for a complete navigation guide organized by use case.
+
+### Quick Navigation
+
+| I want to... | Read this |
+|-------------|-----------|
+| Get started quickly | Start here (README.md) |
+| Understand how docs are organized | [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) |
+| Use the API endpoints | [docs/API.md](docs/API.md) |
+| Understand the architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| Implement new features | [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) |
+| Deploy with Docker | [docs/DOCKER.md](docs/DOCKER.md) |
+| Contribute to the project | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
+| See what's new | [docs/CHANGELOG.md](docs/CHANGELOG.md) |
+
 ## 📁 Project Structure
 
 ```
@@ -207,24 +230,26 @@ Market-Api/
 
 ## 🏗 Architecture
 
-This project follows the **Repository Pattern** with **Dependency Injection**:
+This project follows the **Repository Pattern** with **CQRS using MediatR**:
 
-- **Controllers**: Handle HTTP requests and responses
-- **Repository Layer**: Abstracts data access logic
-- **Entities**: Define domain models
-- **Generic Repository**: Provides common CRUD operations
+- **MediatR Layer**: Commands and queries with handlers
+- **Service Layer**: Business logic and validation
+- **Repository Layer**: Data access abstraction
+- **MongoDB**: NoSQL database with async operations
 
-For detailed architecture documentation, see [Architecture Guide](docs/ARCHITECTURE.md).
+For detailed architecture documentation, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Contributing Guidelines](docs/CONTRIBUTING.md) before submitting a Pull Request.
+Contributions are welcome! Please read **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** before submitting a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+For detailed contribution guidelines, coding standards, and best practices, see **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)**.
 
 ## 📄 License
 
