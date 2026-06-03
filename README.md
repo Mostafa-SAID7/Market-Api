@@ -17,7 +17,6 @@ A modern RESTful API built with ASP.NET Core 9 and MongoDB, implementing the Rep
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
 - [Documentation Guide](#documentation-guide)
-- [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
 - [License](#license)
@@ -202,31 +201,6 @@ Docker: http://localhost:5000/swagger
 | Deploy with Docker | [docs/DOCKER.md](docs/DOCKER.md) |
 | Contribute to the project | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
 | See what's new | [docs/CHANGELOG.md](docs/CHANGELOG.md) |
-
-## 📁 Project Structure
-
-```
-Market-Api/
-├── Market.API/
-│   ├── Controllers/          # API Controllers
-│   ├── Entities/             # Domain Models
-│   ├── Repository/           # Repository Pattern Implementation
-│   ├── Settings/             # Configuration Settings
-│   ├── Program.cs            # Application Entry Point
-│   └── appsettings.json      # Configuration File
-├── docs/                     # Documentation
-│   ├── API.md               # API Documentation
-│   ├── ARCHITECTURE.md      # Architecture Guide
-│   ├── DOCKER.md            # Docker Guide
-│   └── CONTRIBUTING.md      # Contribution Guidelines
-├── .github/                  # GitHub Configuration
-│   ├── workflows/           # CI/CD Workflows
-│   ├── ISSUE_TEMPLATE/      # Issue Templates
-│   └── PULL_REQUEST_TEMPLATE.md
-├── docker-compose.yml        # Docker Compose Configuration
-├── Dockerfile               # Docker Image Definition
-└── README.md                # This File
-```
 
 ## 🏗 Architecture
 

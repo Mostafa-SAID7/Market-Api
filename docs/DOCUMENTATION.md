@@ -115,7 +115,24 @@ Docker and Docker Compose setup guide.
 
 ---
 
-### 8. **CHANGELOG.md** - Version History
+### 8. **PROJECT-STRUCTURE.md** - Directory Organization
+Complete directory structure and file organization guide.
+- Root directory structure
+- Market.API folder organization
+- Docs folder structure
+- Layer descriptions
+- File naming conventions
+- Common file locations
+- Build output structure
+- Summary statistics
+
+**Best for**: Understanding project layout, finding files, folder organization
+
+**Location**: /docs/PROJECT-STRUCTURE.md
+
+---
+
+### 9. **CHANGELOG.md** - Version History
 Version history and release notes.
 - Current version (v2.0.0) - MediatR & Full Implementation
 - Previous versions (v1.0.0) - Initial release
@@ -145,32 +162,24 @@ DOCUMENTATION.md (You are here - Navigation guide)
 
 All files in `/docs/` folder for organization.
 
-## Quick Links by Use Case
+### Quick Navigation
 
-### I'm new to the project
-1. Read **README.md** (root)
-2. Review **ARCHITECTURE.md** (understand design)
-3. Follow setup in **DOCKER.md** (get running)
+**Quick Links by Task**:
+- **New Developer** → README.md → DOCUMENTATION.md → PROJECT-STRUCTURE.md
+- **API Consumer** → README.md → API.md
+- **System Architect** → ARCHITECTURE.md
+- **Feature Developer** → IMPLEMENTATION.md
+- **Contributor** → CONTRIBUTING.md
+- **DevOps/Deployment** → DOCKER.md
+- **Project Layout** → PROJECT-STRUCTURE.md
+- **Version Info** → CHANGELOG.md
 
-### I need to use the API
-1. Start with **API.md** (all endpoints)
-2. Check request/response examples
-3. Test with cURL or Swagger UI (see README.md)
-
-### I need to implement a feature
-1. Review **IMPLEMENTATION.md** for patterns
-2. Check **ARCHITECTURE.md** for design context
-3. Follow guidelines in **CONTRIBUTING.md**
-
-### I need to deploy the application
-1. Follow **DOCKER.md** setup guide
-2. Review **ARCHITECTURE.md** security section
-3. Check **DOCKER.md** production considerations
-
-### I'm contributing to the project
-1. Read **CONTRIBUTING.md** completely
-2. Follow coding standards and commit guidelines
-3. Reference patterns in **IMPLEMENTATION.md**
+**By Question**:
+- "Where is X file?" → PROJECT-STRUCTURE.md
+- "How do I use endpoint Y?" → API.md
+- "How does Z work?" → ARCHITECTURE.md
+- "How do I code this?" → IMPLEMENTATION.md
+- "What's new?" → CHANGELOG.md
 
 ---
 
@@ -297,12 +306,14 @@ See [README.md](../README.md) for project overview
 | File | Sections | Primary Audience |
 |------|----------|-----------------|
 | README.md | 8 | Everyone |
+| docs/DOCUMENTATION.md | 12+ | Navigation |
+| docs/PROJECT-STRUCTURE.md | 10+ | Developers |
 | docs/API.md | 10+ | API Users |
 | docs/ARCHITECTURE.md | 15+ | Architects |
 | docs/IMPLEMENTATION.md | 12+ | Developers |
 | docs/CONTRIBUTING.md | 9+ | Contributors |
 | docs/DOCKER.md | 8+ | DevOps |
-| CHANGELOG.md | 2 major versions | Release Info |
+| docs/CHANGELOG.md | 2 major versions | Release Info |
 
 ### Coverage
 
