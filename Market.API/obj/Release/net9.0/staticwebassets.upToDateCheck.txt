@@ -1,9 +1,9 @@
 wwwroot\404.html
-wwwroot\css\styles.css
+wwwroot\index.html
 wwwroot\docs.html
 wwwroot\images\icons\favicon.svg
 wwwroot\images\logo.svg
-wwwroot\index.html
+wwwroot\css\styles.css
 wwwroot\js\main.js
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\wwwroot\404.html
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\wwwroot\css\styles.css

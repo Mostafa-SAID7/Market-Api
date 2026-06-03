@@ -35,11 +35,8 @@ C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\rjsm
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\scopedcss\bundle\Market.API.styles.css
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\jsg4xbanqk-40kcqopugx.gz
-C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\sl4em94rax-34urzplnie.gz
-C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\9p1orsdkm9-4s3mvfp13d.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\3m2r77uz25-nj3v81yq69.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\cux4qn8tcy-ijw9r7muzg.gz
-C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\312n03plt9-iee3fn4mz0.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\1403mbwx8b-j0goga3pds.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\staticwebassets.build.json
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\staticwebassets.build.json.cache
@@ -52,3 +49,7 @@ C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\refi
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\Market.API.pdb
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\Market.API.genruntimeconfig.cache
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\ref\Market.API.dll
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Release\net9.0\web.config
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\312n03plt9-wb0nn52su4.gz
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\9p1orsdkm9-m0tk0uarrv.gz
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Release\net9.0\compressed\sl4em94rax-qu3c40bzkq.gz

@@ -1,60 +1,66 @@
-/* Market API - Microsoft Cinematic Style with Dark Brown Theme */
+/* Market API - centralized design tokens and utilities */
 
 :root {
-    --primary-brown: #3d2817;
-    --secondary-brown: #5c3d2e;
-    --accent-brown: #8b6f47;
-    --light-brown: #a0826d;
-    --dark-bg: #1a1410;
-    --card-bg: #2a1f17;
-    --text-primary: #f5f5f5;
-    --text-secondary: #d4c5b9;
-    --accent-gold: #d4af37;
+    /* Colors */
+    --bg: #1a1410;
+    --surface: #2a1f17;
+    --primary-900: #3d2817;
+    --primary-700: #5c3d2e;
+    --primary-500: #8b6f47;
+    --primary-300: #a0826d;
+    --accent: #d4af37;
+    --text: #f5f5f5;
+    --muted: #d4c5b9;
     --success: #4caf50;
-    --error: #f44336;
-    --shadow: rgba(0, 0, 0, 0.5);
+    --danger: #f44336;
+
+    /* Backwards-compatible aliases (preserve existing var names) */
+    --primary-brown: var(--primary-900);
+    --secondary-brown: var(--primary-700);
+    --accent-brown: var(--primary-500);
+    --light-brown: var(--primary-300);
+    --accent-gold: var(--accent);
+    --dark-bg: var(--bg);
+    --card-bg: var(--surface);
+    --text-primary: var(--text);
+    --text-secondary: var(--muted);
+    --shadow: rgba(0,0,0,0.36);
+
+    /* Radii */
+    --r-sm: 6px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-pill: 999px;
+
+    /* Shadows */
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.28);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.36);
+    --shadow-lg: 0 16px 48px rgba(0,0,0,0.44);
+
+    /* Layout */
+    --container-max: 1400px;
+    --g-lg: 2rem;
+    --g-md: 1rem;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--dark-bg);
-    border-left: 1px solid rgba(139, 111, 71, 0.2);
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent-brown) 0%, var(--secondary-brown) 100%);
-    border-radius: 6px;
-    border: 2px solid var(--dark-bg);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--accent-gold) 0%, var(--accent-brown) 100%);
-}
-
-/* Firefox Scrollbar */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-brown) var(--dark-bg);
-}
-
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { height: 100% }
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
-    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-brown) 100%);
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--bg) 0%, var(--primary-900) 100%);
+    color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
 }
+
+/* Scrollbars (WebKit + Firefox) */
+::-webkit-scrollbar { width: 12px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary-500), var(--primary-700)); border-radius: 8px; border: 2px solid var(--bg) }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--accent), var(--primary-500)) }
+* { scrollbar-width: thin; scrollbar-color: var(--primary-500) transparent }
 
 /* Animated Background */
 body::before {
@@ -644,3 +650,23 @@ ul li a {
 ul li a:hover {
     color: var(--light-brown);
 }
+
+/* Utility classes - centralized, reusable, responsive-friendly */
+.u-center { display:flex; align-items:center; justify-content:center }
+.u-stack { display:flex; flex-direction:column; gap:var(--g-md) }
+.u-row { display:flex; gap:var(--g-md); align-items:center }
+.u-rounded { border-radius:var(--r-md) }
+.u-rounded-lg { border-radius:var(--r-lg) }
+.u-pill { border-radius:var(--r-pill) }
+.u-shadow-sm { box-shadow:var(--shadow-sm) }
+.u-shadow-md { box-shadow:var(--shadow-md) }
+.text-muted { color:var(--muted) }
+.text-accent { color:var(--accent) }
+
+/* Small helpers for spacing and responsiveness */
+.m-auto { margin: 0 auto }
+.w-full { width:100% }
+.max-w-content { max-width: var(--container-max) }
+
+/* Ensure controls and media follow centralized radii */
+img, button, input, textarea, select { border-radius: var(--r-sm) }

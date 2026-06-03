@@ -30,15 +30,12 @@ namespace Market.API.Data.Configurations
 
         public static WebApplication UseSwaggerDocumentation(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Market API v1");
-                    options.RoutePrefix = "swagger";
-                });
-            }
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Market API v1");
+                options.RoutePrefix = "swagger";
+            });
 
             return app;
         }

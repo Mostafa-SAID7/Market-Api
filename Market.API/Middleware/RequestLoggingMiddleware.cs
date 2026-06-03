@@ -53,7 +53,12 @@ namespace Market.API.Middleware
                     );
 
                     // Copy response back to original stream
-                    await memoryStream.CopyToAsync(originalBodyStream);
+                            // Rewind the memory stream so its contents are copied from the start
+                            memoryStream.Position = 0;
+                            await memoryStream.CopyToAsync(originalBodyStream);
+
+                            // Restore the original response body stream so downstream nothing is affected
+                            context.Response.Body = originalBodyStream;
                 }
             }
         }

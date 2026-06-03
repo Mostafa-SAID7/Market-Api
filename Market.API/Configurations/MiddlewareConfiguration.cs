@@ -9,11 +9,13 @@ namespace Market.API.Data.Configurations
     {
         public static WebApplication UseApplicationMiddleware(this WebApplication app)
         {
-            // Apply custom middleware (error handling, logging, validation, correlation ID)
-            app.UseCustomMiddleware();
-
-            // Enable static files (wwwroot)
+            // Serve static files first so SendFileAsync writes go to the original response stream
             app.UseStaticFiles();
+
+            // Apply custom middleware (error handling, logging, validation, correlation ID)
+            // Placing custom middleware after static files avoids replacing the response body
+            // for SendFile operations which can cause Content-Length mismatches.
+            app.UseCustomMiddleware();
 
             // Enable HTTPS redirection
             app.UseHttpsRedirection();
