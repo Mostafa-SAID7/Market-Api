@@ -27,8 +27,8 @@
             <span class="status-dot"></span>
             <span>API Running</span>
         </div>
-        <h1>Market API</h1>
-        <p>A Modern RESTful API for Product Management</p>
+        <h1>Market API v2.0</h1>
+        <p>A Modern RESTful API with MediatR, Validation, and 7 Complete Entities</p>
         <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
             <a href="/swagger" class="btn btn-primary">Try API</a>
             <a href="/docs.html" class="btn">View Docs</a>
@@ -38,101 +38,184 @@
     <div class="container">
         <div class="cards">
             <div class="card">
-                <span class="card-icon">🚀</span>
-                <h3>Fast & Scalable</h3>
-                <p>Built with ASP.NET Core 9 and MongoDB for high-performance operations</p>
-                <a href="/swagger" class="btn">Explore API</a>
+                <span class="card-icon">⚡</span>
+                <h3>Enterprise Architecture</h3>
+                <p>Built with MediatR CQRS pattern, Repository pattern, and comprehensive validation framework</p>
+                <a href="/docs.html" class="btn">Learn More</a>
             </div>
 
             <div class="card">
                 <span class="card-icon">📚</span>
-                <h3>Well Documented</h3>
-                <p>Comprehensive documentation with examples and interactive Swagger UI</p>
-                <a href="/docs.html" class="btn">Read Docs</a>
+                <h3>Fully Documented</h3>
+                <p>Complete documentation for all 7 entities with examples, architecture guides, and implementation patterns</p>
+                <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/DOCUMENTATION.md" class="btn">Read Docs</a>
             </div>
 
             <div class="card">
                 <span class="card-icon">🔒</span>
-                <h3>Secure & Reliable</h3>
-                <p>Repository pattern with best practices for data access and security</p>
+                <h3>Production Ready</h3>
+                <p>Validated data, dependency injection, logging, error handling, and Docker support included</p>
                 <a href="/swagger" class="btn">Get Started</a>
             </div>
         </div>
 
         <div class="endpoints">
-            <h2>📡 API Endpoints</h2>
+            <h2>📡 API Endpoints (7 Entities)</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Complete CRUD operations for Products, Categories, Users, Vendors, Orders, Carts, and Reviews. See <a href="/docs.html" style="color: var(--accent-gold);">detailed documentation</a> for all endpoints.</p>
             
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/api/products</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all products</p>
-            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Products -->
+                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">📦 Products</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/products</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method post">POST</span>
+                        <code>/api/products</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method put">PUT</span>
+                        <code>/api/products/{id}</code>
+                    </div>
+                </div>
 
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/api/products/{id}</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get product by ID</p>
-            </div>
+                <!-- Categories -->
+                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🏷️ Categories</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/categories</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method post">POST</span>
+                        <code>/api/categories</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method put">PUT</span>
+                        <code>/api/categories/{id}</code>
+                    </div>
+                </div>
 
-            <div class="endpoint">
-                <span class="method get">GET</span>
-                <code>/api/products/GetByPriceRange/{minPrice}/{maxPrice}</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get products by price range</p>
-            </div>
+                <!-- Users -->
+                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">👤 Users</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/users</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method post">POST</span>
+                        <code>/api/users</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method put">PUT</span>
+                        <code>/api/users/{id}</code>
+                    </div>
+                </div>
 
-            <div class="endpoint">
-                <span class="method post">POST</span>
-                <code>/api/products</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create a new product</p>
-            </div>
+                <!-- Vendors -->
+                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🏪 Vendors</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/vendors</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method post">POST</span>
+                        <code>/api/vendors</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method put">PUT</span>
+                        <code>/api/vendors/{id}</code>
+                    </div>
+                </div>
 
-            <div class="endpoint">
-                <span class="method put">PUT</span>
-                <code>/api/products/{id}</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Update a product</p>
-            </div>
+                <!-- Orders -->
+                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">📋 Orders</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/orders</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method post">POST</span>
+                        <code>/api/orders</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method put">PUT</span>
+                        <code>/api/orders/{id}</code>
+                    </div>
+                </div>
 
-            <div class="endpoint">
-                <span class="method delete">DELETE</span>
-                <code>/api/products/{id}</code>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Delete a product</p>
+                <!-- Carts & Reviews -->
+                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
+                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🛒 Carts & ⭐ Reviews</h4>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/carts/{userId}</code>
+                    </div>
+                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                        <span class="method get">GET</span>
+                        <code>/api/reviews</code>
+                    </div>
+                    <div class="endpoint">
+                        <span class="method post">POST</span>
+                        <code>/api/reviews</code>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="cards" style="margin-top: 3rem;">
             <div class="card">
-                <h3>🔗 Quick Links</h3>
+                <h3>🔗 Quick Start</h3>
                 <ul style="list-style: none; padding: 0;">
                     <li style="margin-bottom: 0.5rem;">
-                        <a href="http://localhost:5000/api/products" style="color: var(--accent-gold);">→ API Endpoint</a>
+                        <a href="/swagger" style="color: var(--accent-gold);">→ Interactive API Explorer</a>
                     </li>
                     <li style="margin-bottom: 0.5rem;">
-                        <a href="/swagger" style="color: var(--accent-gold);">→ Swagger UI</a>
+                        <a href="/docs.html" style="color: var(--accent-gold);">→ Full Endpoint Reference</a>
                     </li>
                     <li style="margin-bottom: 0.5rem;">
-                        <a href="/docs.html" style="color: var(--accent-gold);">→ Documentation</a>
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold);">→ GitHub Repository</a>
                     </li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>💡 Tech Stack</h3>
+                <h3>💡 v2.0 Features</h3>
+                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                    <li>✓ MediatR CQRS Pattern</li>
+                    <li>✓ Strong Validation Framework</li>
+                    <li>✓ Service Layer with Logging</li>
+                    <li>✓ Repository Pattern</li>
+                    <li>✓ 7 Complete Entities</li>
+                    <li>✓ Swagger/OpenAPI</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>�️ Tech Stack</h3>
                 <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
                     <li>✓ ASP.NET Core 9</li>
                     <li>✓ MongoDB 8.2</li>
-                    <li>✓ Repository Pattern</li>
-                    <li>✓ Swagger/OpenAPI</li>
-                    <li>✓ Docker Support</li>
+                    <li>✓ MediatR 12+</li>
+                    <li>✓ Serilog Logging</li>
+                    <li>✓ Docker Ready</li>
+                    <li>✓ OpenAPI/Swagger</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>📊 Database Info</h3>
+                <h3>📊 Platform Info</h3>
                 <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
                     <li><strong>Database:</strong> MongoDbDemo</li>
-                    <li><strong>Collection:</strong> Products</li>
-                    <li><strong>Port:</strong> 27017</li>
-                    <li><strong>Status:</strong> <span style="color: var(--success);">Connected</span></li>
+                    <li><strong>Collections:</strong> 7 entities</li>
+                    <li><strong>API Port:</strong> 5000/5001</li>
+                    <li><strong>Status:</strong> <span style="color: var(--success);">Running</span></li>
+                    <li><strong>Version:</strong> v2.0.0</li>
                 </ul>
             </div>
         </div>

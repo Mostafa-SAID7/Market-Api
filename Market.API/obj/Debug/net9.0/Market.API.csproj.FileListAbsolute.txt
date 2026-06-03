@@ -32,10 +32,8 @@ C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\rjsmcs
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\scopedcss\bundle\Market.API.styles.css
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\wqcuw0474d-{0}-40kcqopugx-40kcqopugx.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\29jksgdkuc-{0}-34urzplnie-34urzplnie.gz
-C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\pfghd7rent-{0}-4s3mvfp13d-4s3mvfp13d.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\xduh955gx0-{0}-nj3v81yq69-nj3v81yq69.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\axxliv2cxh-{0}-ijw9r7muzg-ijw9r7muzg.gz
-C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\eymcqj7uht-{0}-iee3fn4mz0-iee3fn4mz0.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\6r4rhdho3h-{0}-j0goga3pds-j0goga3pds.gz
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\staticwebassets.build.json.cache
@@ -52,3 +50,5 @@ C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\BCrypt
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\MediatR.dll
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\MediatR.Contracts.dll
 C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\bin\Debug\net9.0\dotnet-tools.json
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\pfghd7rent-{0}-m0tk0uarrv-m0tk0uarrv.gz
+C:\Users\Memo\Downloads\New folder\Market-Api\Market.API\obj\Debug\net9.0\compressed\eymcqj7uht-{0}-wb0nn52su4-wb0nn52su4.gz
