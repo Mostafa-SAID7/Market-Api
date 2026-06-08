@@ -32,7 +32,7 @@ jobs:
       run: dotnet publish Market.API/Market.API.csproj --configuration Release --output ./publish
     
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: market-api
         path: ./publish
