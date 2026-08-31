@@ -1,0 +1,20 @@
+api:
+  - any:
+    - 'Market.API/**/*'
+
+core:
+  - any:
+    - 'Market.Core/**/*'
+    - 'Market.Application/**/*'
+    - 'Market.Domain/**/*'
+
+infrastructure:
+  - any:
+    - 'Market.Infrastructure/**/*'
+
+config:
+  - any:
+    - '.github/**/*'
+    - '*.json'
+    - '*.yml'
+    - '*.yaml'
