@@ -5,9 +5,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore"
 
   # Maintain dependencies for NuGet (.NET)
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "build"
