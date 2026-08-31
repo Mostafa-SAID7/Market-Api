@@ -8,7 +8,7 @@ namespace Market.API.Features.Users.Queries
     /// </summary>
     public class GetUserByIdQuery : IRequest<UserResponse?>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -40,10 +40,11 @@ namespace Market.API.Features.Users.Queries
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role,
+                Role = user.Role.ToString(),
                 VendorId = user.VendorId,
                 IsActive = user.IsActive,
                 IsEmailVerified = user.IsEmailVerified,
+                EmailConfirmed = user.EmailConfirmed,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             };

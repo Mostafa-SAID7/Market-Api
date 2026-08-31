@@ -7,7 +7,7 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     public class DeleteOrderCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     internal class DeleteOrderInternalCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

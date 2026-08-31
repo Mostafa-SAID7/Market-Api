@@ -8,7 +8,7 @@ namespace Market.API.Features.Carts.Queries
     /// </summary>
     public class GetCartByUserIdQuery : IRequest<CartResponse?>
     {
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 
     /// <summary>

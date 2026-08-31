@@ -1,46 +1,58 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for category operations
+    /// Category repository implementation for EF Core
     /// </summary>
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CategoryRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public CategoryRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<Category?> GetBySlugAsync(string slug)
+        /// <summary>
+        /// Get category by slug
+        /// </summary>
+        public async Task<Category?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Category>.Filter.Eq(c => c.SlugValue, slug);
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _dbSet
+                .FirstOrDefaultAsync(x => x.Slug == slug && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Category>> GetActiveCategoriesAsync()
+        /// <summary>
+        /// Get all active categories
+        /// </summary>
+        public async Task<IEnumerable<Category>> GetActiveCategoriesAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Category>.Filter.Eq(c => c.IsActive, true);
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .OrderBy(x => x.DisplayOrder)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Category>> GetRootCategoriesAsync()
+        /// <summary>
+        /// Get root categories (without parent)
+        /// </summary>
+        public async Task<IEnumerable<Category>> GetRootCategoriesAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Category>.Filter.Eq(c => c.ParentCategoryId, null);
-            return await _collection.Find(filter).SortBy(c => c.DisplayOrder).ToListAsync();
+            return await _dbSet
+                .Where(x => x.ParentCategoryId == null && !x.IsDeleted)
+                .OrderBy(x => x.DisplayOrder)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Category>> GetSubCategoriesAsync(string parentCategoryId)
+        /// <summary>
+        /// Get subcategories by parent ID
+        /// </summary>
+        public async Task<IEnumerable<Category>> GetSubCategoriesAsync(int parentCategoryId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Category>.Filter.Eq(c => c.ParentCategoryId, parentCategoryId);
-            return await _collection.Find(filter).SortBy(c => c.DisplayOrder).ToListAsync();
+            return await _dbSet
+                .Where(x => x.ParentCategoryId == parentCategoryId && !x.IsDeleted)
+                .OrderBy(x => x.DisplayOrder)
+                .ToListAsync(cancellationToken);
         }
     }
 }

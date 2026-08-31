@@ -7,15 +7,15 @@ namespace Market.API.Features.Orders
     /// </summary>
     public class OrderResponse
     {
-        public string Id { get; set; } = string.Empty;
-        public string CustomerId { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
         public string OrderNumber { get; set; } = string.Empty;
         public List<OrderItemResponse> Items { get; set; } = new();
         public decimal SubTotal { get; set; }
         public decimal ShippingCost { get; set; }
         public decimal Tax { get; set; }
         public decimal TotalPrice { get; set; }
-        public OrderStatus Status { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public string ShippingAddress { get; set; } = string.Empty;
         public string? TrackingNumber { get; set; }
@@ -29,9 +29,9 @@ namespace Market.API.Features.Orders
     /// </summary>
     public class OrderItemResponse
     {
-        public string ProductId { get; set; } = string.Empty;
+        public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
-        public string VendorId { get; set; } = string.Empty;
+        public int VendorId { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public decimal SubTotal { get; set; }

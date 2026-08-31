@@ -36,7 +36,7 @@ namespace Market.API.Features.Users.Queries
                 LastName = u.LastName,
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
-                Role = u.Role,
+                Role = u.Role.ToString(),
                 VendorId = u.VendorId,
                 IsActive = u.IsActive,
                 IsEmailVerified = u.IsEmailVerified,

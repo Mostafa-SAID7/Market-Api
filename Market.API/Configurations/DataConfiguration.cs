@@ -1,16 +1,25 @@
 using Market.API.Data.Seeds;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Market.API.Data.Configurations
 {
     /// <summary>
-    /// Configures data access and database services
+    /// Configures data access and database services for EF Core
     /// </summary>
     public static class DataConfiguration
     {
-        public static IServiceCollection AddDataServices(this IServiceCollection services)
+        public static IServiceCollection AddDataServices(this IServiceCollection services, IConfiguration configuration)
         {
-            // Register MongoDB context
-            services.AddSingleton<MongoDbContext>();
+            // Register EF Core DbContext with SQL Server
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("DefaultConnection connection string not found in configuration.");
+            }
+
+            services.AddDbContext<MarketDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
             // Register data seeder
             services.AddScoped<DataSeeder>();
@@ -22,15 +31,20 @@ namespace Market.API.Data.Configurations
         {
             using (var scope = app.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+                var context = scope.ServiceProvider.GetRequiredService<MarketDbContext>();
                 var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
                 try
                 {
                     logger.LogInformation("Initializing database...");
-                    await context.InitializeAsync();
+                    
+                    // Apply any pending migrations and create database
+                    await context.Database.MigrateAsync();
+                    
+                    // Seed data
                     await seeder.SeedAsync();
+                    
                     logger.LogInformation("Database initialization completed.");
                 }
                 catch (Exception ex)

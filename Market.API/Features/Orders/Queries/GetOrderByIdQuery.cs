@@ -8,7 +8,7 @@ namespace Market.API.Features.Orders.Queries
     /// </summary>
     public class GetOrderByIdQuery : IRequest<OrderResponse?>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace Market.API.Features.Orders.Queries
                 ShippingCost = order.ShippingCost,
                 Tax = order.Tax,
                 TotalPrice = order.TotalPrice,
-                Status = order.Status,
+                OrderStatus = order.OrderStatus,
                 PaymentStatus = order.PaymentStatus,
                 ShippingAddress = order.ShippingAddress,
                 TrackingNumber = order.TrackingNumber,

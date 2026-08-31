@@ -8,7 +8,7 @@ namespace Market.API.Features.Products.Queries
     /// </summary>
     public class GetProductByIdQuery : IRequest<ProductResponse?>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ namespace Market.API.Features.Products.Queries
                 ImageUrl = product.ImageUrl,
                 Quantity = product.Quantity,
                 Sold = product.Sold,
-                Category = product.Category,
+                CategoryId = product.CategoryId,
                 VendorId = product.VendorId,
                 AverageRating = product.AverageRating,
                 ReviewCount = product.ReviewCount

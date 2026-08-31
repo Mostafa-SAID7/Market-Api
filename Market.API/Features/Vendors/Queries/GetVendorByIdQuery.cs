@@ -8,7 +8,7 @@ namespace Market.API.Features.Vendors.Queries
     /// </summary>
     public class GetVendorByIdQuery : IRequest<VendorResponse?>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>

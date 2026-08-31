@@ -26,13 +26,9 @@ global using Market.API.Data.Configurations;
 global using Market.API.Data.Interfaces;
 global using Market.API.Data.Repositories;
 global using Market.API.Data.UnitOfWork;
-global using Market.API.Data.Seeds;
 
 // Middleware
 global using Market.API.Middleware;
-
-// Settings
-global using Market.API.Settings;
 
 // AspNetCore
 global using Microsoft.AspNetCore.Builder;

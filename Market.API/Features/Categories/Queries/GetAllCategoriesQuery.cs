@@ -34,9 +34,13 @@ namespace Market.API.Features.Categories.Queries
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
-                SlugValue = c.SlugValue,
+                ImageUrl = c.ImageUrl,
+                Slug = c.Slug,
+                ParentCategoryId = c.ParentCategoryId,
                 IsActive = c.IsActive,
-                DisplayOrder = c.DisplayOrder
+                DisplayOrder = c.DisplayOrder,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt
             }).ToList();
         }
     }

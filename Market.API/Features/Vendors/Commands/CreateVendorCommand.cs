@@ -8,7 +8,7 @@ namespace Market.API.Features.Vendors.Commands
     /// </summary>
     public class CreateVendorCommand : IRequest<VendorResponse>
     {
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }
         public string StoreName { get; set; } = string.Empty;
         public string StoreDescription { get; set; } = string.Empty;
         public string? Logo { get; set; }

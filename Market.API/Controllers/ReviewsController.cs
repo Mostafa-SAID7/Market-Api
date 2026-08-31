@@ -1,5 +1,6 @@
-using Market.API.Models.Entities;
-using Market.API.Services.Interfaces;
+using MediatR;
+using Market.API.Features.Reviews.Commands;
+using Market.API.Features.Reviews.Queries;
 
 namespace Market.API.Controllers
 {
@@ -7,12 +8,12 @@ namespace Market.API.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
-        private readonly IReviewService _reviewService;
+        private readonly IMediator _mediator;
         private readonly ILogger<ReviewsController> _logger;
 
-        public ReviewsController(IReviewService reviewService, ILogger<ReviewsController> logger)
+        public ReviewsController(IMediator mediator, ILogger<ReviewsController> logger)
         {
-            _reviewService = reviewService;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -22,7 +23,8 @@ namespace Market.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var reviews = await _reviewService.GetAllReviewsAsync();
+            var query = new GetAllReviewsQuery();
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -30,9 +32,10 @@ namespace Market.API.Controllers
         /// Get review by ID
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int id)
         {
-            var review = await _reviewService.GetReviewByIdAsync(id);
+            var query = new GetReviewByIdQuery { Id = id };
+            var review = await _mediator.Send(query);
             if (review == null)
                 return NotFound();
 
@@ -43,9 +46,10 @@ namespace Market.API.Controllers
         /// Get reviews by product
         /// </summary>
         [HttpGet("product/{productId}")]
-        public async Task<IActionResult> GetByProduct(string productId)
+        public async Task<IActionResult> GetByProduct(int productId)
         {
-            var reviews = await _reviewService.GetReviewsByProductAsync(productId);
+            var query = new GetReviewsByProductQuery { ProductId = productId };
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -53,9 +57,10 @@ namespace Market.API.Controllers
         /// Get reviews by vendor
         /// </summary>
         [HttpGet("vendor/{vendorId}")]
-        public async Task<IActionResult> GetByVendor(string vendorId)
+        public async Task<IActionResult> GetByVendor(int vendorId)
         {
-            var reviews = await _reviewService.GetReviewsByVendorAsync(vendorId);
+            var query = new GetReviewsByVendorQuery { VendorId = vendorId };
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -63,9 +68,10 @@ namespace Market.API.Controllers
         /// Get reviews by customer
         /// </summary>
         [HttpGet("customer/{customerId}")]
-        public async Task<IActionResult> GetByCustomer(string customerId)
+        public async Task<IActionResult> GetByCustomer(int customerId)
         {
-            var reviews = await _reviewService.GetReviewsByCustomerAsync(customerId);
+            var query = new GetReviewsByCustomerQuery { CustomerId = customerId };
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -73,9 +79,10 @@ namespace Market.API.Controllers
         /// Get verified reviews for product
         /// </summary>
         [HttpGet("product/{productId}/verified")]
-        public async Task<IActionResult> GetVerified(string productId)
+        public async Task<IActionResult> GetVerified(int productId)
         {
-            var reviews = await _reviewService.GetVerifiedReviewsAsync(productId);
+            var query = new GetVerifiedReviewsQuery { ProductId = productId };
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -83,11 +90,12 @@ namespace Market.API.Controllers
         /// Get reviews by rating
         /// </summary>
         [HttpGet("product/{productId}/rating/{rating}")]
-        public async Task<IActionResult> GetByRating(string productId, int rating)
+        public async Task<IActionResult> GetByRating(int productId, int rating)
         {
             try
             {
-                var reviews = await _reviewService.GetReviewsByRatingAsync(productId, rating);
+                var query = new GetReviewsByRatingQuery { ProductId = productId, Rating = rating };
+                var reviews = await _mediator.Send(query);
                 return Ok(reviews);
             }
             catch (ArgumentException ex)
@@ -101,9 +109,10 @@ namespace Market.API.Controllers
         /// Get top helpful reviews
         /// </summary>
         [HttpGet("product/{productId}/helpful")]
-        public async Task<IActionResult> GetTopHelpful(string productId, [FromQuery] int count = 10)
+        public async Task<IActionResult> GetTopHelpful(int productId, [FromQuery] int count = 10)
         {
-            var reviews = await _reviewService.GetTopHelpfulReviewsAsync(productId, count);
+            var query = new GetTopHelpfulReviewsQuery { ProductId = productId, Count = count };
+            var reviews = await _mediator.Send(query);
             return Ok(reviews);
         }
 
@@ -111,9 +120,10 @@ namespace Market.API.Controllers
         /// Get average rating for product
         /// </summary>
         [HttpGet("product/{productId}/average-rating")]
-        public async Task<IActionResult> GetAverageRating(string productId)
+        public async Task<IActionResult> GetAverageRating(int productId)
         {
-            var average = await _reviewService.GetAverageRatingAsync(productId);
+            var query = new GetAverageRatingQuery { ProductId = productId };
+            var average = await _mediator.Send(query);
             return Ok(new { averageRating = average });
         }
 
@@ -121,9 +131,10 @@ namespace Market.API.Controllers
         /// Get rating distribution for product
         /// </summary>
         [HttpGet("product/{productId}/rating-distribution")]
-        public async Task<IActionResult> GetRatingDistribution(string productId)
+        public async Task<IActionResult> GetRatingDistribution(int productId)
         {
-            var distribution = await _reviewService.GetRatingDistributionAsync(productId);
+            var query = new GetRatingDistributionQuery { ProductId = productId };
+            var distribution = await _mediator.Send(query);
             return Ok(distribution);
         }
 
@@ -131,14 +142,14 @@ namespace Market.API.Controllers
         /// Create a new review
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Review review)
+        public async Task<IActionResult> Create([FromBody] CreateReviewCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var createdReview = await _reviewService.CreateReviewAsync(review);
+                var createdReview = await _mediator.Send(command);
                 return CreatedAtAction(nameof(Get), new { id = createdReview.Id }, createdReview);
             }
             catch (ArgumentException ex)
@@ -157,14 +168,16 @@ namespace Market.API.Controllers
         /// Update an existing review
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Review review)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateReviewCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.Id = id;
+
             try
             {
-                var updatedReview = await _reviewService.UpdateReviewAsync(id, review);
+                var updatedReview = await _mediator.Send(command);
                 return Ok(updatedReview);
             }
             catch (KeyNotFoundException ex)
@@ -183,11 +196,12 @@ namespace Market.API.Controllers
         /// Mark review as helpful
         /// </summary>
         [HttpPut("{id}/helpful")]
-        public async Task<IActionResult> MarkHelpful(string id)
+        public async Task<IActionResult> MarkHelpful(int id)
         {
             try
             {
-                var review = await _reviewService.MarkHelpfulAsync(id);
+                var command = new MarkReviewHelpfulCommand { Id = id };
+                var review = await _mediator.Send(command);
                 return Ok(new { success = true, review });
             }
             catch (KeyNotFoundException ex)
@@ -201,11 +215,12 @@ namespace Market.API.Controllers
         /// Delete a review
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _reviewService.DeleteReviewAsync(id);
+                var command = new DeleteReviewCommand { Id = id };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "Review deleted" });
             }
             catch (KeyNotFoundException ex)

@@ -7,7 +7,7 @@ namespace Market.API.Features.Reviews.Commands
     /// </summary>
     public class UpdateReviewCommand : IRequest<ReviewResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public int RatingValue { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;
@@ -52,7 +52,7 @@ namespace Market.API.Features.Reviews.Commands
     /// </summary>
     internal class UpdateReviewInternalCommand : IRequest<ReviewResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public int RatingValue { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;

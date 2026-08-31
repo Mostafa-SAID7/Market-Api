@@ -1,17 +1,16 @@
 using Market.API.Common;
 using Market.API.Models.Enums;
 using Market.API.Models.ValueObjects;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Market.API.Models.Entities
 {
     /// <summary>
     /// Product entity for e-commerce platform
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class Product : BaseEntity
     {
-        public string VendorId { get; set; } = string.Empty; // Reference to Vendor
+        public int VendorId { get; set; }
+        public int CategoryId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
@@ -21,16 +20,21 @@ namespace Market.API.Models.Entities
         public int Quantity { get; set; }
         public int Sold { get; set; } = 0;
 
-        public string Category { get; set; } = string.Empty;
         public string? SubCategory { get; set; }
-        
-        public List<string> TagNames { get; set; } = new(); // Store tag names as strings for MongoDB
         public string? SKU { get; set; }
 
         public ProductStatus Status { get; set; } = ProductStatus.Active;
         
         public double AverageRating { get; set; } = 0.0;
         public int ReviewCount { get; set; } = 0;
+
+        // Navigation properties
+        public Vendor Vendor { get; set; } = null!;
+        public Category Category { get; set; } = null!;
+        public ICollection<ProductTag> Tags { get; set; } = new List<ProductTag>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
         /// <summary>
         /// Add tags to the product
@@ -40,9 +44,9 @@ namespace Market.API.Models.Entities
             foreach (var name in tagNames)
             {
                 var tag = Tag.Create(name);
-                if (!TagNames.Contains(tag.Name, StringComparer.OrdinalIgnoreCase))
+                if (!Tags.Any(t => t.TagName.Equals(tag.Name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    TagNames.Add(tag.Name);
+                    Tags.Add(new ProductTag { TagName = tag.Name });
                 }
             }
         }
@@ -52,7 +56,11 @@ namespace Market.API.Models.Entities
         /// </summary>
         public void RemoveTag(string tagName)
         {
-            TagNames.RemoveAll(t => t.Equals(tagName, StringComparison.OrdinalIgnoreCase));
+            var tag = Tags.FirstOrDefault(t => t.TagName.Equals(tagName, StringComparison.OrdinalIgnoreCase));
+            if (tag != null)
+            {
+                Tags.Remove(tag);
+            }
         }
 
         /// <summary>

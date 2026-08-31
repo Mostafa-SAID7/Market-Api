@@ -1,6 +1,7 @@
-using Market.API.Models.Entities;
+using MediatR;
 using Market.API.Models.Enums;
-using Market.API.Services.Interfaces;
+using Market.API.Features.Users.Commands;
+using Market.API.Features.Users.Queries;
 
 namespace Market.API.Controllers
 {
@@ -8,12 +9,12 @@ namespace Market.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IMediator _mediator;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, ILogger<UsersController> logger)
+        public UsersController(IMediator mediator, ILogger<UsersController> logger)
         {
-            _userService = userService;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -23,7 +24,8 @@ namespace Market.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var users = await _userService.GetAllUsersAsync();
+            var query = new GetAllUsersQuery();
+            var users = await _mediator.Send(query);
             return Ok(users);
         }
 
@@ -31,9 +33,10 @@ namespace Market.API.Controllers
         /// Get user by ID
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var query = new GetUserByIdQuery { Id = id };
+            var user = await _mediator.Send(query);
             if (user == null)
                 return NotFound();
 
@@ -46,7 +49,8 @@ namespace Market.API.Controllers
         [HttpGet("email/{email}")]
         public async Task<IActionResult> GetByEmail(string email)
         {
-            var user = await _userService.GetUserByEmailAsync(email);
+            var query = new GetUserByEmailQuery { Email = email };
+            var user = await _mediator.Send(query);
             if (user == null)
                 return NotFound();
 
@@ -59,7 +63,8 @@ namespace Market.API.Controllers
         [HttpGet("active/list")]
         public async Task<IActionResult> GetActive()
         {
-            var users = await _userService.GetActiveUsersAsync();
+            var query = new GetActiveUsersQuery();
+            var users = await _mediator.Send(query);
             return Ok(users);
         }
 
@@ -69,7 +74,8 @@ namespace Market.API.Controllers
         [HttpGet("role/{role}")]
         public async Task<IActionResult> GetByRole(UserRole role)
         {
-            var users = await _userService.GetUsersByRoleAsync(role);
+            var query = new GetUsersByRoleQuery { Role = role };
+            var users = await _mediator.Send(query);
             return Ok(users);
         }
 
@@ -79,7 +85,8 @@ namespace Market.API.Controllers
         [HttpGet("vendors/list")]
         public async Task<IActionResult> GetVendors()
         {
-            var vendors = await _userService.GetVendorsAsync();
+            var query = new GetVendorsQuery();
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -87,14 +94,14 @@ namespace Market.API.Controllers
         /// Create a new user
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user)
+        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var createdUser = await _userService.CreateUserAsync(user);
+                var createdUser = await _mediator.Send(command);
                 return CreatedAtAction(nameof(Get), new { id = createdUser.Id }, createdUser);
             }
             catch (ArgumentException ex)
@@ -113,14 +120,16 @@ namespace Market.API.Controllers
         /// Update an existing user
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] User user)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.Id = id;
+
             try
             {
-                var updatedUser = await _userService.UpdateUserAsync(id, user);
+                var updatedUser = await _mediator.Send(command);
                 return Ok(updatedUser);
             }
             catch (KeyNotFoundException ex)
@@ -139,11 +148,12 @@ namespace Market.API.Controllers
         /// Delete a user
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _userService.DeleteUserAsync(id);
+                var command = new DeleteUserCommand { Id = id };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "User deleted" });
             }
             catch (KeyNotFoundException ex)
@@ -157,11 +167,12 @@ namespace Market.API.Controllers
         /// Verify user email
         /// </summary>
         [HttpPut("{id}/verify-email")]
-        public async Task<IActionResult> VerifyEmail(string id)
+        public async Task<IActionResult> VerifyEmail(int id)
         {
             try
             {
-                var user = await _userService.VerifyEmailAsync(id);
+                var command = new VerifyEmailCommand { Id = id };
+                var user = await _mediator.Send(command);
                 return Ok(new { success = true, user });
             }
             catch (KeyNotFoundException ex)
@@ -175,12 +186,12 @@ namespace Market.API.Controllers
         /// Set user active status
         /// </summary>
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> SetActiveStatus(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> SetActiveStatus(int id, [FromBody] SetUserActiveStatusCommand command)
         {
             try
             {
-                bool isActive = request.isActive;
-                var user = await _userService.SetUserActiveStatusAsync(id, isActive);
+                command.Id = id;
+                var user = await _mediator.Send(command);
                 return Ok(new { success = true, user });
             }
             catch (KeyNotFoundException ex)

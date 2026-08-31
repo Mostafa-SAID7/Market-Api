@@ -1,64 +1,65 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
 using Market.API.Models.Enums;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for user operations
+    /// User repository implementation for EF Core
     /// </summary>
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public UserRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<User?> GetByEmailAsync(string email)
+        /// <summary>
+        /// Get user by email
+        /// </summary>
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _dbSet
+                .FirstOrDefaultAsync(x => x.Email == email && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<User>> GetActiveUsersAsync()
+        /// <summary>
+        /// Get all active users
+        /// </summary>
+        public async Task<IEnumerable<User>> GetActiveUsersAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.And(
-                Builders<User>.Filter.Eq(u => u.IsActive, true),
-                Builders<User>.Filter.Eq(u => u.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role)
+        /// <summary>
+        /// Get users by role
+        /// </summary>
+        public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.And(
-                Builders<User>.Filter.Eq(u => u.Role, role),
-                Builders<User>.Filter.Eq(u => u.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.Role == role && !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<bool> EmailExistsAsync(string email)
+        /// <summary>
+        /// Check if email exists
+        /// </summary>
+        public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
-            var count = await _collection.CountDocumentsAsync(filter);
-            return count > 0;
+            return await _dbSet
+                .AnyAsync(x => x.Email == email && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<User>> GetVendorsAsync()
+        /// <summary>
+        /// Get users with vendor role
+        /// </summary>
+        public async Task<IEnumerable<User>> GetVendorsAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.And(
-                Builders<User>.Filter.Eq(u => u.Role, UserRole.Vendor),
-                Builders<User>.Filter.Eq(u => u.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.Role == UserRole.Vendor && !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
     }
 }

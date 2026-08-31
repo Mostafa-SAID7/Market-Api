@@ -1,17 +1,15 @@
 using Market.API.Data.Interfaces;
 using Market.API.Data.Repositories;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
 
 namespace Market.API.Data.UnitOfWork
 {
     /// <summary>
-    /// Unit of Work implementation - coordinates all repositories
+    /// Unit of Work implementation - thin wrapper around EF Core DbContext
+    /// Provides repository-based access to data with lazy loading
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MongoDbContext _context;
-        private readonly IOptions<MongoDbSettings> _settings;
+        private readonly MarketDbContext _context;
         private IProductRepository? _productRepository;
         private ICategoryRepository? _categoryRepository;
         private IUserRepository? _userRepository;
@@ -19,152 +17,74 @@ namespace Market.API.Data.UnitOfWork
         private IOrderRepository? _orderRepository;
         private ICartRepository? _cartRepository;
         private IReviewRepository? _reviewRepository;
-        private Dictionary<Type, object>? _repositories;
 
-        public UnitOfWork(MongoDbContext context, IOptions<MongoDbSettings> settings)
+        public UnitOfWork(MarketDbContext context)
         {
             _context = context;
-            _settings = settings;
-            _repositories = new Dictionary<Type, object>();
         }
 
         /// <summary>
-        /// Get product repository (lazy-loaded)
+        /// Product repository (lazy-loaded)
         /// </summary>
         public IProductRepository Products
         {
-            get
-            {
-                _productRepository ??= new ProductRepository(_settings);
-                return _productRepository;
-            }
+            get { return _productRepository ??= new ProductRepository(_context); }
         }
 
         /// <summary>
-        /// Get category repository (lazy-loaded)
+        /// Category repository (lazy-loaded)
         /// </summary>
         public ICategoryRepository Categories
         {
-            get
-            {
-                _categoryRepository ??= new CategoryRepository(_settings);
-                return _categoryRepository;
-            }
+            get { return _categoryRepository ??= new CategoryRepository(_context); }
         }
 
         /// <summary>
-        /// Get user repository (lazy-loaded)
+        /// User repository (lazy-loaded)
         /// </summary>
         public IUserRepository Users
         {
-            get
-            {
-                _userRepository ??= new UserRepository(_settings);
-                return _userRepository;
-            }
+            get { return _userRepository ??= new UserRepository(_context); }
         }
 
         /// <summary>
-        /// Get vendor repository (lazy-loaded)
+        /// Vendor repository (lazy-loaded)
         /// </summary>
         public IVendorRepository Vendors
         {
-            get
-            {
-                _vendorRepository ??= new VendorRepository(_settings);
-                return _vendorRepository;
-            }
+            get { return _vendorRepository ??= new VendorRepository(_context); }
         }
 
         /// <summary>
-        /// Get order repository (lazy-loaded)
+        /// Order repository (lazy-loaded)
         /// </summary>
         public IOrderRepository Orders
         {
-            get
-            {
-                _orderRepository ??= new OrderRepository(_settings);
-                return _orderRepository;
-            }
+            get { return _orderRepository ??= new OrderRepository(_context); }
         }
 
         /// <summary>
-        /// Get cart repository (lazy-loaded)
+        /// Cart repository (lazy-loaded)
         /// </summary>
         public ICartRepository Carts
         {
-            get
-            {
-                _cartRepository ??= new CartRepository(_settings);
-                return _cartRepository;
-            }
+            get { return _cartRepository ??= new CartRepository(_context); }
         }
 
         /// <summary>
-        /// Get review repository (lazy-loaded)
+        /// Review repository (lazy-loaded)
         /// </summary>
         public IReviewRepository Reviews
         {
-            get
-            {
-                _reviewRepository ??= new ReviewRepository(_settings);
-                return _reviewRepository;
-            }
+            get { return _reviewRepository ??= new ReviewRepository(_context); }
         }
 
         /// <summary>
-        /// Get generic repository (lazy-loaded with caching)
+        /// Save all changes to the database asynchronously
         /// </summary>
-        public IRepository<T> Repository<T>() where T : class
+        public async Task SaveAsync(CancellationToken cancellationToken = default)
         {
-            var type = typeof(T);
-            if (_repositories!.ContainsKey(type))
-                return (IRepository<T>)_repositories[type];
-
-            var repositoryType = typeof(Repository<>).MakeGenericType(type);
-            var repository = (IRepository<T>)Activator.CreateInstance(repositoryType, _settings)!;
-            _repositories.Add(type, repository);
-            return repository;
-        }
-
-        /// <summary>
-        /// Save changes (MongoDB doesn't have transactions by default,
-        /// but this is here for API compatibility and future enhancements)
-        /// </summary>
-        public async Task<int> SaveAsync()
-        {
-            // MongoDB doesn't require explicit saves
-            // This is here for compatibility with EF Core patterns
-            await Task.CompletedTask;
-            return 0;
-        }
-
-        /// <summary>
-        /// Begin transaction (for future MongoDB transaction support)
-        /// </summary>
-        public async Task BeginTransactionAsync()
-        {
-            // MongoDB transactions require replica set (not available in MongoDB Atlas free tier)
-            // Placeholder for future implementation
-            await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Commit transaction
-        /// </summary>
-        public async Task CommitAsync()
-        {
-            // Placeholder for future implementation
-            await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Rollback transaction
-        /// </summary>
-        public async Task RollbackAsync()
-        {
-            // Placeholder for future implementation
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -172,7 +92,7 @@ namespace Market.API.Data.UnitOfWork
         /// </summary>
         public void Dispose()
         {
-            _repositories?.Clear();
+            _context?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

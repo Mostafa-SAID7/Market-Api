@@ -7,7 +7,7 @@ namespace Market.API.Features.Vendors.Commands
     /// </summary>
     public class UpdateVendorCommand : IRequest<VendorResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string StoreName { get; set; } = string.Empty;
         public string StoreDescription { get; set; } = string.Empty;
         public string? Logo { get; set; }
@@ -62,7 +62,7 @@ namespace Market.API.Features.Vendors.Commands
     /// </summary>
     internal class UpdateVendorInternalCommand : IRequest<VendorResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string StoreName { get; set; } = string.Empty;
         public string StoreDescription { get; set; } = string.Empty;
         public string? Logo { get; set; }

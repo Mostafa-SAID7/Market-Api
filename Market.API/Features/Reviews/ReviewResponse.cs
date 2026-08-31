@@ -5,10 +5,10 @@ namespace Market.API.Features.Reviews
     /// </summary>
     public class ReviewResponse
     {
-        public string Id { get; set; } = string.Empty;
-        public string ProductId { get; set; } = string.Empty;
-        public string VendorId { get; set; } = string.Empty;
-        public string CustomerId { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public int VendorId { get; set; }
+        public int CustomerId { get; set; }
         public int RatingValue { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;

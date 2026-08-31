@@ -7,7 +7,7 @@ namespace Market.API.Features.Vendors.Commands
     /// </summary>
     public class DeleteVendorCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Vendors.Commands
     /// </summary>
     internal class DeleteVendorInternalCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

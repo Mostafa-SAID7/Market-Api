@@ -8,7 +8,7 @@ namespace Market.API.Features.Products.Queries
     /// </summary>
     public class GetProductsByCategoryQuery : IRequest<List<ProductResponse>>
     {
-        public string Category { get; set; } = string.Empty;
+        public int CategoryId { get; set; }
     }
 
     /// <summary>
@@ -27,11 +27,11 @@ namespace Market.API.Features.Products.Queries
 
         public async Task<List<ProductResponse>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handling GetProductsByCategoryQuery for category: {Category}", request.Category);
+            _logger.LogInformation("Handling GetProductsByCategoryQuery for category: {CategoryId}", request.CategoryId);
 
             var products = await _unitOfWork.Products.GetAllAsync();
             return products
-                .Where(p => p.Category == request.Category)
+                .Where(p => p.CategoryId == request.CategoryId)
                 .Select(p => new ProductResponse
                 {
                     Id = p.Id,
@@ -42,7 +42,7 @@ namespace Market.API.Features.Products.Queries
                     ImageUrl = p.ImageUrl,
                     Quantity = p.Quantity,
                     Sold = p.Sold,
-                    Category = p.Category,
+                    CategoryId = p.CategoryId,
                     VendorId = p.VendorId,
                     AverageRating = p.AverageRating,
                     ReviewCount = p.ReviewCount

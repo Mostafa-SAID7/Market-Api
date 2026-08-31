@@ -1,72 +1,68 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for vendor operations
+    /// Vendor repository implementation for EF Core
     /// </summary>
     public class VendorRepository : Repository<Vendor>, IVendorRepository
     {
-        public VendorRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public VendorRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<Vendor?> GetByUserIdAsync(string userId)
+        /// <summary>
+        /// Get vendor by user ID
+        /// </summary>
+        public async Task<Vendor?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Vendor>.Filter.Eq(v => v.UserId, userId);
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _dbSet
+                .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Vendor>> GetApprovedVendorsAsync()
+        /// <summary>
+        /// Get approved vendors
+        /// </summary>
+        public async Task<IEnumerable<Vendor>> GetApprovedVendorsAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Vendor>.Filter.And(
-                Builders<Vendor>.Filter.Eq(v => v.IsApproved, true),
-                Builders<Vendor>.Filter.Eq(v => v.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.IsApproved && x.IsActive && !x.IsDeleted)
+                .OrderByDescending(x => x.AverageRating)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Vendor>> GetActiveVendorsAsync()
+        /// <summary>
+        /// Get active vendors
+        /// </summary>
+        public async Task<IEnumerable<Vendor>> GetActiveVendorsAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Vendor>.Filter.And(
-                Builders<Vendor>.Filter.Eq(v => v.IsActive, true),
-                Builders<Vendor>.Filter.Eq(v => v.IsApproved, true),
-                Builders<Vendor>.Filter.Eq(v => v.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => x.IsActive && !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Vendor>> GetPendingVendorsAsync()
+        /// <summary>
+        /// Get pending vendors (not approved)
+        /// </summary>
+        public async Task<IEnumerable<Vendor>> GetPendingVendorsAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Vendor>.Filter.And(
-                Builders<Vendor>.Filter.Eq(v => v.IsApproved, false),
-                Builders<Vendor>.Filter.Eq(v => v.IsDeleted, false)
-            );
-            return await _collection.Find(filter).ToListAsync();
+            return await _dbSet
+                .Where(x => !x.IsApproved && !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Vendor>> GetTopRatedVendorsAsync(int count = 10)
+        /// <summary>
+        /// Get top rated vendors
+        /// </summary>
+        public async Task<IEnumerable<Vendor>> GetTopRatedVendorsAsync(int count = 10, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Vendor>.Filter.And(
-                Builders<Vendor>.Filter.Eq(v => v.IsActive, true),
-                Builders<Vendor>.Filter.Eq(v => v.IsApproved, true),
-                Builders<Vendor>.Filter.Eq(v => v.IsDeleted, false)
-            );
-
-            return await _collection
-                .Find(filter)
-                .SortByDescending(v => v.AverageRating)
-                .Limit(count)
-                .ToListAsync();
+            return await _dbSet
+                .Where(x => x.IsApproved && x.IsActive && !x.IsDeleted)
+                .OrderByDescending(x => x.AverageRating)
+                .Take(count)
+                .ToListAsync(cancellationToken);
         }
     }
 }

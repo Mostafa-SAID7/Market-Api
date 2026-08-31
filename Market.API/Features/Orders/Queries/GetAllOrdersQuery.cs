@@ -47,7 +47,7 @@ namespace Market.API.Features.Orders.Queries
                 ShippingCost = o.ShippingCost,
                 Tax = o.Tax,
                 TotalPrice = o.TotalPrice,
-                Status = o.Status,
+                OrderStatus = o.OrderStatus,
                 PaymentStatus = o.PaymentStatus,
                 ShippingAddress = o.ShippingAddress,
                 TrackingNumber = o.TrackingNumber,

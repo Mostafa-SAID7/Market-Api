@@ -7,7 +7,7 @@ namespace Market.API.Features.Categories.Commands
     /// </summary>
     public class DeleteCategoryCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Categories.Commands
     /// </summary>
     internal class DeleteCategoryInternalCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

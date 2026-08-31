@@ -1,3 +1,4 @@
+using Market.API.Data.Repositories;
 using Market.API.Models.Entities;
 
 namespace Market.API.Data.Interfaces
@@ -10,11 +11,11 @@ namespace Market.API.Data.Interfaces
         /// <summary>
         /// Get cart by user ID
         /// </summary>
-        Task<Cart?> GetByUserIdAsync(string userId);
+        Task<Cart?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Check if cart exists for user
         /// </summary>
-        Task<bool> CartExistsAsync(string userId);
+        Task<bool> CartExistsAsync(int userId, CancellationToken cancellationToken = default);
     }
 }

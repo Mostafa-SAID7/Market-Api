@@ -1,15 +1,14 @@
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace Market.API.Common
 {
     /// <summary>
-    /// Base entity with soft delete support and GUID as primary key
+    /// Base entity with soft delete support and int identity primary key
     /// </summary>
     public abstract class BaseEntity
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; } = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
+        /// <summary>
+        /// Primary key - SQL Server IDENTITY
+        /// </summary>
+        public int Id { get; set; }
 
         /// <summary>
         /// Soft delete flag - entity is not physically deleted
@@ -17,27 +16,27 @@ namespace Market.API.Common
         public bool IsDeleted { get; set; } = false;
 
         /// <summary>
-        /// Timestamp when entity was created
+        /// Timestamp when entity was created (UTC)
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Timestamp when entity was last updated
+        /// Timestamp when entity was last updated (UTC)
         /// </summary>
         public DateTime? UpdatedAt { get; set; }
 
         /// <summary>
-        /// Timestamp when entity was soft deleted
+        /// Timestamp when entity was soft deleted (UTC)
         /// </summary>
         public DateTime? DeletedAt { get; set; }
 
         /// <summary>
-        /// User who created the entity
+        /// User ID who created the entity
         /// </summary>
         public string? CreatedBy { get; set; }
 
         /// <summary>
-        /// User who last updated the entity
+        /// User ID who last updated the entity
         /// </summary>
         public string? UpdatedBy { get; set; }
 

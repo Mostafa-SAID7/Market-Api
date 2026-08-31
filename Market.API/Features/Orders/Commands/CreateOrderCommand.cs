@@ -9,7 +9,7 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     public class CreateOrderCommand : IRequest<OrderResponse>
     {
-        public string CustomerId { get; set; } = string.Empty;
+        public int CustomerId { get; set; }
         public List<OrderItemInput> Items { get; set; } = new();
         public decimal SubTotal { get; set; }
         public decimal ShippingCost { get; set; }
@@ -23,9 +23,9 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     public class OrderItemInput
     {
-        public string ProductId { get; set; } = string.Empty;
+        public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
-        public string VendorId { get; set; } = string.Empty;
+        public int VendorId { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
@@ -65,7 +65,7 @@ namespace Market.API.Features.Orders.Commands
                 Tax = request.Tax,
                 ShippingAddress = request.ShippingAddress,
                 Notes = request.Notes,
-                Status = OrderStatus.Pending,
+                OrderStatus = OrderStatus.Pending,
                 PaymentStatus = PaymentStatus.Pending
             };
 

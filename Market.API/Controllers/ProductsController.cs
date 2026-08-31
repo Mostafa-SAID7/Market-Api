@@ -1,5 +1,6 @@
-﻿using Market.API.Models.Entities;
-using Market.API.Services.Interfaces;
+﻿using MediatR;
+using Market.API.Features.Products.Commands;
+using Market.API.Features.Products.Queries;
 
 namespace Market.API.Controllers
 {
@@ -7,48 +8,51 @@ namespace Market.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IMediator _mediator;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductService productService, ILogger<ProductsController> logger)
+        public ProductsController(IMediator mediator, ILogger<ProductsController> logger)
         {
-            _productService = productService;
+            _mediator = mediator;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var query = new GetAllProductsQuery();
+            var products = await _mediator.Send(query);
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
+            var query = new GetProductByIdQuery { Id = id };
+            var product = await _mediator.Send(query);
             if (product == null)
                 return NotFound();
 
             return Ok(product);
         }
 
-        [HttpGet("GetByPriceRange/{minPrice}/{maxPrice}")]
-        public async Task<IActionResult> GetByPriceRange(decimal minPrice, decimal maxPrice)
-        {
-            var products = await _productService.GetProductsByPriceRangeAsync(minPrice, maxPrice);
-            return Ok(products);
-        }
+        // [HttpGet("GetByPriceRange/{minPrice}/{maxPrice}")]
+        // public async Task<IActionResult> GetByPriceRange(decimal minPrice, decimal maxPrice)
+        // {
+        //     var query = new GetProductsByPriceRangeQuery { MinPrice = minPrice, MaxPrice = maxPrice };
+        //     var products = await _mediator.Send(query);
+        //     return Ok(products);
+        // }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(CreateProductCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var createdProduct = await _productService.CreateProductAsync(product);
+                var createdProduct = await _mediator.Send(command);
                 return CreatedAtAction(nameof(Get), new { id = createdProduct.Id }, createdProduct);
             }
             catch (ArgumentException ex)
@@ -59,14 +63,16 @@ namespace Market.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, Product product)
+        public async Task<IActionResult> Update(int id, UpdateProductCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.Id = id;
+
             try
             {
-                var updatedProduct = await _productService.UpdateProductAsync(id, product);
+                var updatedProduct = await _mediator.Send(command);
                 return Ok(updatedProduct);
             }
             catch (KeyNotFoundException ex)
@@ -77,11 +83,12 @@ namespace Market.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _productService.DeleteProductAsync(id);
+                var command = new DeleteProductCommand { Id = id };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "Product deleted" });
             }
             catch (KeyNotFoundException ex)

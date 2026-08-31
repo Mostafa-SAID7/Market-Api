@@ -8,7 +8,7 @@ namespace Market.API.Features.Reviews.Queries
     /// </summary>
     public class GetReviewsByProductIdQuery : IRequest<List<ReviewResponse>>
     {
-        public string ProductId { get; set; } = string.Empty;
+        public int ProductId { get; set; }
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace Market.API.Features.Reviews.Queries
                     RatingValue = r.RatingValue,
                     Title = r.Title,
                     Comment = r.Comment,
-                    ImageUrls = r.ImageUrls,
+                    ImageUrls = r.Images.Select(i => i.ImageUrl).ToList(),
                     HelpfulCount = r.HelpfulCount,
                     IsVerifiedPurchase = r.IsVerifiedPurchase,
                     CreatedAt = r.CreatedAt,

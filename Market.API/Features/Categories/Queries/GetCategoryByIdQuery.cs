@@ -8,7 +8,7 @@ namespace Market.API.Features.Categories.Queries
     /// </summary>
     public class GetCategoryByIdQuery : IRequest<CategoryResponse?>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,9 +38,13 @@ namespace Market.API.Features.Categories.Queries
                 Id = category.Id,
                 Name = category.Name,
                 Description = category.Description,
-                SlugValue = category.SlugValue,
+                ImageUrl = category.ImageUrl,
+                Slug = category.Slug,
+                ParentCategoryId = category.ParentCategoryId,
                 IsActive = category.IsActive,
-                DisplayOrder = category.DisplayOrder
+                DisplayOrder = category.DisplayOrder,
+                CreatedAt = category.CreatedAt,
+                UpdatedAt = category.UpdatedAt
             };
         }
     }

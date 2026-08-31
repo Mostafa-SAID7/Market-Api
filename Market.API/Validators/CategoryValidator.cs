@@ -28,10 +28,10 @@ namespace Market.API.Validators
                 result.AddError(nameof(Category.Description), "Category description cannot exceed 1000 characters");
 
             // Slug validation
-            if (string.IsNullOrWhiteSpace(entity.SlugValue))
-                result.AddError(nameof(Category.SlugValue), "Category slug is required");
-            else if (!IsValidSlug(entity.SlugValue))
-                result.AddError(nameof(Category.SlugValue), "Category slug contains invalid characters");
+            if (string.IsNullOrWhiteSpace(entity.Slug))
+                result.AddError(nameof(Category.Slug), "Category slug is required");
+            else if (!IsValidSlug(entity.Slug))
+                result.AddError(nameof(Category.Slug), "Category slug contains invalid characters");
 
             // DisplayOrder validation
             if (entity.DisplayOrder < 0)

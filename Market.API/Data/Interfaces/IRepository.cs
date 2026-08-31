@@ -4,31 +4,36 @@ namespace Market.API.Data.Interfaces
     /// Generic repository interface for CRUD operations
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : BaseEntity
     {
         /// <summary>
-        /// Get all entities (including soft-deleted if needed)
+        /// Get all non-deleted entities
         /// </summary>
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get entity by ID
         /// </summary>
-        Task<T?> GetByIdAsync(string id);
+        Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create new entity
         /// </summary>
-        Task CreateAsync(T entity);
+        Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Update existing entity
+        /// Update entity
         /// </summary>
-        Task UpdateAsync(string id, T entity);
+        Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Delete entity (soft delete supported via BaseEntity)
+        /// Soft delete entity
         /// </summary>
-        Task DeleteAsync(string id);
+        Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Check if entity exists
+        /// </summary>
+        Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default);
     }
 }

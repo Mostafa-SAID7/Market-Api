@@ -28,12 +28,12 @@ namespace Market.API.Validators
                 result.AddError(nameof(Product.Description), "Product description cannot exceed 5000 characters");
 
             // VendorId validation
-            if (string.IsNullOrWhiteSpace(entity.VendorId))
+            if (entity.VendorId <= 0)
                 result.AddError(nameof(Product.VendorId), "Vendor ID is required");
 
             // Category validation
-            if (string.IsNullOrWhiteSpace(entity.Category))
-                result.AddError(nameof(Product.Category), "Category is required");
+            if (entity.CategoryId <= 0)
+                result.AddError(nameof(Product.CategoryId), "Category is required");
 
             // Price validation
             if (entity.Price <= 0)

@@ -7,7 +7,7 @@ namespace Market.API.Features.Users.Commands
     /// </summary>
     public class UpdateUserCommand : IRequest<UserResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -52,7 +52,7 @@ namespace Market.API.Features.Users.Commands
     /// </summary>
     internal class UpdateUserInternalCommand : IRequest<UserResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

@@ -1,77 +1,82 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
 using Market.API.Models.Enums;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for order operations
+    /// Order repository implementation for EF Core
     /// </summary>
     public class OrderRepository : Repository<Order>, IOrderRepository
     {
-        public OrderRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public OrderRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<Order?> GetByOrderNumberAsync(string orderNumber)
+        /// <summary>
+        /// Get order by order number
+        /// </summary>
+        public async Task<Order?> GetByOrderNumberAsync(string orderNumber, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.Eq(o => o.OrderNumber, orderNumber);
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _dbSet
+                .FirstOrDefaultAsync(x => x.OrderNumber == orderNumber && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Order>> GetByCustomerIdAsync(string customerId)
+        /// <summary>
+        /// Get orders by customer ID
+        /// </summary>
+        public async Task<IEnumerable<Order>> GetByCustomerIdAsync(int customerId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.And(
-                Builders<Order>.Filter.Eq(o => o.CustomerId, customerId),
-                Builders<Order>.Filter.Eq(o => o.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(o => o.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.CustomerId == customerId && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status)
+        /// <summary>
+        /// Get orders by status
+        /// </summary>
+        public async Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.And(
-                Builders<Order>.Filter.Eq(o => o.Status, status),
-                Builders<Order>.Filter.Eq(o => o.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(o => o.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.OrderStatus == status && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Order>> GetByPaymentStatusAsync(PaymentStatus paymentStatus)
+        /// <summary>
+        /// Get orders by payment status
+        /// </summary>
+        public async Task<IEnumerable<Order>> GetByPaymentStatusAsync(PaymentStatus paymentStatus, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.And(
-                Builders<Order>.Filter.Eq(o => o.PaymentStatus, paymentStatus),
-                Builders<Order>.Filter.Eq(o => o.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(o => o.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.PaymentStatus == paymentStatus && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Order>> GetPendingOrdersAsync()
+        /// <summary>
+        /// Get pending orders
+        /// </summary>
+        public async Task<IEnumerable<Order>> GetPendingOrdersAsync(CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.And(
-                Builders<Order>.Filter.Eq(o => o.Status, OrderStatus.Pending),
-                Builders<Order>.Filter.Eq(o => o.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(o => o.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.OrderStatus == OrderStatus.Pending && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Order>> GetRecentOrdersAsync(int count = 50)
+        /// <summary>
+        /// Get recent orders
+        /// </summary>
+        public async Task<IEnumerable<Order>> GetRecentOrdersAsync(int count = 50, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Order>.Filter.Eq(o => o.IsDeleted, false);
-            return await _collection
-                .Find(filter)
-                .SortByDescending(o => o.CreatedAt)
-                .Limit(count)
-                .ToListAsync();
+            return await _dbSet
+                .Where(x => !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(count)
+                .ToListAsync(cancellationToken);
         }
     }
 }

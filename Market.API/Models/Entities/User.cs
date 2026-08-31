@@ -1,13 +1,11 @@
 ﻿using Market.API.Common;
 using Market.API.Models.Enums;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Market.API.Models.Entities
 {
     /// <summary>
     /// User entity for the e-commerce platform
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class User : BaseEntity
     {
         public string Email { get; set; } = string.Empty;
@@ -18,11 +16,19 @@ namespace Market.API.Models.Entities
         
         public UserRole Role { get; set; }
         
-        public string? VendorId { get; set; } // If user is a vendor
         public bool IsActive { get; set; } = true;
         public bool IsEmailVerified { get; set; } = false;
+        public bool EmailConfirmed { get; set; } = false;
+        
+        public int? VendorId { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
+
+        // Navigation properties
+        public Vendor? Vendor { get; set; }
+        public Cart? Cart { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }
 

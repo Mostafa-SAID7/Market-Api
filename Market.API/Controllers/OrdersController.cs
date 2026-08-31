@@ -1,6 +1,7 @@
-using Market.API.Models.Entities;
+using MediatR;
 using Market.API.Models.Enums;
-using Market.API.Services.Interfaces;
+using Market.API.Features.Orders.Commands;
+using Market.API.Features.Orders.Queries;
 
 namespace Market.API.Controllers
 {
@@ -8,12 +9,12 @@ namespace Market.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly IOrderService _orderService;
+        private readonly IMediator _mediator;
         private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(IOrderService orderService, ILogger<OrdersController> logger)
+        public OrdersController(IMediator mediator, ILogger<OrdersController> logger)
         {
-            _orderService = orderService;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -23,7 +24,8 @@ namespace Market.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var query = new GetAllOrdersQuery();
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -31,9 +33,10 @@ namespace Market.API.Controllers
         /// Get order by ID
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
+            var query = new GetOrderByIdQuery { Id = id };
+            var order = await _mediator.Send(query);
             if (order == null)
                 return NotFound();
 
@@ -46,7 +49,8 @@ namespace Market.API.Controllers
         [HttpGet("number/{orderNumber}")]
         public async Task<IActionResult> GetByOrderNumber(string orderNumber)
         {
-            var order = await _orderService.GetOrderByNumberAsync(orderNumber);
+            var query = new GetOrderByNumberQuery { OrderNumber = orderNumber };
+            var order = await _mediator.Send(query);
             if (order == null)
                 return NotFound();
 
@@ -57,9 +61,10 @@ namespace Market.API.Controllers
         /// Get orders by customer ID
         /// </summary>
         [HttpGet("customer/{customerId}")]
-        public async Task<IActionResult> GetByCustomer(string customerId)
+        public async Task<IActionResult> GetByCustomer(int customerId)
         {
-            var orders = await _orderService.GetOrdersByCustomerAsync(customerId);
+            var query = new GetOrdersByCustomerQuery { CustomerId = customerId };
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -69,7 +74,8 @@ namespace Market.API.Controllers
         [HttpGet("status/{status}")]
         public async Task<IActionResult> GetByStatus(OrderStatus status)
         {
-            var orders = await _orderService.GetOrdersByStatusAsync(status);
+            var query = new GetOrdersByStatusQuery { Status = status };
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -79,7 +85,8 @@ namespace Market.API.Controllers
         [HttpGet("payment-status/{paymentStatus}")]
         public async Task<IActionResult> GetByPaymentStatus(PaymentStatus paymentStatus)
         {
-            var orders = await _orderService.GetOrdersByPaymentStatusAsync(paymentStatus);
+            var query = new GetOrdersByPaymentStatusQuery { PaymentStatus = paymentStatus };
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -89,7 +96,8 @@ namespace Market.API.Controllers
         [HttpGet("pending/list")]
         public async Task<IActionResult> GetPending()
         {
-            var orders = await _orderService.GetPendingOrdersAsync();
+            var query = new GetPendingOrdersQuery();
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -99,7 +107,8 @@ namespace Market.API.Controllers
         [HttpGet("recent/list")]
         public async Task<IActionResult> GetRecent([FromQuery] int count = 50)
         {
-            var orders = await _orderService.GetRecentOrdersAsync(count);
+            var query = new GetRecentOrdersQuery { Count = count };
+            var orders = await _mediator.Send(query);
             return Ok(orders);
         }
 
@@ -107,14 +116,14 @@ namespace Market.API.Controllers
         /// Create a new order
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Order order)
+        public async Task<IActionResult> Create([FromBody] CreateOrderCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var createdOrder = await _orderService.CreateOrderAsync(order);
+                var createdOrder = await _mediator.Send(command);
                 return CreatedAtAction(nameof(Get), new { id = createdOrder.Id }, createdOrder);
             }
             catch (ArgumentException ex)
@@ -133,14 +142,16 @@ namespace Market.API.Controllers
         /// Update an existing order
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateOrderCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.Id = id;
+
             try
             {
-                var updatedOrder = await _orderService.UpdateOrderAsync(id, order);
+                var updatedOrder = await _mediator.Send(command);
                 return Ok(updatedOrder);
             }
             catch (KeyNotFoundException ex)
@@ -154,11 +165,12 @@ namespace Market.API.Controllers
         /// Cancel an order
         /// </summary>
         [HttpPut("{id}/cancel")]
-        public async Task<IActionResult> Cancel(string id)
+        public async Task<IActionResult> Cancel(int id)
         {
             try
             {
-                var order = await _orderService.CancelOrderAsync(id);
+                var command = new CancelOrderCommand { Id = id };
+                var order = await _mediator.Send(command);
                 return Ok(new { success = true, order });
             }
             catch (KeyNotFoundException ex)
@@ -177,12 +189,12 @@ namespace Market.API.Controllers
         /// Update order status
         /// </summary>
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusCommand command)
         {
             try
             {
-                OrderStatus status = request.status;
-                var order = await _orderService.UpdateOrderStatusAsync(id, status);
+                command.Id = id;
+                var order = await _mediator.Send(command);
                 return Ok(new { success = true, order });
             }
             catch (KeyNotFoundException ex)
@@ -196,12 +208,12 @@ namespace Market.API.Controllers
         /// Update payment status
         /// </summary>
         [HttpPut("{id}/payment-status")]
-        public async Task<IActionResult> UpdatePaymentStatus(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> UpdatePaymentStatus(int id, [FromBody] UpdateOrderPaymentStatusCommand command)
         {
             try
             {
-                PaymentStatus paymentStatus = request.paymentStatus;
-                var order = await _orderService.UpdatePaymentStatusAsync(id, paymentStatus);
+                command.Id = id;
+                var order = await _mediator.Send(command);
                 return Ok(new { success = true, order });
             }
             catch (KeyNotFoundException ex)
@@ -215,12 +227,12 @@ namespace Market.API.Controllers
         /// Update tracking number
         /// </summary>
         [HttpPut("{id}/tracking")]
-        public async Task<IActionResult> UpdateTracking(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> UpdateTracking(int id, [FromBody] UpdateOrderTrackingCommand command)
         {
             try
             {
-                string trackingNumber = request.trackingNumber;
-                var order = await _orderService.UpdateTrackingNumberAsync(id, trackingNumber);
+                command.Id = id;
+                var order = await _mediator.Send(command);
                 return Ok(new { success = true, order });
             }
             catch (KeyNotFoundException ex)
@@ -234,11 +246,12 @@ namespace Market.API.Controllers
         /// Delete an order
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _orderService.DeleteOrderAsync(id);
+                var command = new DeleteOrderCommand { Id = id };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "Order deleted" });
             }
             catch (KeyNotFoundException ex)

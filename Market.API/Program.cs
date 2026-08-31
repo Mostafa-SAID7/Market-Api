@@ -7,7 +7,7 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddValidators();
 builder.Services.AddMediatRServices();
 builder.Services.AddSwaggerDocumentation();
-builder.Services.AddDataServices();
+builder.Services.AddDataServices(builder.Configuration);
 
 var app = builder.Build();
 

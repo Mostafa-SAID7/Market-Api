@@ -7,7 +7,7 @@ namespace Market.API.Features.Products.Commands
     /// </summary>
     public class UpdateProductCommand : IRequest<ProductResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
@@ -56,7 +56,7 @@ namespace Market.API.Features.Products.Commands
     /// </summary>
     internal class UpdateProductInternalCommand : IRequest<ProductResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }

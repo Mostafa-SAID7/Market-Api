@@ -7,7 +7,7 @@ namespace Market.API.Features.Reviews.Commands
     /// </summary>
     public class DeleteReviewCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Reviews.Commands
     /// </summary>
     internal class DeleteReviewInternalCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

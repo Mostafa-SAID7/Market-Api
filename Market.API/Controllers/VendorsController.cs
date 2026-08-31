@@ -1,5 +1,6 @@
-using Market.API.Models.Entities;
-using Market.API.Services.Interfaces;
+using MediatR;
+using Market.API.Features.Vendors.Commands;
+using Market.API.Features.Vendors.Queries;
 
 namespace Market.API.Controllers
 {
@@ -7,12 +8,12 @@ namespace Market.API.Controllers
     [ApiController]
     public class VendorsController : ControllerBase
     {
-        private readonly IVendorService _vendorService;
+        private readonly IMediator _mediator;
         private readonly ILogger<VendorsController> _logger;
 
-        public VendorsController(IVendorService vendorService, ILogger<VendorsController> logger)
+        public VendorsController(IMediator mediator, ILogger<VendorsController> logger)
         {
-            _vendorService = vendorService;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -22,7 +23,8 @@ namespace Market.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var vendors = await _vendorService.GetAllVendorsAsync();
+            var query = new GetAllVendorsQuery();
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -30,9 +32,10 @@ namespace Market.API.Controllers
         /// Get vendor by ID
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(int id)
         {
-            var vendor = await _vendorService.GetVendorByIdAsync(id);
+            var query = new GetVendorByIdQuery { Id = id };
+            var vendor = await _mediator.Send(query);
             if (vendor == null)
                 return NotFound();
 
@@ -43,9 +46,10 @@ namespace Market.API.Controllers
         /// Get vendor by user ID
         /// </summary>
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetByUserId(string userId)
+        public async Task<IActionResult> GetByUserId(int userId)
         {
-            var vendor = await _vendorService.GetVendorByUserIdAsync(userId);
+            var query = new GetVendorByUserIdQuery { UserId = userId };
+            var vendor = await _mediator.Send(query);
             if (vendor == null)
                 return NotFound();
 
@@ -58,7 +62,8 @@ namespace Market.API.Controllers
         [HttpGet("approved/list")]
         public async Task<IActionResult> GetApproved()
         {
-            var vendors = await _vendorService.GetApprovedVendorsAsync();
+            var query = new GetApprovedVendorsQuery();
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -68,7 +73,8 @@ namespace Market.API.Controllers
         [HttpGet("active/list")]
         public async Task<IActionResult> GetActive()
         {
-            var vendors = await _vendorService.GetActiveVendorsAsync();
+            var query = new GetActiveVendorsQuery();
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -78,7 +84,8 @@ namespace Market.API.Controllers
         [HttpGet("pending/list")]
         public async Task<IActionResult> GetPending()
         {
-            var vendors = await _vendorService.GetPendingVendorsAsync();
+            var query = new GetPendingVendorsQuery();
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -88,7 +95,8 @@ namespace Market.API.Controllers
         [HttpGet("toprated/list")]
         public async Task<IActionResult> GetTopRated([FromQuery] int count = 10)
         {
-            var vendors = await _vendorService.GetTopRatedVendorsAsync(count);
+            var query = new GetTopRatedVendorsQuery { Count = count };
+            var vendors = await _mediator.Send(query);
             return Ok(vendors);
         }
 
@@ -96,14 +104,14 @@ namespace Market.API.Controllers
         /// Create a new vendor
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Vendor vendor)
+        public async Task<IActionResult> Create([FromBody] CreateVendorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var createdVendor = await _vendorService.CreateVendorAsync(vendor);
+                var createdVendor = await _mediator.Send(command);
                 return CreatedAtAction(nameof(Get), new { id = createdVendor.Id }, createdVendor);
             }
             catch (ArgumentException ex)
@@ -127,14 +135,16 @@ namespace Market.API.Controllers
         /// Update an existing vendor
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Vendor vendor)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateVendorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.Id = id;
+
             try
             {
-                var updatedVendor = await _vendorService.UpdateVendorAsync(id, vendor);
+                var updatedVendor = await _mediator.Send(command);
                 return Ok(updatedVendor);
             }
             catch (KeyNotFoundException ex)
@@ -148,11 +158,12 @@ namespace Market.API.Controllers
         /// Delete a vendor
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _vendorService.DeleteVendorAsync(id);
+                var command = new DeleteVendorCommand { Id = id };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "Vendor deleted" });
             }
             catch (KeyNotFoundException ex)
@@ -171,11 +182,12 @@ namespace Market.API.Controllers
         /// Approve a vendor
         /// </summary>
         [HttpPut("{id}/approve")]
-        public async Task<IActionResult> Approve(string id)
+        public async Task<IActionResult> Approve(int id)
         {
             try
             {
-                var vendor = await _vendorService.ApproveVendorAsync(id);
+                var command = new ApproveVendorCommand { Id = id };
+                var vendor = await _mediator.Send(command);
                 return Ok(new { success = true, vendor });
             }
             catch (KeyNotFoundException ex)
@@ -189,11 +201,12 @@ namespace Market.API.Controllers
         /// Reject a vendor
         /// </summary>
         [HttpPut("{id}/reject")]
-        public async Task<IActionResult> Reject(string id)
+        public async Task<IActionResult> Reject(int id)
         {
             try
             {
-                var vendor = await _vendorService.RejectVendorAsync(id);
+                var command = new RejectVendorCommand { Id = id };
+                var vendor = await _mediator.Send(command);
                 return Ok(new { success = true, vendor });
             }
             catch (KeyNotFoundException ex)
@@ -207,12 +220,12 @@ namespace Market.API.Controllers
         /// Set vendor active status
         /// </summary>
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> SetActiveStatus(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> SetActiveStatus(int id, [FromBody] SetVendorActiveStatusCommand command)
         {
             try
             {
-                bool isActive = request.isActive;
-                var vendor = await _vendorService.SetVendorActiveStatusAsync(id, isActive);
+                command.Id = id;
+                var vendor = await _mediator.Send(command);
                 return Ok(new { success = true, vendor });
             }
             catch (KeyNotFoundException ex)
@@ -226,13 +239,12 @@ namespace Market.API.Controllers
         /// Update vendor rating
         /// </summary>
         [HttpPut("{id}/rating")]
-        public async Task<IActionResult> UpdateRating(string id, [FromBody] dynamic request)
+        public async Task<IActionResult> UpdateRating(int id, [FromBody] UpdateVendorRatingCommand command)
         {
             try
             {
-                double rating = request.rating;
-                int reviewCount = request.reviewCount;
-                var vendor = await _vendorService.UpdateVendorRatingAsync(id, rating, reviewCount);
+                command.Id = id;
+                var vendor = await _mediator.Send(command);
                 return Ok(new { success = true, vendor });
             }
             catch (KeyNotFoundException ex)

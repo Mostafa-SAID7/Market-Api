@@ -7,7 +7,7 @@ namespace Market.API.Features.Users.Commands
     /// </summary>
     public class DeleteUserCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Users.Commands
     /// </summary>
     internal class DeleteUserInternalCommand : IRequest<bool>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

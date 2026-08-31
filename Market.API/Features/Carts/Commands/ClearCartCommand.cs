@@ -7,7 +7,7 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     public class ClearCartCommand : IRequest<bool>
     {
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     internal class ClearCartInternalCommand : IRequest<bool>
     {
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 }

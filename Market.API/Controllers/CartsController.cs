@@ -1,5 +1,6 @@
-using Market.API.Models.Entities;
-using Market.API.Services.Interfaces;
+using MediatR;
+using Market.API.Features.Carts.Commands;
+using Market.API.Features.Carts.Queries;
 
 namespace Market.API.Controllers
 {
@@ -7,12 +8,12 @@ namespace Market.API.Controllers
     [ApiController]
     public class CartsController : ControllerBase
     {
-        private readonly ICartService _cartService;
+        private readonly IMediator _mediator;
         private readonly ILogger<CartsController> _logger;
 
-        public CartsController(ICartService cartService, ILogger<CartsController> logger)
+        public CartsController(IMediator mediator, ILogger<CartsController> logger)
         {
-            _cartService = cartService;
+            _mediator = mediator;
             _logger = logger;
         }
 
@@ -20,9 +21,10 @@ namespace Market.API.Controllers
         /// Get cart by user ID
         /// </summary>
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetByUserId(string userId)
+        public async Task<IActionResult> GetByUserId(int userId)
         {
-            var cart = await _cartService.GetCartByUserIdAsync(userId);
+            var query = new GetCartByUserIdQuery { UserId = userId };
+            var cart = await _mediator.Send(query);
             if (cart == null)
                 return NotFound();
 
@@ -33,11 +35,12 @@ namespace Market.API.Controllers
         /// Get or create cart for user
         /// </summary>
         [HttpGet("user/{userId}/get-or-create")]
-        public async Task<IActionResult> GetOrCreate(string userId)
+        public async Task<IActionResult> GetOrCreate(int userId)
         {
             try
             {
-                var cart = await _cartService.GetOrCreateCartAsync(userId);
+                var query = new GetOrCreateCartQuery { UserId = userId };
+                var cart = await _mediator.Send(query);
                 return Ok(cart);
             }
             catch (KeyNotFoundException ex)
@@ -51,9 +54,10 @@ namespace Market.API.Controllers
         /// Get cart items
         /// </summary>
         [HttpGet("user/{userId}/items")]
-        public async Task<IActionResult> GetItems(string userId)
+        public async Task<IActionResult> GetItems(int userId)
         {
-            var items = await _cartService.GetCartItemsAsync(userId);
+            var query = new GetCartItemsQuery { UserId = userId };
+            var items = await _mediator.Send(query);
             return Ok(items);
         }
 
@@ -61,9 +65,10 @@ namespace Market.API.Controllers
         /// Get cart total
         /// </summary>
         [HttpGet("user/{userId}/total")]
-        public async Task<IActionResult> GetTotal(string userId)
+        public async Task<IActionResult> GetTotal(int userId)
         {
-            var total = await _cartService.GetCartTotalAsync(userId);
+            var query = new GetCartTotalQuery { UserId = userId };
+            var total = await _mediator.Send(query);
             return Ok(new { total });
         }
 
@@ -71,9 +76,10 @@ namespace Market.API.Controllers
         /// Get cart item count
         /// </summary>
         [HttpGet("user/{userId}/count")]
-        public async Task<IActionResult> GetItemCount(string userId)
+        public async Task<IActionResult> GetItemCount(int userId)
         {
-            var count = await _cartService.GetCartItemCountAsync(userId);
+            var query = new GetCartItemCountQuery { UserId = userId };
+            var count = await _mediator.Send(query);
             return Ok(new { count });
         }
 
@@ -81,14 +87,16 @@ namespace Market.API.Controllers
         /// Add item to cart
         /// </summary>
         [HttpPost("user/{userId}/items")]
-        public async Task<IActionResult> AddItem(string userId, [FromBody] CartItem item)
+        public async Task<IActionResult> AddItem(int userId, [FromBody] AddToCartCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            command.UserId = userId;
+
             try
             {
-                var cart = await _cartService.AddItemToCartAsync(userId, item);
+                var cart = await _mediator.Send(command);
                 return Ok(new { success = true, cart });
             }
             catch (ArgumentException ex)
@@ -107,11 +115,12 @@ namespace Market.API.Controllers
         /// Remove item from cart
         /// </summary>
         [HttpDelete("user/{userId}/items/{productId}")]
-        public async Task<IActionResult> RemoveItem(string userId, string productId)
+        public async Task<IActionResult> RemoveItem(int userId, int productId)
         {
             try
             {
-                var cart = await _cartService.RemoveItemFromCartAsync(userId, productId);
+                var command = new RemoveFromCartCommand { UserId = userId, ProductId = productId };
+                var cart = await _mediator.Send(command);
                 return Ok(new { success = true, cart });
             }
             catch (KeyNotFoundException ex)
@@ -125,12 +134,13 @@ namespace Market.API.Controllers
         /// Update item quantity
         /// </summary>
         [HttpPut("user/{userId}/items/{productId}/quantity")]
-        public async Task<IActionResult> UpdateQuantity(string userId, string productId, [FromBody] dynamic request)
+        public async Task<IActionResult> UpdateQuantity(int userId, int productId, [FromBody] UpdateCartItemQuantityCommand command)
         {
             try
             {
-                int quantity = request.quantity;
-                var cart = await _cartService.UpdateItemQuantityAsync(userId, productId, quantity);
+                command.UserId = userId;
+                command.ProductId = productId;
+                var cart = await _mediator.Send(command);
                 return Ok(new { success = true, cart });
             }
             catch (ArgumentException ex)
@@ -149,11 +159,12 @@ namespace Market.API.Controllers
         /// Clear cart
         /// </summary>
         [HttpDelete("user/{userId}/clear")]
-        public async Task<IActionResult> ClearCart(string userId)
+        public async Task<IActionResult> ClearCart(int userId)
         {
             try
             {
-                var cart = await _cartService.ClearCartAsync(userId);
+                var command = new ClearCartCommand { UserId = userId };
+                var cart = await _mediator.Send(command);
                 return Ok(new { success = true, cart });
             }
             catch (KeyNotFoundException ex)
@@ -167,11 +178,12 @@ namespace Market.API.Controllers
         /// Delete cart
         /// </summary>
         [HttpDelete("user/{userId}")]
-        public async Task<IActionResult> DeleteCart(string userId)
+        public async Task<IActionResult> DeleteCart(int userId)
         {
             try
             {
-                await _cartService.DeleteCartAsync(userId);
+                var command = new DeleteCartCommand { UserId = userId };
+                await _mediator.Send(command);
                 return Ok(new { success = true, message = "Cart deleted" });
             }
             catch (KeyNotFoundException ex)

@@ -10,8 +10,8 @@ namespace Market.API.Features.Products.Commands
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string VendorId { get; set; } = string.Empty;
-        public string Category { get; set; } = string.Empty;
+        public int VendorId { get; set; }
+        public int CategoryId { get; set; }
         public decimal Price { get; set; }
         public decimal? DiscountPrice { get; set; }
         public int Quantity { get; set; }
@@ -42,7 +42,7 @@ namespace Market.API.Features.Products.Commands
                 Name = request.Name,
                 Description = request.Description,
                 VendorId = request.VendorId,
-                Category = request.Category,
+                CategoryId = request.CategoryId,
                 Price = request.Price,
                 DiscountPrice = request.DiscountPrice,
                 Quantity = request.Quantity,

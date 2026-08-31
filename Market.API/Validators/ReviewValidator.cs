@@ -12,15 +12,15 @@ namespace Market.API.Validators
             var result = new ValidationResult();
 
             // ProductId validation
-            if (string.IsNullOrWhiteSpace(entity.ProductId))
+            if (entity.ProductId <= 0)
                 result.AddError(nameof(Review.ProductId), "Product ID is required");
 
             // CustomerId validation
-            if (string.IsNullOrWhiteSpace(entity.CustomerId))
+            if (entity.CustomerId <= 0)
                 result.AddError(nameof(Review.CustomerId), "Customer ID is required");
 
             // VendorId validation
-            if (string.IsNullOrWhiteSpace(entity.VendorId))
+            if (entity.VendorId <= 0)
                 result.AddError(nameof(Review.VendorId), "Vendor ID is required");
 
             // RatingValue validation
@@ -47,16 +47,16 @@ namespace Market.API.Validators
             if (entity.HelpfulCount < 0)
                 result.AddError(nameof(Review.HelpfulCount), "Helpful count cannot be negative");
 
-            // ImageUrls validation
-            if (entity.ImageUrls != null && entity.ImageUrls.Count > 0)
+            // Images validation
+            if (entity.Images != null && entity.Images.Count > 0)
             {
-                if (entity.ImageUrls.Count > 10)
-                    result.AddError(nameof(Review.ImageUrls), "Cannot upload more than 10 images");
+                if (entity.Images.Count > 10)
+                    result.AddError(nameof(Review.Images), "Cannot upload more than 10 images");
 
-                foreach (var url in entity.ImageUrls)
+                foreach (var image in entity.Images)
                 {
-                    if (!IsValidUrl(url))
-                        result.AddError(nameof(Review.ImageUrls), "Image URL format is invalid");
+                    if (!IsValidUrl(image.ImageUrl))
+                        result.AddError(nameof(Review.Images), "Image URL format is invalid");
                 }
             }
 

@@ -42,8 +42,13 @@ namespace Market.API.Features.Categories.Commands
                 Id = category.Id,
                 Name = category.Name,
                 Description = category.Description,
-                SlugValue = category.SlugValue,
-                IsActive = category.IsActive
+                ImageUrl = category.ImageUrl,
+                Slug = category.Slug,
+                ParentCategoryId = category.ParentCategoryId,
+                IsActive = category.IsActive,
+                DisplayOrder = category.DisplayOrder,
+                CreatedAt = category.CreatedAt,
+                UpdatedAt = category.UpdatedAt
             };
         }
     }

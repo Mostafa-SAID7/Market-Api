@@ -1,97 +1,93 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for review operations
+    /// Review repository implementation for EF Core
     /// </summary>
     public class ReviewRepository : Repository<Review>, IReviewRepository
     {
-        public ReviewRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public ReviewRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetByProductIdAsync(string productId)
+        /// <summary>
+        /// Get reviews by product ID
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetByProductIdAsync(int productId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.ProductId, productId),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(r => r.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.ProductId == productId && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetByVendorIdAsync(string vendorId)
+        /// <summary>
+        /// Get reviews by vendor ID
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetByVendorIdAsync(int vendorId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.VendorId, vendorId),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(r => r.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.VendorId == vendorId && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetByCustomerIdAsync(string customerId)
+        /// <summary>
+        /// Get reviews by customer ID
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetByCustomerIdAsync(int customerId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.CustomerId, customerId),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(r => r.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.CustomerId == customerId && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetVerifiedReviewsAsync(string productId)
+        /// <summary>
+        /// Get verified purchase reviews
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetVerifiedReviewsAsync(int productId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.ProductId, productId),
-                Builders<Review>.Filter.Eq(r => r.IsVerifiedPurchase, true),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(r => r.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.ProductId == productId && x.IsVerifiedPurchase && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetByRatingAsync(string productId, int rating)
+        /// <summary>
+        /// Get reviews by rating
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetByRatingAsync(int productId, int rating, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.ProductId, productId),
-                Builders<Review>.Filter.Eq(r => r.RatingValue, rating),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection.Find(filter).SortByDescending(r => r.CreatedAt).ToListAsync();
+            return await _dbSet
+                .Where(x => x.ProductId == productId && x.RatingValue == rating && !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Review>> GetTopHelpfulAsync(string productId, int count = 10)
+        /// <summary>
+        /// Get top helpful reviews
+        /// </summary>
+        public async Task<IEnumerable<Review>> GetTopHelpfulAsync(int productId, int count = 10, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.ProductId, productId),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            return await _collection
-                .Find(filter)
-                .SortByDescending(r => r.HelpfulCount)
-                .ThenByDescending(r => r.CreatedAt)
-                .Limit(count)
-                .ToListAsync();
+            return await _dbSet
+                .Where(x => x.ProductId == productId && !x.IsDeleted)
+                .OrderByDescending(x => x.HelpfulCount)
+                .ThenByDescending(x => x.CreatedAt)
+                .Take(count)
+                .ToListAsync(cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<bool> CustomerReviewedProductAsync(string productId, string customerId)
+        /// <summary>
+        /// Check if customer reviewed product
+        /// </summary>
+        public async Task<bool> CustomerReviewedProductAsync(int productId, int customerId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Review>.Filter.And(
-                Builders<Review>.Filter.Eq(r => r.ProductId, productId),
-                Builders<Review>.Filter.Eq(r => r.CustomerId, customerId),
-                Builders<Review>.Filter.Eq(r => r.IsDeleted, false)
-            );
-            var count = await _collection.CountDocumentsAsync(filter);
-            return count > 0;
+            return await _dbSet
+                .AnyAsync(x => x.ProductId == productId && x.CustomerId == customerId && !x.IsDeleted, cancellationToken);
         }
     }
 }

@@ -1,86 +1,82 @@
 using Market.API.Common;
-using Market.API.Data.Interfaces;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Generic repository implementation with MongoDB support
+    /// Generic repository implementation for EF Core
     /// </summary>
-    /// <typeparam name="T">Entity type that extends BaseEntity</typeparam>
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        protected readonly IMongoCollection<T> _collection;
+        protected readonly MarketDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-        public Repository(IOptions<MongoDbSettings> settings)
+        public Repository(MarketDbContext context)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _collection = database.GetCollection<T>(typeof(T).Name);
+            _context = context;
+            _dbSet = context.Set<T>();
         }
 
         /// <summary>
         /// Get all non-deleted entities
         /// </summary>
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _collection
-                .Find(x => !x.IsDeleted)
-                .ToListAsync();
+            return await _dbSet
+                .Where(x => !x.IsDeleted)
+                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
-        /// Get entity by ID (ignores soft-deleted flag)
+        /// Get entity by ID
         /// </summary>
-        public virtual async Task<T?> GetByIdAsync(string id)
+        public virtual async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            if (!ObjectId.TryParse(id, out var objectId))
-                return null;
-
-            return await _collection
-                .Find(Builders<T>.Filter.Eq("_id", id))
-                .FirstOrDefaultAsync();
+            return await _dbSet.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, cancellationToken);
         }
 
         /// <summary>
         /// Create new entity
         /// </summary>
-        public virtual async Task CreateAsync(T entity)
+        public virtual async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
         {
             entity.CreatedAt = DateTime.UtcNow;
             entity.IsDeleted = false;
-            await _collection.InsertOneAsync(entity);
+            _dbSet.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
         /// <summary>
         /// Update entity
         /// </summary>
-        public virtual async Task UpdateAsync(string id, T entity)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             entity.UpdatedAt = DateTime.UtcNow;
-            await _collection.ReplaceOneAsync(
-                Builders<T>.Filter.Eq("_id", id),
-                entity
-            );
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Soft delete entity
         /// </summary>
-        public virtual async Task DeleteAsync(string id)
+        public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var update = Builders<T>.Update
-                .Set(x => x.IsDeleted, true)
-                .Set(x => x.DeletedAt, DateTime.UtcNow)
-                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            if (entity != null)
+            {
+                entity.Delete();
+                _dbSet.Update(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
 
-            await _collection.UpdateOneAsync(
-                Builders<T>.Filter.Eq("_id", id),
-                update
-            );
+        /// <summary>
+        /// Check if entity exists
+        /// </summary>
+        public virtual async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == id && !x.IsDeleted, cancellationToken);
         }
     }
 }

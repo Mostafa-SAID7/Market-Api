@@ -8,7 +8,7 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     public class UpdateOrderCommand : IRequest<OrderResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public OrderStatus Status { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }
         public string? TrackingNumber { get; set; }
@@ -53,7 +53,7 @@ namespace Market.API.Features.Orders.Commands
     /// </summary>
     internal class UpdateOrderInternalCommand : IRequest<OrderResponse>
     {
-        public string Id { get; set; } = string.Empty;
+        public int Id { get; set; }
         public OrderStatus Status { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }
         public string? TrackingNumber { get; set; }

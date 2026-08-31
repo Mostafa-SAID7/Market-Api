@@ -35,9 +35,12 @@ namespace Market.API.Features.Products.Queries
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
-                Category = p.Category,
+                DiscountPrice = p.DiscountPrice,
+                ImageUrl = p.ImageUrl,
+                CategoryId = p.CategoryId,
                 VendorId = p.VendorId,
                 Quantity = p.Quantity,
+                Sold = p.Sold,
                 AverageRating = p.AverageRating,
                 ReviewCount = p.ReviewCount
             }).ToList();

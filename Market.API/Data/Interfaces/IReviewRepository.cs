@@ -1,3 +1,4 @@
+using Market.API.Data.Repositories;
 using Market.API.Models.Entities;
 
 namespace Market.API.Data.Interfaces
@@ -10,36 +11,36 @@ namespace Market.API.Data.Interfaces
         /// <summary>
         /// Get reviews by product ID
         /// </summary>
-        Task<IEnumerable<Review>> GetByProductIdAsync(string productId);
+        Task<IEnumerable<Review>> GetByProductIdAsync(int productId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get reviews by vendor ID
         /// </summary>
-        Task<IEnumerable<Review>> GetByVendorIdAsync(string vendorId);
+        Task<IEnumerable<Review>> GetByVendorIdAsync(int vendorId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get reviews by customer ID
         /// </summary>
-        Task<IEnumerable<Review>> GetByCustomerIdAsync(string customerId);
+        Task<IEnumerable<Review>> GetByCustomerIdAsync(int customerId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get verified purchase reviews
         /// </summary>
-        Task<IEnumerable<Review>> GetVerifiedReviewsAsync(string productId);
+        Task<IEnumerable<Review>> GetVerifiedReviewsAsync(int productId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get reviews by rating
         /// </summary>
-        Task<IEnumerable<Review>> GetByRatingAsync(string productId, int rating);
+        Task<IEnumerable<Review>> GetByRatingAsync(int productId, int rating, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get top helpful reviews
         /// </summary>
-        Task<IEnumerable<Review>> GetTopHelpfulAsync(string productId, int count = 10);
+        Task<IEnumerable<Review>> GetTopHelpfulAsync(int productId, int count = 10, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Check if customer reviewed product
         /// </summary>
-        Task<bool> CustomerReviewedProductAsync(string productId, string customerId);
+        Task<bool> CustomerReviewedProductAsync(int productId, int customerId, CancellationToken cancellationToken = default);
     }
 }

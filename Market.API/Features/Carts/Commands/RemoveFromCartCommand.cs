@@ -7,8 +7,8 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     public class RemoveFromCartCommand : IRequest<CartResponse>
     {
-        public string UserId { get; set; } = string.Empty;
-        public string ProductId { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     internal class RemoveFromCartInternalCommand : IRequest<CartResponse>
     {
-        public string UserId { get; set; } = string.Empty;
-        public string ProductId { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
     }
 }

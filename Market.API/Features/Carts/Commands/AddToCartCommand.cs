@@ -8,10 +8,13 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     public class AddToCartCommand : IRequest<CartResponse>
     {
-        public string UserId { get; set; } = string.Empty;
-        public string ProductId { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
+        public int VendorId { get; set; }
+        public string ProductName { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
     }
 
     /// <summary>
@@ -36,8 +39,11 @@ namespace Market.API.Features.Carts.Commands
             var cartItem = new CartItem
             {
                 ProductId = request.ProductId,
+                VendorId = request.VendorId,
+                ProductName = request.ProductName,
                 Quantity = request.Quantity,
-                Price = request.Price
+                Price = request.Price,
+                ImageUrl = request.ImageUrl
             };
 
             var result = await _mediator.Send(
@@ -53,7 +59,7 @@ namespace Market.API.Features.Carts.Commands
     /// </summary>
     internal class AddToCartInternalCommand : IRequest<CartResponse>
     {
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }
         public CartItem Item { get; set; } = null!;
     }
 }

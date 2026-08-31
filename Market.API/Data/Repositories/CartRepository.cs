@@ -1,39 +1,35 @@
 using Market.API.Data.Interfaces;
 using Market.API.Models.Entities;
-using Market.API.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.API.Data.Repositories
 {
     /// <summary>
-    /// Repository for cart operations
+    /// Cart repository implementation for EF Core
     /// </summary>
     public class CartRepository : Repository<Cart>, ICartRepository
     {
-        public CartRepository(IOptions<MongoDbSettings> settings) : base(settings)
+        public CartRepository(MarketDbContext context) : base(context)
         {
         }
 
-        /// <inheritdoc/>
-        public async Task<Cart?> GetByUserIdAsync(string userId)
+        /// <summary>
+        /// Get cart by user ID
+        /// </summary>
+        public async Task<Cart?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Cart>.Filter.And(
-                Builders<Cart>.Filter.Eq(c => c.UserId, userId),
-                Builders<Cart>.Filter.Eq(c => c.IsDeleted, false)
-            );
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _dbSet
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(x => x.UserId == userId && !x.IsDeleted, cancellationToken);
         }
 
-        /// <inheritdoc/>
-        public async Task<bool> CartExistsAsync(string userId)
+        /// <summary>
+        /// Check if cart exists for user
+        /// </summary>
+        public async Task<bool> CartExistsAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var filter = Builders<Cart>.Filter.And(
-                Builders<Cart>.Filter.Eq(c => c.UserId, userId),
-                Builders<Cart>.Filter.Eq(c => c.IsDeleted, false)
-            );
-            var count = await _collection.CountDocumentsAsync(filter);
-            return count > 0;
+            return await _dbSet
+                .AnyAsync(x => x.UserId == userId && !x.IsDeleted, cancellationToken);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Market.API.Data.Repositories;
 using Market.API.Models.Entities;
 
 namespace Market.API.Data.Interfaces
@@ -10,26 +11,26 @@ namespace Market.API.Data.Interfaces
         /// <summary>
         /// Get vendor by user ID
         /// </summary>
-        Task<Vendor?> GetByUserIdAsync(string userId);
+        Task<Vendor?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get approved vendors
         /// </summary>
-        Task<IEnumerable<Vendor>> GetApprovedVendorsAsync();
+        Task<IEnumerable<Vendor>> GetApprovedVendorsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get active vendors
         /// </summary>
-        Task<IEnumerable<Vendor>> GetActiveVendorsAsync();
+        Task<IEnumerable<Vendor>> GetActiveVendorsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get pending vendors (not approved)
         /// </summary>
-        Task<IEnumerable<Vendor>> GetPendingVendorsAsync();
+        Task<IEnumerable<Vendor>> GetPendingVendorsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get top rated vendors
         /// </summary>
-        Task<IEnumerable<Vendor>> GetTopRatedVendorsAsync(int count = 10);
+        Task<IEnumerable<Vendor>> GetTopRatedVendorsAsync(int count = 10, CancellationToken cancellationToken = default);
     }
 }

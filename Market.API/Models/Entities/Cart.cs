@@ -1,20 +1,21 @@
 ﻿using Market.API.Common;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Market.API.Models.Entities
 {
     /// <summary>
     /// Shopping cart entity
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class Cart : BaseEntity
     {
-        public string UserId { get; set; } = string.Empty; // Reference to User
+        public int UserId { get; set; }
         
-        public List<CartItem> Items { get; set; } = new();
+        public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
         
         public decimal SubTotal => Items.Sum(x => x.SubTotal);
         public int TotalItems => Items.Sum(x => x.Quantity);
+
+        // Navigation properties
+        public User User { get; set; } = null!;
 
         /// <summary>
         /// Add item to cart
@@ -38,16 +39,20 @@ namespace Market.API.Models.Entities
         /// <summary>
         /// Remove item from cart
         /// </summary>
-        public void RemoveItem(string productId)
+        public void RemoveItem(int productId)
         {
-            Items.RemoveAll(x => x.ProductId == productId);
-            UpdatedAt = DateTime.UtcNow;
+            var item = Items.FirstOrDefault(x => x.ProductId == productId);
+            if (item != null)
+            {
+                Items.Remove(item);
+                UpdatedAt = DateTime.UtcNow;
+            }
         }
 
         /// <summary>
         /// Update item quantity
         /// </summary>
-        public void UpdateItemQuantity(string productId, int quantity)
+        public void UpdateItemQuantity(int productId, int quantity)
         {
             var item = Items.FirstOrDefault(x => x.ProductId == productId);
             if (item != null)
@@ -77,16 +82,24 @@ namespace Market.API.Models.Entities
     /// <summary>
     /// Cart item - product in cart
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class CartItem
     {
-        public string ProductId { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public int CartId { get; set; }
+        public int ProductId { get; set; }
+        public int VendorId { get; set; }
         public string ProductName { get; set; } = string.Empty;
-        public string VendorId { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string? ImageUrl { get; set; }
         public decimal SubTotal => Price * Quantity;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+
+        // Navigation properties
+        public Cart Cart { get; set; } = null!;
+        public Product Product { get; set; } = null!;
+        public Vendor Vendor { get; set; } = null!;
     }
 }
 

@@ -12,7 +12,7 @@ namespace Market.API.Validators
             var result = new ValidationResult();
 
             // UserId validation
-            if (string.IsNullOrWhiteSpace(entity.UserId))
+            if (entity.UserId <= 0)
                 result.AddError(nameof(Cart.UserId), "User ID is required");
 
             // Items validation
@@ -20,7 +20,7 @@ namespace Market.API.Validators
             {
                 foreach (var item in entity.Items)
                 {
-                    if (string.IsNullOrWhiteSpace(item.ProductId))
+                    if (item.ProductId <= 0)
                         result.AddError(nameof(Cart.Items), "Product ID is required for all cart items");
 
                     if (item.Quantity <= 0)

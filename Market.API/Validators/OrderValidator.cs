@@ -12,7 +12,7 @@ namespace Market.API.Validators
             var result = new ValidationResult();
 
             // CustomerId validation
-            if (string.IsNullOrWhiteSpace(entity.CustomerId))
+            if (entity.CustomerId <= 0)
                 result.AddError(nameof(Order.CustomerId), "Customer ID is required");
 
             // OrderNumber validation
@@ -26,7 +26,7 @@ namespace Market.API.Validators
             {
                 foreach (var item in entity.Items)
                 {
-                    if (string.IsNullOrWhiteSpace(item.ProductId))
+                    if (item.ProductId <= 0)
                         result.AddError(nameof(Order.Items), "Product ID is required for all items");
                     if (item.Quantity <= 0)
                         result.AddError(nameof(Order.Items), "Quantity must be greater than 0 for all items");
