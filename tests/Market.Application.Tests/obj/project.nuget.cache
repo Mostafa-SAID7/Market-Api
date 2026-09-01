@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HvsAiYjU9T8=",
+  "dgSpecHash": "voZqrE8ZwDU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder\\Market-Api\\tests\\Market.Application.Tests\\Market.Application.Tests.csproj",
+  "projectFilePath": "c:\\Users\\cw_14\\Downloads\\New folder\\Market-Api\\tests\\Market.Application.Tests\\Market.Application.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cw_14\\.nuget\\packages\\fluentvalidation\\11.8.0\\fluentvalidation.11.8.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.8.0\\fluentvalidation.dependencyinjectionextensions.11.8.0.nupkg.sha512",

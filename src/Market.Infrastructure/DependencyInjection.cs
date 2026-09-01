@@ -1,8 +1,8 @@
 using Market.Domain.Repositories;
 using Market.Infrastructure.Data;
-using Market.Infrastructure.Data.Persistence;
-using Market.Infrastructure.Data.Repositories;
 using Market.Infrastructure.Data.Seeds;
+using Market.Infrastructure.Persistence.Repositories;
+using Market.Infrastructure.Persistence.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

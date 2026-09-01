@@ -1,8 +1,9 @@
 using Market.Domain.Repositories;
 using Market.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Market.Infrastructure.Data;
 
-namespace Market.Infrastructure.Data.Repositories
+namespace Market.Infrastructure.Persistence.Repositories
 {
     /// <summary>
     /// Product repository implementation for EF Core
@@ -63,4 +64,6 @@ namespace Market.Infrastructure.Data.Repositories
         }
     }
 }
+
+
 

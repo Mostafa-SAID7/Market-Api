@@ -1,7 +1,8 @@
 using Market.Domain.Common;
 using Microsoft.EntityFrameworkCore;
+using Market.Infrastructure.Data;
 
-namespace Market.Infrastructure.Data.Repositories
+namespace Market.Infrastructure.Persistence.Repositories
 {
     /// <summary>
     /// Generic repository implementation for EF Core
@@ -80,4 +81,6 @@ namespace Market.Infrastructure.Data.Repositories
         }
     }
 }
+
+
 

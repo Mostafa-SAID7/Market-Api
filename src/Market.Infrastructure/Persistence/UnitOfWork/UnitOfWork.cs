@@ -1,7 +1,8 @@
 using Market.Domain.Repositories;
-using Market.Infrastructure.Data.Repositories;
+using Market.Infrastructure.Data;
+using Market.Infrastructure.Persistence.Repositories;
 
-namespace Market.Infrastructure.Data.Persistence
+namespace Market.Infrastructure.Persistence.UnitOfWork
 {
     /// <summary>
     /// Unit of Work implementation - thin wrapper around EF Core DbContext
@@ -97,4 +98,5 @@ namespace Market.Infrastructure.Data.Persistence
         }
     }
 }
+
 
