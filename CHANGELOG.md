@@ -1,3 +1,25 @@
+# [2.0.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v1.0.0...v2.0.0) (2026-09-01)
+
+
+### Features
+
+* Complete Clean Architecture refactor with SOLID principles and pure CQRS ([544fcf4](https://github.com/Mostafa-SAID7/Market-Api/commit/544fcf46e126cef701baa5b9fe479fdbcdbb9407))
+
+
+### BREAKING CHANGES
+
+* Migrated from MongoDB to SQL Server. Update connection strings and database setup.
+
+- Implement strict 4-layer architecture (Domain → Application → Infrastructure → API)
+- Apply SOLID principles throughout codebase
+- Implement pure CQRS with MediatR
+- Migrate to SQL Server with Entity Framework Core 9.0.19
+- Reorganize Infrastructure layer (Data/ for DbContext, Persistence/ for repositories)
+- Update all namespaces to reflect new architecture
+- Fix package dependency versions (DependencyInjection.Abstractions 10.0.0)
+- Optimize Docker build to only include source projects
+- Add comprehensive CHANGELOG documentation
+
 # 1.0.0 (2026-08-31)
 
 
