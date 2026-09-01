@@ -5,74 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2026-06-03 - MediatR & Full Feature Implementation
-
-### Added - MediatR Pattern (Complete Implementation)
-- MediatR command/query pattern for all 7 entities with dedicated handlers
-- Response DTOs for Products, Categories, Users, Vendors, Orders, Carts, Reviews
-- CQRS-style architecture with Commands (Create, Update, Delete, Approve) and Queries (GetAll, GetById, Filtered)
-- Automatic handler registration via MediatRConfiguration
-- Special operations: ApproveVendor, AddToCart, RemoveFromCart, ClearCart, GetProductsByCategory, GetReviewsByProductId
-
-### Added - Validation Framework
-- Comprehensive IValidator interface with ValidationResult and ValidationError
-- Entity validators: ProductValidator, CategoryValidator, UserValidator, VendorValidator, OrderValidator, CartValidator, ReviewValidator
-- Validation rules: required fields, length constraints, format validation (email, URL, slug, phone), numeric ranges
-- Middleware for validation exception handling
-- Scoped DI registration via ValidatorConfiguration
-
-### Added - Service Layer
-- Service layer for all 7 entities with logging integration
-- Services: ProductService, CategoryService, UserService, VendorService, OrderService, CartService, ReviewService
-- Service interfaces for testability
-- UnitOfWork pattern for coordinated repository access across multiple entities
-- ServiceConfiguration for automatic DI registration
-
-### Added - API Endpoints (Complete REST)
-- CRUD endpoints for all 7 entities (Create, Read, Update, Delete)
-- Special operations: Approve Vendor, Add to Cart, Remove from Cart, Clear Cart
-- Proper HTTP status codes (200, 201, 400, 404)
-- Error responses with validation details
-
-### Added - Database Layer
-- MongoDB integration with ObjectId serialization
-- BaseEntity with Id, CreatedAt, UpdatedAt properties
-- Repository pattern with generic and specific implementations
-- Unit of Work coordination
-- Index creation with duplicate handling
-- BSON attribute configuration for proper serialization
-
-### Fixed - Critical Bugs
-- Entity property mappings in all DTOs and Commands
-- Order: CustomerId (not UserId), Items (not ProductIds), TotalPrice (not TotalAmount), OrderStatus enum
-- Review: CustomerId (not UserId), RatingValue (not Rating), VendorId, Title properties
-- User: PhoneNumber (not Phone), removed non-existent Address
-- Vendor: StoreName (not Name), IsApproved boolean (not Status string), TotalReviews, location fields
-- Cart query implementation using GetAllAsync() with filtering
-- Program.cs using statements for configurations
-
-### Changed - Documentation
-- Updated API.md to focus only on endpoint reference (removed architecture details)
-- Consolidated architecture documentation in ARCHITECTURE.md
-- Updated CONTRIBUTING.md with MediatR patterns
-- Enhanced README with complete feature list
-
-## [1.0.0] - 2026-04-21
+## [1.0.0] - 2026-09-01
 
 ### Added
-- Initial ASP.NET Core 9 with MongoDB integration
-- Repository pattern implementation
-- Product CRUD operations
-- Swagger/OpenAPI documentation  
-- Docker and Docker Compose support
+- **Clean Architecture Implementation**: Strict 4-layer architecture (Domain → Application → Infrastructure → API)
+- **SOLID Principles**: Applied throughout the codebase for maintainability and scalability
+- **Pure CQRS Pattern**: Complete Command Query Responsibility Segregation implementation
+- **SQL Server Integration**: Migrated from MongoDB to SQL Server with Entity Framework Core 9.0.19
+- **Repository Pattern**: Generic repository with specific implementations for all entities
+- **Unit of Work Pattern**: Centralized transaction management
+- **MediatR 12.0.1**: Request/response messaging for decoupled handlers
+- **Dependency Injection**: Comprehensive DI configuration across all layers
+- **Swagger Documentation**: Auto-generated API documentation
 
-### Features
-- GET /api/products - Get all products
-- GET /api/products/{id} - Get product by ID
-- GET /api/products/GetByPriceRange/{minPrice}/{maxPrice} - Filter by price
-- POST /api/products - Create product
-- PUT /api/products/{id} - Update product
-- DELETE /api/products/{id} - Delete product
+### Changed
+- **Infrastructure Layer Reorganization**: 
+  - `Data/` folder: DbContext, configurations, seeders
+  - `Persistence/` folder: Repositories, UnitOfWork, migrations
+- **Project Structure**: Migrated to `/src` and `/tests` directories for clean organization
+- **Namespace Updates**: Corrected all namespaces to reflect 4-layer architecture
+- **Dockerfile Optimization**: Build only production-needed source projects (excludes tests)
 
-### Technical Stack
-- ASP.NET Core 9, MongoDB 8.2, Docker, Swagger/OpenAPI
+### Fixed
+- **Package Downgrade Error**: Updated `Microsoft.Extensions.DependencyInjection.Abstractions` to 10.0.0 in Infrastructure layer
+- **Docker Build Cache**: Invalidated stale NuGet cache for fresh dependency resolution
+- **Test Projects**: Moved test projects to separate `/tests` folder with correct references
+- **Old MongoDB References**: Removed all MongoDB connection strings and legacy configurations
+
+### Removed
+- **Monolithic Structure**: Deleted old `Market.API.sln` file
+- **MongoDB Integration**: Removed MongoDB driver and configuration
+- **Legacy Project Layout**: Removed root-level project folders in favor of `/src` and `/tests`
+- **Old Migrations**: Cleaned up migrations from API layer (now in Infrastructure)
+
+### Technical Details
+
+#### Dependencies Updated
+- MediatR: 12.0.1 (stable)
+- Microsoft.EntityFrameworkCore: 9.0.19
+- Microsoft.EntityFrameworkCore.SqlServer: 9.0.19
+- Microsoft.Extensions.DependencyInjection.Abstractions: 10.0.0
+- Microsoft.Extensions.Logging.Abstractions: 10.0.0
+- BCrypt.Net-Next: 4.0.3
+
+#### Build & Deployment
+- .NET SDK: 9.0
+- Target Framework: net9.0
+- Docker: Multi-stage build (build → publish → runtime)
+- CI/CD: GitHub Actions with Docker build and push
+- Registry: GHCR (GitHub Container Registry)
+
+#### Architecture Layers
+1. **Domain Layer** (Market.Domain): Entities, value objects, interfaces, business logic
+2. **Application Layer** (Market.Application): DTOs, commands, queries, handlers, validators
+3. **Infrastructure Layer** (Market.Infrastructure): DbContext, repositories, migrations, UoW
+4. **API Layer** (Market.API): Controllers, middleware, dependency injection, Swagger
+
+---
+
+**Status**: Production Ready
+**Breaking Changes**: Yes (MongoDB → SQL Server migration)
+**Database Migration Required**: Yes
+
