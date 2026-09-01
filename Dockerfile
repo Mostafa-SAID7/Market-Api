@@ -2,6 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
+# Cache invalidation: Force fresh NuGet restore on package changes
 # Copy solution and source project files (tests not needed for Docker build)
 COPY Market.sln .
 COPY src/Market.Domain/Market.Domain.csproj src/Market.Domain/
