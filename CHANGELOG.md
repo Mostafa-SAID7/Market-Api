@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.0.0...v2.0.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* Correct publish path in dotnet.yml workflow to use src/Market.API ([5152760](https://github.com/Mostafa-SAID7/Market-Api/commit/515276006f24c5c626ac6e86db48325c9adb80f7))
+
 # [2.0.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v1.0.0...v2.0.0) (2026-09-01)
 
 
