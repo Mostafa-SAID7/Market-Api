@@ -1,682 +1,569 @@
 # Architecture Guide
 
-This document describes the architecture and design patterns used in the Market API project.
+This document describes the strict 4-layer Clean Architecture used in the Market API project.
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Architecture Pattern](#architecture-pattern)
+- [4-Layer Architecture](#4-layer-architecture)
 - [Project Structure](#project-structure)
+- [Layer Responsibilities](#layer-responsibilities)
+- [Dependency Flow](#dependency-flow)
 - [Design Patterns](#design-patterns)
+- [SOLID Principles](#solid-principles)
 - [Data Flow](#data-flow)
-- [Key Components](#key-components)
-- [Best Practices](#best-practices)
+- [Technology Stack](#technology-stack)
 
 ## Overview
 
 Market API is built using **ASP.NET Core 9** with a focus on:
-- Clean Architecture principles
-- Repository Pattern for data access
-- Dependency Injection
-- Separation of Concerns
-- SOLID principles
+- **Strict Clean Architecture** (4-layer separation)
+- **Pure CQRS** (Command/Query Responsibility Segregation)
+- **Dependency Inversion** (Domain interfaces, Infrastructure implementations)
+- **Repository Pattern** for data access
+- **Entity Framework Core 9.0** with SQL Server
+- **SOLID Principles** throughout
+- **Zero Duplication** and tight coupling prevention
 
-## Architecture Pattern
-
-### Repository Pattern
-
-The Repository Pattern abstracts the data access layer, providing a collection-like interface for accessing domain objects.
-
-**Benefits**:
-- Decouples business logic from data access
-- Easier to test (can mock repositories)
-- Centralized data access logic
-- Easier to switch data sources
+## 4-Layer Architecture
 
 ```
-┌─────────────────────────────────────────────┐
-│           Presentation Layer                │
-│         (Controllers/API)                   │
-└─────────────────┬───────────────────────────┘
+┌─────────────────────────────────────────┐
+│  API Layer (Presentation)               │  ← Depends on: Application + Infrastructure
+│  • Controllers                          │
+│  • Middleware                           │
+│  • Program.cs / Configuration           │
+│  • Zero Business Logic                  │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────▼─────────┐
+        │  (MediatR CQRS)   │
+        └─────────┬─────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│  Application Layer                      │  ← Depends on: Domain only
+│  • Commands & Queries                   │
+│  • CQRS Handlers (MediatR)              │
+│  • DTOs / Response Models               │
+│  • Validators (FluentValidation)        │
+│  • No EF Core, No Dependencies          │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ (abstraction)
+                  │
+┌─────────────────▼───────────────────────┐
+│  Infrastructure Layer                   │  ← Depends on: Application + Domain
+│  • DbContext (EF Core)                  │
+│  • Repository Implementations           │
+│  • Unit of Work                         │
+│  • Data Seeds                           │
+│  • Migrations                           │
+│  • External Services                    │
+└─────────────────┬───────────────────────┘
                   │
                   ▼
-┌─────────────────────────────────────────────┐
-│         Business Logic Layer                │
-│         (Services - Future)                 │
-└─────────────────┬───────────────────────────┘
-                  │
-                  ▼
-┌─────────────────────────────────────────────┐
-│         Repository Layer                    │
-│    (IRepository, IProductRepository)        │
-└─────────────────┬───────────────────────────┘
-                  │
-                  ▼
-┌─────────────────────────────────────────────┐
-│         Data Access Layer                   │
-│         (MongoDB Driver)                    │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────┐
+│  Domain Layer (Core)                    │  ← Depends on: NOTHING
+│  • Entities                             │
+│  • Enums                                │
+│  • Value Objects                        │
+│  • Repository Interfaces (IRepo*)       │
+│  • IUnitOfWork                          │
+│  • Zero External Dependencies           │
+└─────────────────────────────────────────┘
 ```
 
 ## Project Structure
 
 ```
-Market.API/
-├── Controllers/              # HTTP Request Handlers
-│   ├── ProductsController.cs
-│   ├── CategoriesController.cs
-│   ├── UsersController.cs
-│   ├── VendorsController.cs
-│   ├── OrdersController.cs
-│   ├── CartsController.cs
-│   └── ReviewsController.cs
+Market-Api/
 │
-├── Features/                 # MediatR Commands & Queries
-│   ├── Products/
-│   │   ├── Commands/        # Create, Update, Delete
-│   │   ├── Queries/         # GetAll, GetById, GetByCategory
-│   │   └── ProductResponse.cs
-│   ├── Categories/
-│   │   ├── Commands/
-│   │   ├── Queries/
-│   │   └── CategoryResponse.cs
-│   ├── Users, Vendors, Orders, Carts, Reviews/  # Same structure
-│   └── (Similar for all 7 entities)
+├── src/
+│   │
+│   ├── Market.Domain/                  (Innermost - Zero Dependencies)
+│   │   ├── Entities/
+│   │   │   ├── Product.cs
+│   │   │   ├── Category.cs
+│   │   │   ├── User.cs
+│   │   │   ├── Vendor.cs
+│   │   │   ├── Order.cs
+│   │   │   ├── OrderItem.cs
+│   │   │   ├── Cart.cs
+│   │   │   ├── CartItem.cs
+│   │   │   └── Review.cs
+│   │   │
+│   │   ├── Enums/
+│   │   │   ├── OrderStatus.cs
+│   │   │   ├── PaymentStatus.cs
+│   │   │   ├── UserRole.cs
+│   │   │   ├── ProductStatus.cs
+│   │   │   └── VendorApprovalStatus.cs
+│   │   │
+│   │   ├── ValueObjects/
+│   │   │   └── Slug.cs
+│   │   │
+│   │   ├── Common/
+│   │   │   └── BaseEntity.cs
+│   │   │
+│   │   ├── Repositories/  (Abstractions Only)
+│   │   │   ├── IRepository.cs
+│   │   │   ├── IProductRepository.cs
+│   │   │   ├── ICategoryRepository.cs
+│   │   │   ├── IUserRepository.cs
+│   │   │   ├── IVendorRepository.cs
+│   │   │   ├── IOrderRepository.cs
+│   │   │   ├── ICartRepository.cs
+│   │   │   ├── IReviewRepository.cs
+│   │   │   └── IUnitOfWork.cs
+│   │   │
+│   │   └── Market.Domain.csproj
+│   │
+│   ├── Market.Application/             (Depends on Domain)
+│   │   ├── DependencyInjection.cs       (Registers MediatR + Validators)
+│   │   │
+│   │   ├── Features/                    (Organized by Feature)
+│   │   │   ├── Products/
+│   │   │   │   ├── Commands/
+│   │   │   │   │   ├── CreateProductCommand.cs
+│   │   │   │   │   ├── UpdateProductCommand.cs
+│   │   │   │   │   └── DeleteProductCommand.cs
+│   │   │   │   ├── Queries/
+│   │   │   │   │   ├── GetAllProductsQuery.cs
+│   │   │   │   │   ├── GetProductByIdQuery.cs
+│   │   │   │   │   └── GetProductsByCategoryQuery.cs
+│   │   │   │   ├── Handlers/
+│   │   │   │   │   ├── CreateProductCommandHandler.cs
+│   │   │   │   │   ├── GetAllProductsQueryHandler.cs
+│   │   │   │   │   └── ...
+│   │   │   │   └── ProductResponse.cs   (DTO)
+│   │   │   │
+│   │   │   ├── Orders/
+│   │   │   ├── Users/
+│   │   │   ├── Vendors/
+│   │   │   ├── Categories/
+│   │   │   ├── Carts/
+│   │   │   └── Reviews/
+│   │   │
+│   │   ├── Validators/                  (FluentValidation Rules)
+│   │   │   ├── CreateProductValidator.cs
+│   │   │   ├── UpdateProductValidator.cs
+│   │   │   └── ...
+│   │   │
+│   │   └── Market.Application.csproj
+│   │
+│   ├── Market.Infrastructure/          (Depends on Application + Domain)
+│   │   ├── DependencyInjection.cs       (Registers DbContext + Repos + UnitOfWork)
+│   │   │
+│   │   ├── Data/
+│   │   │   ├── MarketDbContext.cs       (EF Core DbContext)
+│   │   │   │
+│   │   │   ├── Configurations/          (EF Core Fluent API)
+│   │   │   │   ├── ProductConfiguration.cs
+│   │   │   │   ├── CategoryConfiguration.cs
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── Persistence/
+│   │   │   │   └── UnitOfWork.cs        (IUnitOfWork Implementation)
+│   │   │   │
+│   │   │   ├── Repositories/            (IRepository Implementations)
+│   │   │   │   ├── Repository.cs        (Generic Base)
+│   │   │   │   ├── ProductRepository.cs
+│   │   │   │   ├── OrderRepository.cs
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── Seeds/
+│   │   │   │   └── DataSeeder.cs        (Initial Data)
+│   │   │   │
+│   │   │   └── Migrations/              (EF Core Migrations)
+│   │   │       ├── 001_InitialCreate.cs
+│   │   │       └── ...
+│   │   │
+│   │   └── Market.Infrastructure.csproj
+│   │
+│   ├── Market.API/                     (Depends on Application + Infrastructure)
+│   │   ├── Controllers/
+│   │   │   ├── ProductsController.cs    (Thin - Delegates to MediatR)
+│   │   │   ├── OrdersController.cs
+│   │   │   ├── UsersController.cs
+│   │   │   └── ...
+│   │   │
+│   │   ├── Middleware/
+│   │   │   ├── ValidationMiddleware.cs
+│   │   │   ├── ExceptionMiddleware.cs
+│   │   │   └── ...
+│   │   │
+│   │   ├── Configurations/              (Swagger, CORS, etc.)
+│   │   │   ├── SwaggerConfiguration.cs
+│   │   │   ├── MiddlewareConfiguration.cs
+│   │   │   └── ...
+│   │   │
+│   │   ├── DependencyInjection.cs       (Registers Controllers, Swagger, Middleware)
+│   │   ├── GlobalUsings.cs
+│   │   ├── Program.cs
+│   │   ├── appsettings.json
+│   │   ├── appsettings.Development.json
+│   │   │
+│   │   └── Market.API.csproj
+│   │
+│   └── Market.sln
 │
-├── Models/
-│   ├── Entities/             # Domain Models
-│   │   ├── Product.cs
-│   │   ├── Category.cs
-│   │   ├── User.cs
-│   │   ├── Vendor.cs
-│   │   ├── Order.cs
-│   │   ├── Cart.cs
-│   │   └── Review.cs
-│   └── Enums/                # OrderStatus, PaymentStatus, UserRole
+├── tests/
+│   ├── Market.Domain.Tests/
+│   │   ├── UnitTest1.cs (stub)
+│   │   └── Market.Domain.Tests.csproj
+│   │
+│   ├── Market.Application.Tests/
+│   │   ├── UnitTest1.cs (stub)
+│   │   └── Market.Application.Tests.csproj
+│   │
+│   ├── Market.Infrastructure.Tests/
+│   │   ├── UnitTest1.cs (stub)
+│   │   └── Market.Infrastructure.Tests.csproj
+│   │
+│   └── Market.API.Tests/
+│       ├── UnitTest1.cs (stub)
+│       └── Market.API.Tests.csproj
 │
-├── Data/
-│   ├── Repositories/         # Data Access Implementation
-│   │   ├── Repository.cs     # Generic implementation
-│   │   └── (Specific repos for each entity)
-│   ├── Interfaces/           # Repository Contracts
-│   │   ├── IRepository.cs    # Generic interface
-│   │   └── (Specific interfaces)
-│   ├── UnitOfWork/           # Coordinated repository access
-│   └── MongoDbContext.cs    # MongoDB connection & indexes
+├── docs/
+│   ├── ARCHITECTURE.md         (this file)
+│   ├── API.md
+│   ├── DOCKER.md
+│   └── ...
 │
-├── Services/                 # Business Logic Layer
-│   ├── ProductService.cs
-│   ├── Interfaces/
-│   │   └── IProductService.cs
-│   └── (Similar for all entities)
-│
-├── Validators/               # Validation Framework
-│   ├── ProductValidator.cs
-│   ├── ValidationResult.cs
-│   ├── ValidationError.cs
-│   └── (Similar for all entities)
-│
-├── Configurations/           # DI Setup & Middleware
-│   ├── ServiceConfiguration.cs
-│   ├── DataConfiguration.cs
-│   ├── ValidatorConfiguration.cs
-│   ├── MediatRConfiguration.cs
-│   ├── SwaggerConfiguration.cs
-│   └── MiddlewareConfiguration.cs
-│
-├── Middleware/               # Request Processing
-│   └── ValidationMiddleware.cs
-│
-├── Settings/                 # Configuration Models
-│   └── MongoDbSettings.cs
-│
-├── Program.cs               # Application Entry Point
-└── appsettings.json         # Configuration
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
 ```
+
+## Layer Responsibilities
+
+### 1. Domain Layer (`Market.Domain`)
+
+**Purpose**: Core business models and abstractions
+
+**Responsibilities**:
+- Define business entities (Product, Category, User, Order, etc.)
+- Define value objects (Slug, Money, etc.)
+- Define enums (OrderStatus, UserRole, etc.)
+- Define repository interfaces (contracts that Infrastructure implements)
+- Encapsulate domain business rules
+
+**Rules**:
+- ✅ Can reference: Nothing (zero dependencies)
+- ❌ Cannot reference: Application, Infrastructure, or API layers
+- ❌ Cannot import: EF Core, MediatR, ASP.NET Core, external packages (except BCL)
+
+**Example**:
+```csharp
+namespace Market.Domain.Entities
+{
+    public class Product : BaseEntity
+    {
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        // ... business properties
+    }
+}
+
+namespace Market.Domain.Repositories
+{
+    public interface IProductRepository : IRepository<Product>
+    {
+        Task<Product> GetBySkuAsync(string sku);
+    }
+}
+```
+
+### 2. Application Layer (`Market.Application`)
+
+**Purpose**: Business logic and use cases (CQRS handlers)
+
+**Responsibilities**:
+- Implement CQRS Commands (write operations)
+- Implement CQRS Queries (read operations)
+- Validate incoming requests (FluentValidation)
+- Map between DTOs and domain models
+- Orchestrate repository calls
+- Define application DTOs/responses
+
+**Rules**:
+- ✅ Can reference: Domain only
+- ✅ Can use: MediatR, FluentValidation, AutoMapper
+- ❌ Cannot reference: Infrastructure, API layers
+- ❌ Cannot import: EF Core, ASP.NET Core, controllers
+
+**Example**:
+```csharp
+namespace Market.Application.Features.Products.Commands
+{
+    public class CreateProductCommand : IRequest<ProductResponse> { }
+
+    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
+    {
+        private readonly IProductRepository _repo;
+        
+        public async Task<ProductResponse> Handle(CreateProductCommand request, CancellationToken ct)
+        {
+            // Business logic using Domain interfaces
+            var product = new Product(request.Name, request.Price);
+            await _repo.AddAsync(product);
+            return new ProductResponse { Id = product.Id, Name = product.Name };
+        }
+    }
+}
+```
+
+### 3. Infrastructure Layer (`Market.Infrastructure`)
+
+**Purpose**: Data access and external services
+
+**Responsibilities**:
+- Implement DbContext (SQL Server with EF Core)
+- Implement repository interfaces
+- Implement Unit of Work
+- Configure entity mappings
+- Manage database migrations
+- Seed initial data
+- Register IoC container
+
+**Rules**:
+- ✅ Can reference: Application, Domain
+- ✅ Can use: EF Core, external libraries
+- ❌ Cannot reference: API layer
+- ❌ Cannot import: Controllers, HTTP concerns
+
+**Example**:
+```csharp
+namespace Market.Infrastructure.Data.Repositories
+{
+    public class ProductRepository : Repository<Product>, IProductRepository
+    {
+        public async Task<Product> GetBySkuAsync(string sku)
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.SKU == sku);
+        }
+    }
+}
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services, 
+        IConfiguration config)
+    {
+        services.AddDbContext<MarketDbContext>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return services;
+    }
+}
+```
+
+### 4. API Layer (`Market.API`)
+
+**Purpose**: HTTP presentation and orchestration
+
+**Responsibilities**:
+- Accept HTTP requests via Controllers
+- Validate HTTP input
+- Send commands/queries to MediatR
+- Return HTTP responses
+- Configure Swagger/OpenAPI
+- Set up middleware
+- Register all layer services in composition root
+
+**Rules**:
+- ✅ Can reference: Application, Infrastructure
+- ✅ Can use: ASP.NET Core, MediatR
+- ❌ Cannot contain: Business logic
+- ❌ Cannot have: Direct repository access
+
+**Example**:
+```csharp
+namespace Market.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductsController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateProductCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _mediator.Send(new GetProductByIdQuery { Id = id });
+            return Ok(result);
+        }
+    }
+}
+
+// Program.cs
+builder.Services
+    .AddApplicationServices()                    // Register MediatR + Validators
+    .AddInfrastructureServices(config)         // Register DbContext + Repos
+    .AddPresentationServices();                 // Register Controllers + Swagger
+```
+
+## Dependency Flow
+
+```
+API Layer
+  ↓
+  └─→ Depends on: Application + Infrastructure
+  
+Application Layer
+  ↓
+  └─→ Depends on: Domain ONLY
+  
+Infrastructure Layer
+  ↓
+  └─→ Depends on: Domain + Application
+  
+Domain Layer
+  ↓
+  └─→ Depends on: NOTHING ✓
+```
+
+**Rule**: Flow is always downward (unidirectional). No upward or sideways dependencies.
 
 ## Design Patterns
 
 ### 1. Repository Pattern
+- Abstracts data access behind interfaces defined in Domain
+- Each entity has a specialized repository interface
+- Infrastructure implements all repository interfaces
 
-**Generic Repository** (`IRepository<T>`):
-```csharp
-public interface IRepository<T> where T : class
-{
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<T> GetByIdAsync(string id);
-    Task CreateAsync(T entity);
-    Task UpdateAsync(string id, T entity);
-    Task DeleteAsync(string id);
-}
-```
+### 2. CQRS (Command/Query Responsibility Segregation)
+- Commands: Write operations (CreateProductCommand, UpdateProductCommand, etc.)
+- Queries: Read operations (GetAllProductsQuery, GetProductByIdQuery, etc.)
+- Handlers: IRequestHandler<TRequest, TResponse> implementations
+- All routed through MediatR
 
-**Specific Repository** (`IProductRepository`):
-```csharp
-public interface IProductRepository : IRepository<Product>
-{
-    Task<IEnumerable<Product>> GetByPriceRange(decimal minPrice, decimal maxPrice);
-}
-```
+### 3. Dependency Injection
+- Layers register their own services via extension methods
+- API composes all layers in Program.cs
+- Infrastructure creates DbContext and repositories
+- Application registers MediatR handlers and validators
 
-### 2. Dependency Injection
+### 4. Unit of Work
+- Manages DbContext and coordinates multiple repositories
+- Ensures transaction consistency
+- Provides atomic operations across aggregates
 
-Services are registered in `Program.cs`:
+### 5. Value Objects
+- Encapsulate primitive values (Slug, Money, Email)
+- Enforce validation rules
+- Provide type safety
 
-```csharp
-// MongoDB Settings
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection(nameof(MongoDbSettings)));
+## SOLID Principles
 
-// Generic Repository
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+### Single Responsibility
+- Each class has ONE reason to change
+- ProductRepository handles only Product data access
+- CreateProductCommandHandler handles only product creation logic
+- Controllers only orchestrate HTTP concerns
 
-// Product Repository
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-```
+### Open/Closed
+- Classes are open for extension, closed for modification
+- New features added via new Commands/Queries, not modifying existing ones
+- Repository interfaces allow swapping implementations
 
-### 3. Options Pattern
+### Liskov Substitution
+- All IProductRepository implementations behave identically
+- Any IRepository<T> can be used interchangeably
+- Handlers depend on abstractions, not concrete implementations
 
-Configuration is bound to strongly-typed classes:
+### Interface Segregation
+- Small, focused interfaces (IProductRepository vs. IRepository<>)
+- Clients don't depend on methods they don't use
+- Commands/Queries are specific and single-purpose
 
-```csharp
-public class MongoDbSettings
-{
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
-}
-```
+### Dependency Inversion
+- High-level modules (Application) don't depend on low-level modules (Infrastructure)
+- Both depend on abstractions (Domain interfaces)
+- Interfaces defined in Domain layer
+- Implementations in Infrastructure layer
 
 ## Data Flow
 
-### Request Flow with MediatR
-
+### Command Flow (Write Operation)
 ```
-1. HTTP Request
-   ↓
-2. Controller (e.g., ProductsController)
-   ↓
-3. MediatR.Send(Command or Query)
-   ↓
-4. Command/Query Handler
-   ├─ Validates request
-   ├─ Calls Service (if needed)
-   └─ Calls Repository
-      ↓
-5. Service Layer (optional business logic)
-   ├─ Validates entity
-   ├─ Applies business rules
-   └─ Calls Repository
-      ↓
-6. Repository Layer
-   ├─ Applies MongoDB operations
-   └─ Calls MongoDB Driver
-      ↓
-7. MongoDB Database
-   ↓
-8. Handler returns Response DTO
-   ↓
-9. HTTP Response (JSON)
+HTTP POST
+  ↓
+ProductsController
+  ↓
+_mediator.Send(CreateProductCommand)
+  ↓
+CreateProductCommandHandler (Application)
+  ↓
+IProductRepository.AddAsync() (Domain interface)
+  ↓
+ProductRepository.AddAsync() (Infrastructure implementation)
+  ↓
+DbContext.Products.AddAsync()
+  ↓
+await _unitOfWork.SaveChangesAsync()
+  ↓
+SQL INSERT
+  ↓
+HTTP Response
 ```
 
-### Example: Create Product Request
-
-```csharp
-// 1. HTTP POST request
-POST /api/products
-{
-  "name": "Laptop",
-  "price": 999.99
-}
-
-// 2. Controller receives request
-[HttpPost]
-public async Task<IActionResult> Create(CreateProductCommand command)
-{
-    // 3. Send to MediatR
-    var result = await _mediator.Send(command);
-    return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
-}
-
-// 4. Handler processes command
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
-{
-    public async Task<ProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
-    {
-        // 5. Create entity
-        var product = new Product 
-        { 
-            Name = request.Name, 
-            Price = request.Price 
-        };
-        
-        // 6. Call repository
-        await _repository.CreateAsync(product);
-        
-        // 7. Return response DTO
-        return new ProductResponse 
-        { 
-            Id = product.Id, 
-            Name = product.Name, 
-            Price = product.Price 
-        };
-    }
-}
-
-// 8. Response sent back
-201 Created
-{
-  "id": "507f1f77bcf86cd799439011",
-  "name": "Laptop",
-  "price": 999.99
-}
+### Query Flow (Read Operation)
+```
+HTTP GET /api/products
+  ↓
+ProductsController
+  ↓
+_mediator.Send(GetAllProductsQuery)
+  ↓
+GetAllProductsQueryHandler (Application)
+  ↓
+IProductRepository.GetAllAsync() (Domain interface)
+  ↓
+ProductRepository.GetAllAsync() (Infrastructure)
+  ↓
+DbContext.Products.ToListAsync()
+  ↓
+SQL SELECT
+  ↓
+Map to ProductResponse DTOs
+  ↓
+HTTP Response (JSON)
 ```
 
-## Key Components
-
-### 1. Controllers
-
-**Responsibility**: Handle HTTP requests and route to MediatR
-
-**Example**:
-```csharp
-[Route("api/[controller]")]
-[ApiController]
-public class ProductsController : ControllerBase
-{
-    private readonly IMediator _mediator;
-    
-    public ProductsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-    
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var result = await _mediator.Send(new GetAllProductsQuery());
-        return Ok(result);
-    }
-}
-```
-
-### 2. MediatR Commands & Queries
-
-**Responsibility**: Encapsulate request/response logic with handlers
-
-**Commands** (Create, Update, Delete):
-```csharp
-public class CreateProductCommand : IRequest<ProductResponse>
-{
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-}
-
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
-{
-    // Handle business logic
-}
-```
-
-**Queries** (Read):
-```csharp
-public class GetAllProductsQuery : IRequest<List<ProductResponse>> { }
-
-public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductResponse>>
-{
-    // Handle query logic
-}
-```
-
-### 3. Response DTOs
-
-**Responsibility**: Define API response contracts
-
-**Example**:
-```csharp
-public class ProductResponse
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-    public DateTime CreatedAt { get; set; }
-}
-```
-
-### 4. Services
-
-**Responsibility**: Business logic layer with validation and logging
-
-**Example**:
-```csharp
-public class ProductService : IProductService
-{
-    private readonly IProductRepository _repository;
-    private readonly IValidator<Product> _validator;
-    
-    public async Task<Product> CreateAsync(Product product)
-    {
-        // Validate
-        var validationResult = await _validator.ValidateAsync(product);
-        if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.Errors);
-        
-        // Create
-        await _repository.CreateAsync(product);
-        return product;
-    }
-}
-```
-
-### 5. Validators
-
-**Responsibility**: Validate entities before processing
-
-**Example**:
-```csharp
-public class ProductValidator : IValidator<Product>
-{
-    public async Task<ValidationResult> ValidateAsync(Product entity)
-    {
-        var errors = new List<ValidationError>();
-        
-        if (string.IsNullOrWhiteSpace(entity.Name))
-            errors.Add(new ValidationError("Name", "Product name is required"));
-            
-        if (entity.Price <= 0)
-            errors.Add(new ValidationError("Price", "Price must be positive"));
-        
-        return new ValidationResult { Errors = errors, IsValid = errors.Count == 0 };
-    }
-}
-```
-
-### 6. Repositories
-
-**Responsibility**: Abstract data access logic
-
-**Generic Repository**:
-```csharp
-public interface IRepository<T> where T : class
-{
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<T> GetByIdAsync(string id);
-    Task CreateAsync(T entity);
-    Task UpdateAsync(string id, T entity);
-    Task DeleteAsync(string id);
-}
-```
-
-**Specific Repository**:
-```csharp
-public interface IProductRepository : IRepository<Product>
-{
-    Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal min, decimal max);
-}
-```
-
-### 7. Entities
-
-**Responsibility**: Define domain models
-
-**Example**:
-```csharp
-[BsonIgnoreExtraElements]
-public class Product : BaseEntity
-{
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-    public string Category { get; set; }
-}
-```
-
-### 8. Unit of Work
-
-**Responsibility**: Coordinate multiple repositories
-
-**Example**:
-```csharp
-public interface IUnitOfWork
-{
-    IProductRepository Products { get; }
-    IUserRepository Users { get; }
-    IVendorRepository Vendors { get; }
-    // ... other repositories
-    Task<int> SaveAsync();
-}
-```
-
-## Best Practices
-
-### 1. Async/Await
-
-All data access operations use async/await:
-
-```csharp
-public async Task<IEnumerable<Product>> GetAllAsync()
-{
-    return await _collection.Find(_ => true).ToListAsync();
-}
-```
-
-### 2. Dependency Injection
-
-Use constructor injection for dependencies:
-
-```csharp
-public ProductsController(IProductRepository repository)
-{
-    _repository = repository;
-}
-```
-
-### 3. Interface Segregation
-
-Separate interfaces for different concerns:
-
-```csharp
-IRepository<T>           // Generic operations
-IProductRepository       // Product-specific operations
-```
-
-### 4. Single Responsibility
-
-Each class has one reason to change:
-
-- **Controllers**: Handle HTTP
-- **Repositories**: Handle data access
-- **Entities**: Define data structure
-
-### 5. Configuration Management
-
-Use strongly-typed configuration:
-
-```csharp
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection(nameof(MongoDbSettings)));
-```
-
-## Future Enhancements
-
-### 1. Service Layer
-
-Add a service layer between controllers and repositories:
-
-```
-Controller → Service → Repository → Database
-```
-
-### 2. Unit of Work Pattern
-
-Implement Unit of Work for transaction management:
-
-```csharp
-public interface IUnitOfWork
-{
-    IProductRepository Products { get; }
-    Task<int> CompleteAsync();
-}
-```
-
-### 3. CQRS Pattern
-
-Separate read and write operations:
-
-```csharp
-IProductQueryRepository  // Read operations
-IProductCommandRepository // Write operations
-```
-
-### 4. Domain Events
-
-Implement domain events for loose coupling:
-
-```csharp
-public class ProductCreatedEvent : IDomainEvent
-{
-    public Product Product { get; set; }
-}
-```
-
-### 5. Validation Layer
-
-Add FluentValidation for request validation:
-
-```csharp
-public class ProductValidator : AbstractValidator<Product>
-{
-    public ProductValidator()
-    {
-        RuleFor(x => x.Name).NotEmpty();
-        RuleFor(x => x.Price).GreaterThan(0);
-    }
-}
-```
-
-## Testing Strategy
-
-### Unit Tests
-
-Test repositories with mocked MongoDB:
-
-```csharp
-[Fact]
-public async Task GetAllAsync_ReturnsAllProducts()
-{
-    // Arrange
-    var mockCollection = new Mock<IMongoCollection<Product>>();
-    var repository = new Repository<Product>(mockCollection.Object);
-    
-    // Act
-    var result = await repository.GetAllAsync();
-    
-    // Assert
-    Assert.NotNull(result);
-}
-```
-
-### Integration Tests
-
-Test with real MongoDB (TestContainers):
-
-```csharp
-[Fact]
-public async Task CreateProduct_SavesToDatabase()
-{
-    // Arrange
-    using var container = new MongoDbContainer();
-    await container.StartAsync();
-    
-    // Act & Assert
-    // Test with real MongoDB
-}
-```
-
-## Performance Considerations
-
-### 1. Indexing
-
-Create indexes for frequently queried fields:
-
-```csharp
-await collection.Indexes.CreateOneAsync(
-    new CreateIndexModel<Product>(
-        Builders<Product>.IndexKeys.Ascending(x => x.Price)
-    )
-);
-```
-
-### 2. Projection
-
-Use projection to retrieve only needed fields:
-
-```csharp
-var products = await _collection
-    .Find(filter)
-    .Project(x => new { x.Id, x.Name })
-    .ToListAsync();
-```
-
-### 3. Pagination
-
-Implement pagination for large datasets:
-
-```csharp
-public async Task<IEnumerable<Product>> GetPagedAsync(int page, int pageSize)
-{
-    return await _collection
-        .Find(_ => true)
-        .Skip((page - 1) * pageSize)
-        .Limit(pageSize)
-        .ToListAsync();
-}
-```
-
-## Security Considerations
-
-### 1. Input Validation
-
-Validate all user inputs:
-
-```csharp
-[Required]
-[StringLength(100)]
-public string Name { get; set; }
-
-[Range(0.01, double.MaxValue)]
-public decimal Price { get; set; }
-```
-
-### 2. Connection String Security
-
-Store connection strings securely:
-- Use User Secrets in development
-- Use Azure Key Vault in production
-- Never commit connection strings to source control
-
-### 3. API Security
-
-Consider adding:
-- Authentication (JWT)
-- Authorization (Role-based)
-- Rate limiting
-- CORS configuration
-
-## Monitoring and Logging
-
-### Recommended Additions
-
-1. **Structured Logging**: Use Serilog
-2. **Health Checks**: Monitor MongoDB connection
-3. **Metrics**: Track API performance
-4. **Distributed Tracing**: Use OpenTelemetry
-
-## Conclusion
-
-This architecture provides:
-- ✅ Clean separation of concerns
-- ✅ Testable code
-- ✅ Maintainable structure
-- ✅ Scalable design
-- ✅ SOLID principles
-
-The design allows for easy extension and modification as the application grows.
+## Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Presentation** | ASP.NET Core 9.0 Web API |
+| **Orchestration** | MediatR (CQRS) |
+| **Validation** | FluentValidation |
+| **Data Access** | Entity Framework Core 9.0 |
+| **Database** | SQL Server 2022 |
+| **Testing** | xUnit |
+| **Language** | C# 13 (.NET 9) |
+| **Build** | MSBuild |
+| **Documentation** | Swagger/OpenAPI |
+
+## Key Takeaways
+
+1. **Strict Layer Separation**: Each layer has clear responsibilities and dependencies
+2. **Domain-Centric**: Domain layer is the core; other layers serve it
+3. **Pure CQRS**: All business operations modeled as Commands or Queries
+4. **No Circular Dependencies**: Always flow downward
+5. **Highly Testable**: Mock Domain interfaces to test Application and Infrastructure
+6. **Maintainable**: New features added without modifying existing code (Open/Closed)
+7. **Scalable**: Easy to add new entities, commands, queries, and handlers
+
+---
+
+*Last Updated: August 2026*

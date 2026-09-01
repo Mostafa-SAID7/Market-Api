@@ -1,20 +1,23 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
+  # SQL Server database
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: market-api-mssql
     restart: always
     ports:
-      - "27017:27017"
+      - "1433:1433"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password123
+      SA_PASSWORD: "YourPassword@123"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
     volumes:
-      - mongodb_data:/data/db
+      - mssql_data:/var/opt/mssql
     networks:
-      - aspnet-mongodb-network
+      - market-api-network
 
+  # Market API Application
   market-api:
     build:
       context: .
@@ -27,16 +30,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - MongoDbSettings__ConnectionString=mongodb://admin:password123@mongodb:27017
-      - MongoDbSettings__DatabaseName=MongoDbDemo
+      - ConnectionStrings__DefaultConnection=Server=mssql;Database=MarketDb;User Id=sa;Password=YourPassword@123;Encrypt=False;TrustServerCertificate=True;
     depends_on:
-      - mongodb
+      - mssql
     networks:
-      - aspnet-mongodb-network
+      - market-api-network
 
 volumes:
-  mongodb_data:
+  mssql_data:
 
 networks:
-  aspnet-mongodb-network:
+  market-api-network:
     driver: bridge

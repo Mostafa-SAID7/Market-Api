@@ -1,0 +1,5 @@
+C:\Users\cw_14\Downloads\New folder\Market-Api\src\Market.Domain\obj\Release\net9.0\Market.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cw_14\Downloads\New folder\Market-Api\src\Market.Domain\obj\Release\net9.0\Market.Domain.AssemblyInfoInputs.cache
+C:\Users\cw_14\Downloads\New folder\Market-Api\src\Market.Domain\obj\Release\net9.0\Market.Domain.AssemblyInfo.cs
+C:\Users\cw_14\Downloads\New folder\Market-Api\src\Market.Domain\obj\Release\net9.0\Market.Domain.csproj.CoreCompileInputs.cache
+C:\Users\cw_14\Downloads\New folder\Market-Api\src\Market.Domain\obj\Release\net9.0\Market.Domain.sourcelink.json
