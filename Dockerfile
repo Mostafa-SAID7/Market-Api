@@ -2,21 +2,21 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy solution and all project files
+# Copy solution and source project files (tests not needed for Docker build)
 COPY Market.sln .
 COPY src/Market.Domain/Market.Domain.csproj src/Market.Domain/
 COPY src/Market.Application/Market.Application.csproj src/Market.Application/
 COPY src/Market.Infrastructure/Market.Infrastructure.csproj src/Market.Infrastructure/
 COPY src/Market.API/Market.API.csproj src/Market.API/
 
-# Restore dependencies
-RUN dotnet restore "Market.sln"
+# Restore dependencies for source projects only
+RUN dotnet restore "src/Market.API/Market.API.csproj"
 
-# Copy everything else
-COPY . .
+# Copy source code
+COPY src/ src/
 
-# Build
-RUN dotnet build "Market.sln" -c Release -o /app/build
+# Build only API project for production
+RUN dotnet build "src/Market.API/Market.API.csproj" -c Release -o /app/build
 
 # Publish stage
 FROM build AS publish
