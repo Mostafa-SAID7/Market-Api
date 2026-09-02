@@ -15,8 +15,8 @@ jobs:
 
     steps:
     - name: Assign Issue Creator
-      if: github.event_name == 'issues'
-      uses: actions/github-script@v7
+      if: github.event_name == 'issues' && github.actor != 'dependabot[bot]'
+      uses: actions/github-script@v8
       with:
         script: |
           const { owner, repo } = context.repo;
@@ -31,8 +31,8 @@ jobs:
           });
 
     - name: Assign PR Author
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+      uses: actions/github-script@v8
       with:
         script: |
           const { owner, repo } = context.repo;
