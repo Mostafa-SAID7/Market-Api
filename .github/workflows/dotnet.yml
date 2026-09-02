@@ -25,8 +25,8 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     
     - name: Test
-      run: dotnet test --no-build --configuration Release --verbosity normal
-      continue-on-error: true
+      run: dotnet test --configuration Release --verbosity normal
+
     
     - name: Publish
       run: dotnet publish src/Market.API/Market.API.csproj --configuration Release --output ./publish

@@ -40,7 +40,8 @@ jobs:
       run: dotnet build Market.sln --configuration Release --no-restore
 
     - name: Run Tests
-      run: dotnet test Market.sln --configuration Release --no-build --verbosity normal
+      run: dotnet test Market.sln --configuration Release --verbosity normal
+
 
     - name: Pack Projects
       run: |
