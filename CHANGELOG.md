@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.1...v2.3.2) (2026-09-02)
+
+
+### Bug Fixes
+
+* **tests:** add Microsoft.NET.Test.Sdk to all test projects and remove --no-build from test workflow steps ([8af3dc4](https://github.com/Mostafa-SAID7/Market-Api/commit/8af3dc4149d4717b5536bd7d79919d026f0b8bc2))
+
 ## [2.3.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.0...v2.3.1) (2026-09-02)
 
 
