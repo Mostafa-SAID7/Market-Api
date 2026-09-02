@@ -1,3 +1,10 @@
+## [2.3.3](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.2...v2.3.3) (2026-09-02)
+
+
+### Bug Fixes
+
+* resolve package downgrade errors in Market.API and Market.Infrastructure ([7b09eb2](https://github.com/Mostafa-SAID7/Market-Api/commit/7b09eb201a1e73cd52dcc8869472734331ac27c3))
+
 ## [2.3.2](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.1...v2.3.2) (2026-09-02)
 
 
