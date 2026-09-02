@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.2.0...v2.3.0) (2026-09-02)
+
+
+### Features
+
+* **ci/cd:** add NuGet publishing workflow, package metadata, interactive issue forms, and governance files ([56bd1b1](https://github.com/Mostafa-SAID7/Market-Api/commit/56bd1b1864df68a7b4fa646835b6414fcb3faae0))
+
 # [2.2.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.1.0...v2.2.0) (2026-09-02)
 
 
