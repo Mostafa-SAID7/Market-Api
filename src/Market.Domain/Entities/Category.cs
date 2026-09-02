@@ -11,9 +11,9 @@ namespace Market.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
-        
+
         public string Slug { get; set; } = string.Empty;
-        
+
         public int? ParentCategoryId { get; set; } // For subcategories
         public bool IsActive { get; set; } = true;
         public int DisplayOrder { get; set; } = 0;

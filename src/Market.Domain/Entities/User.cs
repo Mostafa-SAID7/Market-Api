@@ -13,13 +13,13 @@ namespace Market.Domain.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        
+
         public UserRole Role { get; set; }
-        
+
         public bool IsActive { get; set; } = true;
         public bool IsEmailVerified { get; set; } = false;
         public bool EmailConfirmed { get; set; } = false;
-        
+
         public int? VendorId { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";

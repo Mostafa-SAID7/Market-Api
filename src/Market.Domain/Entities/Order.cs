@@ -10,7 +10,7 @@ namespace Market.Domain.Entities
     {
         public int CustomerId { get; set; }
         public string OrderNumber { get; set; } = string.Empty;
-        
+
         public decimal SubTotal { get; set; }
         public decimal ShippingCost { get; set; }
         public decimal Tax { get; set; }

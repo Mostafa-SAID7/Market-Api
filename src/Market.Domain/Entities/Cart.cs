@@ -8,9 +8,9 @@ namespace Market.Domain.Entities
     public class Cart : BaseEntity
     {
         public int UserId { get; set; }
-        
+
         public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
-        
+
         public decimal SubTotal => Items.Sum(x => x.SubTotal);
         public int TotalItems => Items.Sum(x => x.Quantity);
 
@@ -23,7 +23,7 @@ namespace Market.Domain.Entities
         public void AddItem(CartItem item)
         {
             var existingItem = Items.FirstOrDefault(x => x.ProductId == item.ProductId && x.VendorId == item.VendorId);
-            
+
             if (existingItem != null)
             {
                 existingItem.Quantity += item.Quantity;

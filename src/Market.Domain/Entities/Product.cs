@@ -24,7 +24,7 @@ namespace Market.Domain.Entities
         public string? SKU { get; set; }
 
         public ProductStatus Status { get; set; } = ProductStatus.Active;
-        
+
         public double AverageRating { get; set; } = 0.0;
         public int ReviewCount { get; set; } = 0;
 
