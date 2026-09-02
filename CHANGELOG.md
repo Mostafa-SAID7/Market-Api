@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.1.0...v2.2.0) (2026-09-02)
+
+
+### Features
+
+* optimize API performance, enhance static assets caching, and cleanup build artifacts from git tracking ([d322176](https://github.com/Mostafa-SAID7/Market-Api/commit/d322176ae5c9f703b453463393130ff4cf65cf4f))
+
 # [2.1.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.0.1...v2.1.0) (2026-09-02)
 
 
