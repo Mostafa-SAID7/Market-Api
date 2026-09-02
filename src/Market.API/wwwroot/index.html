@@ -11,12 +11,16 @@
     <nav>
         <div class="container">
             <a href="/index.html" class="logo">
-                <img src="/images/logo.svg" alt="Market API Logo" style="width: 40px; height: 40px;">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
                 <span>Market API</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
-                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
                 <li><a href="/swagger">Swagger</a></li>
             </ul>
         </div>
@@ -29,7 +33,7 @@
         </div>
         <h1>Market API v2.0</h1>
         <p>A Modern RESTful API with MediatR, Validation, and 7 Complete Entities</p>
-        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+        <div class="button-group button-group--center">
             <a href="/swagger" class="btn btn-primary">Try API</a>
             <a href="/docs.html" class="btn">View Docs</a>
         </div>
@@ -38,21 +42,21 @@
     <div class="container">
         <div class="cards">
             <div class="card">
-                <span class="card-icon">⚡</span>
+                <span class="card-icon"><i data-lucide="zap" aria-hidden="true"></i></span>
                 <h3>Enterprise Architecture</h3>
                 <p>Built with MediatR CQRS pattern, Repository pattern, and comprehensive validation framework</p>
                 <a href="/docs.html" class="btn">Learn More</a>
             </div>
 
             <div class="card">
-                <span class="card-icon">📚</span>
+                <span class="card-icon"><i data-lucide="book-open" aria-hidden="true"></i></span>
                 <h3>Fully Documented</h3>
                 <p>Complete documentation for all 7 entities with examples, architecture guides, and implementation patterns</p>
                 <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/DOCUMENTATION.md" class="btn">Read Docs</a>
             </div>
 
             <div class="card">
-                <span class="card-icon">🔒</span>
+                <span class="card-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span>
                 <h3>Production Ready</h3>
                 <p>Validated data, dependency injection, logging, error handling, and Docker support included</p>
                 <a href="/swagger" class="btn">Get Started</a>
@@ -60,18 +64,18 @@
         </div>
 
         <div class="endpoints">
-            <h2>📡 API Endpoints (7 Entities)</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Complete CRUD operations for Products, Categories, Users, Vendors, Orders, Carts, and Reviews. See <a href="/docs.html" style="color: var(--accent-gold);">detailed documentation</a> for all endpoints.</p>
+            <h2><i data-lucide="server" aria-hidden="true" class="icon-inline"></i> API Endpoints (7 Entities)</h2>
+            <p class="section-subtitle">Complete CRUD operations for Products, Categories, Users, Vendors, Orders, Carts, and Reviews. See <a href="/docs.html" class="link-accent">detailed documentation</a> for all endpoints.</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div class="endpoint-grid">
                 <!-- Products -->
-                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">📦 Products</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--gold">
+                    <h4 class="endpoint-category-title"><i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Products</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/products</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method post">POST</span>
                         <code>/api/products</code>
                     </div>
@@ -82,13 +86,13 @@
                 </div>
 
                 <!-- Categories -->
-                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🏷️ Categories</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--brown">
+                    <h4 class="endpoint-category-title"><i data-lucide="tag" aria-hidden="true" class="icon-inline"></i> Categories</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/categories</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method post">POST</span>
                         <code>/api/categories</code>
                     </div>
@@ -99,13 +103,13 @@
                 </div>
 
                 <!-- Users -->
-                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">👤 Users</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--gold">
+                    <h4 class="endpoint-category-title"><i data-lucide="users" aria-hidden="true" class="icon-inline"></i> Users</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/users</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method post">POST</span>
                         <code>/api/users</code>
                     </div>
@@ -116,13 +120,13 @@
                 </div>
 
                 <!-- Vendors -->
-                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🏪 Vendors</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--brown">
+                    <h4 class="endpoint-category-title"><i data-lucide="store" aria-hidden="true" class="icon-inline"></i> Vendors</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/vendors</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method post">POST</span>
                         <code>/api/vendors</code>
                     </div>
@@ -133,13 +137,13 @@
                 </div>
 
                 <!-- Orders -->
-                <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 1rem;">📋 Orders</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--gold">
+                    <h4 class="endpoint-category-title"><i data-lucide="clipboard-list" aria-hidden="true" class="icon-inline"></i> Orders</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/orders</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method post">POST</span>
                         <code>/api/orders</code>
                     </div>
@@ -150,13 +154,13 @@
                 </div>
 
                 <!-- Carts & Reviews -->
-                <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem;">
-                    <h4 style="color: var(--accent-brown); margin-bottom: 1rem;">🛒 Carts & ⭐ Reviews</h4>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                <div class="endpoint-category endpoint-category--brown">
+                    <h4 class="endpoint-category-title"><i data-lucide="shopping-cart" aria-hidden="true" class="icon-inline"></i> Carts & <i data-lucide="star" aria-hidden="true" class="icon-inline"></i> Reviews</h4>
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/carts/{userId}</code>
                     </div>
-                    <div class="endpoint" style="margin-bottom: 0.5rem;">
+                    <div class="endpoint endpoint--mb">
                         <span class="method get">GET</span>
                         <code>/api/reviews</code>
                     </div>
@@ -168,53 +172,53 @@
             </div>
         </div>
 
-        <div class="cards" style="margin-top: 3rem;">
+        <div class="cards section-mt">
             <div class="card">
-                <h3>🔗 Quick Start</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="/swagger" style="color: var(--accent-gold);">→ Interactive API Explorer</a>
+                <h3><i data-lucide="link" aria-hidden="true" class="icon-inline"></i> Quick Start</h3>
+                <ul class="card-list">
+                    <li class="card-list-item">
+                        <a href="/swagger" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> Interactive API Explorer</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="/docs.html" style="color: var(--accent-gold);">→ Full Endpoint Reference</a>
+                    <li class="card-list-item">
+                        <a href="/docs.html" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> Full Endpoint Reference</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold);">→ GitHub Repository</a>
+                    <li class="card-list-item">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> GitHub Repository</a>
                     </li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>💡 v2.0 Features</h3>
-                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
-                    <li>✓ MediatR CQRS Pattern</li>
-                    <li>✓ Strong Validation Framework</li>
-                    <li>✓ Service Layer with Logging</li>
-                    <li>✓ Repository Pattern</li>
-                    <li>✓ 7 Complete Entities</li>
-                    <li>✓ Swagger/OpenAPI</li>
+                <h3><i data-lucide="sparkles" aria-hidden="true" class="icon-inline"></i> v2.0 Features</h3>
+                <ul class="card-list card-list--muted">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> MediatR CQRS Pattern</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Strong Validation Framework</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Service Layer with Logging</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Repository Pattern</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> 7 Complete Entities</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Swagger/OpenAPI</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>�️ Tech Stack</h3>
-                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
-                    <li>✓ ASP.NET Core 9</li>
-                    <li>✓ MongoDB 8.2</li>
-                    <li>✓ MediatR 12+</li>
-                    <li>✓ Serilog Logging</li>
-                    <li>✓ Docker Ready</li>
-                    <li>✓ OpenAPI/Swagger</li>
+                <h3><i data-lucide="layers" aria-hidden="true" class="icon-inline"></i> Tech Stack</h3>
+                <ul class="card-list card-list--muted">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> ASP.NET Core 9</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> SQL Server + EF Core 9</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> MediatR 12+</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Serilog Logging</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Docker Ready</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> OpenAPI/Swagger</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>📊 Platform Info</h3>
-                <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
-                    <li><strong>Database:</strong> MongoDbDemo</li>
-                    <li><strong>Collections:</strong> 7 entities</li>
+                <h3><i data-lucide="bar-chart-3" aria-hidden="true" class="icon-inline"></i> Platform Info</h3>
+                <ul class="card-list card-list--muted">
+                    <li><strong>Database:</strong> SQL Server (MarketApiDb)</li>
+                    <li><strong>Tables:</strong> 7 Relational Entities</li>
                     <li><strong>API Port:</strong> 5000/5001</li>
-                    <li><strong>Status:</strong> <span style="color: var(--success);">Running</span></li>
+                    <li><strong>Status:</strong> <span class="text-success">Running</span></li>
                     <li><strong>Version:</strong> v2.0.0</li>
                 </ul>
             </div>
@@ -222,10 +226,16 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
-        <p style="margin-top: 0.5rem; color: var(--accent-brown);">
-            <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold); text-decoration: none;">GitHub Repository</a>
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
         </p>
+    </footer>
+
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html></p>
     </footer>
 
     <script src="/js/main.js"></script>

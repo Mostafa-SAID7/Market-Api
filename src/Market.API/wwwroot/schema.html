@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Schema | Market API</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <div class="page-header">
+            <h1 class="page-title page-title-gradient">
+                <i data-lucide="database" aria-hidden="true" class="icon-title"></i> Data Schema & Entity Dictionary
+            </h1>
+            <p class="page-description">
+                Relational entity specifications, C# data types, and EF Core 9 Fluent API validation rules
+            </p>
+        </div>
+
+        <div class="card section-mt">
+            <h3><i data-lucide="git-fork" aria-hidden="true" class="icon-inline"></i> Entity Relationship Overview</h3>
+            <p class="text-mb">Market API enforces a clean, normalized relational schema backed by SQL Server:</p>
+            <ul class="card-list card-list--muted">
+                <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <strong>Products ↔ Categories</strong> (Many-to-One: Product belongs to Category)</li>
+                <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <strong>Products ↔ Vendors</strong> (Many-to-One: Product is supplied by Vendor)</li>
+                <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <strong>Orders ↔ Users</strong> (Many-to-One: Order is placed by Customer User)</li>
+                <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <strong>Carts ↔ Users</strong> (One-to-One: Customer active shopping cart)</li>
+                <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <strong>Reviews ↔ Products & Users</strong> (Many-to-One rating & review model)</li>
+            </ul>
+        </div>
+
+        <div class="endpoints section-mt">
+            <h2><i data-lucide="table" aria-hidden="true" class="icon-inline"></i> 7 Relational Entity Specifications</h2>
+
+            <!-- Product Entity -->
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Product Entity</h3>
+                <pre class="code-block">
+Table: Products
+-----------------------------------------------------------------------
+Field         | Type           | Nullable | Validation / Constraints
+-----------------------------------------------------------------------
+Id            | Guid (PK)      | No       | Primary Key (Sequential Guid)
+Name          | string         | No       | Max length 200, Required
+Description   | string         | Yes      | Max length 2000
+Price         | decimal(18,2)  | No       | Range [0.01 - 1,000,000.00]
+Quantity      | int            | No       | Minimum 0
+CategoryId    | Guid (FK)      | No       | Foreign Key -> Categories.Id
+VendorId      | Guid (FK)      | No       | Foreign Key -> Vendors.Id
+Status        | ProductStatus  | No       | Enum (Draft, Active, Archived)
+CreatedAt     | DateTime       | No       | UTC Timestamp</pre>
+            </div>
+
+            <!-- Category Entity -->
+            <div class="endpoint-group endpoint-group--brown">
+                <h3 class="endpoint-group-title"><i data-lucide="tag" aria-hidden="true" class="icon-inline"></i> Category Entity</h3>
+                <pre class="code-block">
+Table: Categories
+-----------------------------------------------------------------------
+Field         | Type           | Nullable | Validation / Constraints
+-----------------------------------------------------------------------
+Id            | Guid (PK)      | No       | Primary Key
+Name          | string         | No       | Unique, Max length 100
+Slug          | string         | No       | Unique URL slug format
+ParentId      | Guid (FK)      | Yes      | Self-referencing FK for subcategories</pre>
+            </div>
+
+            <!-- User Entity -->
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="users" aria-hidden="true" class="icon-inline"></i> User Entity</h3>
+                <pre class="code-block">
+Table: Users
+-----------------------------------------------------------------------
+Field         | Type           | Nullable | Validation / Constraints
+-----------------------------------------------------------------------
+Id            | Guid (PK)      | No       | Primary Key
+FirstName     | string         | No       | Max length 100
+LastName      | string         | No       | Max length 100
+Email         | string         | No       | Unique, Valid Email Regex
+PhoneNumber   | string         | Yes      | E.164 Phone Format
+Role          | UserRole       | No       | Enum (Customer, Vendor, Admin)</pre>
+            </div>
+
+            <!-- Vendor Entity -->
+            <div class="endpoint-group endpoint-group--brown">
+                <h3 class="endpoint-group-title"><i data-lucide="store" aria-hidden="true" class="icon-inline"></i> Vendor Entity</h3>
+                <pre class="code-block">
+Table: Vendors
+-----------------------------------------------------------------------
+Field         | Type           | Nullable | Validation / Constraints
+-----------------------------------------------------------------------
+Id            | Guid (PK)      | No       | Primary Key
+StoreName     | string         | No       | Unique, Max length 150
+UserId        | Guid (FK)      | No       | Foreign Key -> Users.Id
+ApprovalStatus| ApprovalStatus | No       | Enum (Pending, Approved, Suspended)</pre>
+            </div>
+        </div>
+
+        <div class="card section-mt">
+            <h3><i data-lucide="list" aria-hidden="true" class="icon-inline"></i> Domain Enums Reference</h3>
+            <pre class="code-block">
+// OrderStatus Enum
+0 = Pending, 1 = Processing, 2 = Shipped, 3 = Delivered, 4 = Cancelled
+
+// PaymentStatus Enum
+0 = Pending, 1 = Authorized, 2 = Paid, 3 = Refunded, 4 = Failed
+
+// UserRole Enum
+0 = Customer, 1 = Vendor, 2 = Administrator</pre>
+        </div>
+    </div>
+
+    <footer class="section-mt-lg">
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

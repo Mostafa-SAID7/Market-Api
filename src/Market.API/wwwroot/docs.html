@@ -11,213 +11,217 @@
     <nav>
         <div class="container">
             <a href="/index.html" class="logo">
-                <img src="/images/logo.svg" alt="Market API Logo" style="width: 40px; height: 40px;">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
                 <span>Market API</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
-                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
                 <li><a href="/swagger">Swagger</a></li>
             </ul>
         </div>
     </nav>
 
-    <div class="container" style="padding-top: 4rem;">
-        <div style="text-align: center; margin-bottom: 4rem;">
-            <h1 style="font-size: 3.5rem; background: linear-gradient(135deg, var(--accent-gold) 0%, var(--light-brown) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                📚 API Documentation
+    <div class="container page-container">
+        <div class="page-header">
+            <h1 class="page-title page-title-gradient">
+                <i data-lucide="book-open" aria-hidden="true" class="icon-title"></i> API Documentation
             </h1>
-            <p style="font-size: 1.3rem; color: var(--text-secondary); margin-top: 1rem;">
+            <p class="page-description">
                 Complete guide to the Market API v2.0 with MediatR, Validation, and 7 entities
             </p>
         </div>
 
         <div class="cards">
             <div class="card">
-                <h3>🚀 Getting Started</h3>
+                <h3><i data-lucide="rocket" aria-hidden="true" class="icon-inline"></i> Getting Started</h3>
                 <p>Market API is a comprehensive RESTful service for managing a complete marketplace with 7 entities. All responses are in JSON format.</p>
-                <p style="margin-top: 1rem;"><strong>Base URL:</strong></p>
-                <code style="background: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 4px; display: block; margin-top: 0.5rem;">
+                <p class="text-mt"><strong>Base URL:</strong></p>
+                <code class="code-banner">
                     http://localhost:5000/api
                 </code>
-                <p style="margin-top: 1rem;"><strong>Entities:</strong> Products, Categories, Users, Vendors, Orders, Carts, Reviews</p>
+                <p class="text-mt"><strong>Entities:</strong> Products, Categories, Users, Vendors, Orders, Carts, Reviews</p>
             </div>
 
             <div class="card">
-                <h3>🔑 Architecture</h3>
+                <h3><i data-lucide="key" aria-hidden="true" class="icon-inline"></i> Architecture</h3>
                 <p>Built with modern patterns for clean, maintainable code:</p>
-                <ul style="margin-top: 1rem; color: var(--text-secondary);">
-                    <li>✓ MediatR CQRS Pattern</li>
-                    <li>✓ Repository Pattern</li>
-                    <li>✓ Strong Validation Framework</li>
-                    <li>✓ Service Layer with Logging</li>
-                    <li>✓ Unit of Work Pattern</li>
-                    <li>✓ Dependency Injection</li>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> MediatR CQRS Pattern</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Repository Pattern</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Strong Validation Framework</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Service Layer with Logging</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Unit of Work Pattern</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Dependency Injection</li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>📦 Response Format</h3>
+                <h3><i data-lucide="box" aria-hidden="true" class="icon-inline"></i> Response Format</h3>
                 <p>All API responses follow standard HTTP status codes:</p>
-                <ul style="margin-top: 1rem; color: var(--text-secondary);">
-                    <li>✓ 200 - Success</li>
-                    <li>✓ 201 - Created</li>
-                    <li>✓ 204 - No Content</li>
-                    <li>✗ 400 - Bad Request (validation errors)</li>
-                    <li>✗ 404 - Not Found</li>
-                    <li>✗ 500 - Server Error</li>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> 200 - Success</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> 201 - Created</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> 204 - No Content</li>
+                    <li><i data-lucide="x" aria-hidden="true" class="icon-x"></i> 400 - Bad Request (validation errors)</li>
+                    <li><i data-lucide="x" aria-hidden="true" class="icon-x"></i> 404 - Not Found</li>
+                    <li><i data-lucide="x" aria-hidden="true" class="icon-x"></i> 500 - Server Error</li>
                 </ul>
             </div>
         </div>
 
-        <div class="endpoints" style="margin-top: 3rem;">
-            <h2>📡 Endpoints Quick Reference</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">All 7 entities support CRUD operations. For detailed endpoint documentation, see <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/API.md" style="color: var(--accent-gold);">API.md</a>.</p>
+        <div class="endpoints section-mt">
+            <h2><i data-lucide="server" aria-hidden="true" class="icon-inline"></i> Endpoints Quick Reference</h2>
+            <p class="section-subtitle">All 7 entities support CRUD operations. For detailed endpoint documentation, see <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/API.md" class="link-accent">API.md</a>.</p>
 
             <!-- Products -->
-            <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-gold);">📦 Products</h3>
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Products</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/products</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all products</p>
+                    <p class="endpoint-desc">Get all products</p>
                 </div>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/products/{id}</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get product by ID</p>
+                    <p class="endpoint-desc">Get product by ID</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/products</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create new product</p>
+                    <p class="endpoint-desc">Create new product</p>
                 </div>
                 <div class="endpoint">
                     <span class="method put">PUT</span>
                     <code>/api/products/{id}</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Update product</p>
+                    <p class="endpoint-desc">Update product</p>
                 </div>
                 <div class="endpoint">
                     <span class="method delete">DELETE</span>
                     <code>/api/products/{id}</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Delete product</p>
+                    <p class="endpoint-desc">Delete product</p>
                 </div>
             </div>
 
             <!-- Categories -->
-            <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-brown);">🏷️ Categories</h3>
+            <div class="endpoint-group endpoint-group--brown">
+                <h3 class="endpoint-group-title"><i data-lucide="tag" aria-hidden="true" class="icon-inline"></i> Categories</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/categories</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all categories</p>
+                    <p class="endpoint-desc">Get all categories</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/categories</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create category</p>
+                    <p class="endpoint-desc">Create category</p>
                 </div>
             </div>
 
             <!-- Users -->
-            <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-gold);">👤 Users</h3>
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="users" aria-hidden="true" class="icon-inline"></i> Users</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/users</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all users</p>
+                    <p class="endpoint-desc">Get all users</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/users</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create user</p>
+                    <p class="endpoint-desc">Create user</p>
                 </div>
             </div>
 
             <!-- Vendors -->
-            <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-brown);">🏪 Vendors</h3>
+            <div class="endpoint-group endpoint-group--brown">
+                <h3 class="endpoint-group-title"><i data-lucide="store" aria-hidden="true" class="icon-inline"></i> Vendors</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/vendors</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all vendors</p>
+                    <p class="endpoint-desc">Get all vendors</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/vendors</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create vendor</p>
+                    <p class="endpoint-desc">Create vendor</p>
                 </div>
             </div>
 
             <!-- Orders -->
-            <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-gold);">📋 Orders</h3>
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="clipboard-list" aria-hidden="true" class="icon-inline"></i> Orders</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/orders</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all orders</p>
+                    <p class="endpoint-desc">Get all orders</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/orders</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create order</p>
+                    <p class="endpoint-desc">Create order</p>
                 </div>
             </div>
 
             <!-- Carts -->
-            <div style="border-left: 4px solid var(--accent-brown); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-brown);">🛒 Carts</h3>
+            <div class="endpoint-group endpoint-group--brown">
+                <h3 class="endpoint-group-title"><i data-lucide="shopping-cart" aria-hidden="true" class="icon-inline"></i> Carts</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/carts/{userId}</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get user's cart</p>
+                    <p class="endpoint-desc">Get user's cart</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/carts/{userId}/add</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Add item to cart</p>
+                    <p class="endpoint-desc">Add item to cart</p>
                 </div>
             </div>
 
             <!-- Reviews -->
-            <div style="border-left: 4px solid var(--accent-gold); padding-left: 1rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--accent-gold);">⭐ Reviews</h3>
+            <div class="endpoint-group endpoint-group--gold">
+                <h3 class="endpoint-group-title"><i data-lucide="star" aria-hidden="true" class="icon-inline"></i> Reviews</h3>
                 <div class="endpoint">
                     <span class="method get">GET</span>
                     <code>/api/reviews</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Get all reviews</p>
+                    <p class="endpoint-desc">Get all reviews</p>
                 </div>
                 <div class="endpoint">
                     <span class="method post">POST</span>
                     <code>/api/reviews</code>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Create review</p>
+                    <p class="endpoint-desc">Create review</p>
                 </div>
             </div>
         </div>
 
-        <div class="card" style="margin-top: 3rem;">
-            <h3>🔄 Architecture Overview</h3>
-            <p style="margin-bottom: 1rem;">Market API v2.0 implements modern patterns for enterprise applications:</p>
+        <div class="card section-mt">
+            <h3><i data-lucide="refresh-cw" aria-hidden="true" class="icon-inline"></i> Architecture Overview</h3>
+            <p class="text-mb">Market API v2.0 implements modern patterns for enterprise applications:</p>
             
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">MediatR CQRS Pattern</h4>
-            <p style="margin-top: 0.5rem; color: var(--text-secondary);">Commands handle mutations (Create, Update, Delete) while Queries handle data retrieval. This separation provides better scalability and testability.</p>
+            <h4 class="subheading-accent">MediatR CQRS Pattern</h4>
+            <p class="text-secondary-mt">Commands handle mutations (Create, Update, Delete) while Queries handle data retrieval. This separation provides better scalability and testability.</p>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Validation Framework</h4>
-            <p style="margin-top: 0.5rem; color: var(--text-secondary);">All entities are validated before persistence. Validation rules include required fields, length constraints, format validation (email, URL, phone), and numeric ranges. Invalid requests return 400 Bad Request with detailed validation errors.</p>
+            <h4 class="subheading-accent">Validation Framework</h4>
+            <p class="text-secondary-mt">All entities are validated before persistence. Validation rules include required fields, length constraints, format validation (email, URL, phone), and numeric ranges. Invalid requests return 400 Bad Request with detailed validation errors.</p>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Repository Pattern</h4>
-            <p style="margin-top: 0.5rem; color: var(--text-secondary);">Data access is abstracted through repositories, making the code testable and database-agnostic. MongoDB is the current database with full async/await support.</p>
+            <h4 class="subheading-accent">Repository Pattern</h4>
+            <p class="text-secondary-mt">Data access is abstracted through repositories and Entity Framework Core 9, making the code testable and database-agnostic. SQL Server is the primary relational database with full async/await support.</p>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Service Layer</h4>
-            <p style="margin-top: 0.5rem; color: var(--text-secondary);">Business logic is isolated in services with comprehensive logging for debugging and monitoring. All services use dependency injection and follow SOLID principles.</p>
+            <h4 class="subheading-accent">Service Layer</h4>
+            <p class="text-secondary-mt">Business logic is isolated in services with comprehensive logging for debugging and monitoring. All services use dependency injection and follow SOLID principles.</p>
         </div>
 
-        <div class="card" style="margin-top: 3rem;">
-            <h3>💻 Request/Response Examples</h3>
-            <p style="margin-bottom: 1rem;">Here are examples of how to interact with the API:</p>
+        <div class="card section-mt">
+            <h3><i data-lucide="code" aria-hidden="true" class="icon-inline"></i> Request/Response Examples</h3>
+            <p class="text-mb">Here are examples of how to interact with the API:</p>
             
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Get All Products</h4>
-            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+            <h4 class="subheading-accent">Get All Products</h4>
+            <pre class="code-block">
 curl -X GET http://localhost:5000/api/products
 
 Response: 200 OK
@@ -231,8 +235,8 @@ Response: 200 OK
   }
 ]</pre>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Create Product (with validation)</h4>
-            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+            <h4 class="subheading-accent">Create Product (with validation)</h4>
+            <pre class="code-block">
 curl -X POST http://localhost:5000/api/products \
   -H "Content-Type: application/json" \
   -d '{
@@ -251,8 +255,8 @@ Response: 201 Created
   "price": 149.99
 }</pre>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Create User</h4>
-            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+            <h4 class="subheading-accent">Create User</h4>
+            <pre class="code-block">
 curl -X POST http://localhost:5000/api/users \
   -H "Content-Type: application/json" \
   -d '{
@@ -264,8 +268,8 @@ curl -X POST http://localhost:5000/api/users \
 
 Response: 201 Created</pre>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Create Order</h4>
-            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+            <h4 class="subheading-accent">Create Order</h4>
+            <pre class="code-block">
 curl -X POST http://localhost:5000/api/orders \
   -H "Content-Type: application/json" \
   -d '{
@@ -278,8 +282,8 @@ curl -X POST http://localhost:5000/api/orders \
 
 Response: 201 Created</pre>
 
-            <h4 style="color: var(--accent-gold); margin-top: 2rem;">Validation Error Example</h4>
-            <pre style="background: var(--dark-bg); padding: 1rem; border-radius: 4px; overflow-x: auto; margin-top: 0.5rem;">
+            <h4 class="subheading-accent">Validation Error Example</h4>
+            <pre class="code-block">
 # Missing required fields
 curl -X POST http://localhost:5000/api/products \
   -H "Content-Type: application/json" \
@@ -295,40 +299,40 @@ Response: 400 Bad Request
 }</pre>
         </div>
 
-        <div class="cards" style="margin-top: 3rem;">
+        <div class="cards section-mt">
             <div class="card">
-                <h3>🔗 Interactive Testing</h3>
+                <h3><i data-lucide="terminal" aria-hidden="true" class="icon-inline"></i> Interactive Testing</h3>
                 <p>Use our interactive Swagger UI to test all endpoints for all 7 entities:</p>
-                <a href="/swagger" class="btn btn-primary" style="margin-top: 1rem;">Open Swagger UI</a>
+                <a href="/swagger" class="btn btn-primary btn-mt">Open Swagger UI</a>
             </div>
 
             <div class="card">
-                <h3>📚 Full Documentation</h3>
+                <h3><i data-lucide="file-text" aria-hidden="true" class="icon-inline"></i> Full Documentation</h3>
                 <p>Explore comprehensive documentation on GitHub:</p>
-                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/API.md" style="color: var(--accent-gold);">→ API Reference (All endpoints)</a>
+                <ul class="card-list card-list-mt">
+                    <li class="card-list-item">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/API.md" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> API Reference (All endpoints)</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/ARCHITECTURE.md" style="color: var(--accent-gold);">→ Architecture & Design Patterns</a>
+                    <li class="card-list-item">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/ARCHITECTURE.md" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> Architecture & Design Patterns</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/IMPLEMENTATION.md" style="color: var(--accent-gold);">→ Implementation Guide</a>
+                    <li class="card-list-item">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/IMPLEMENTATION.md" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> Implementation Guide</a>
                     </li>
                 </ul>
             </div>
 
             <div class="card">
-                <h3>🚀 Quick Links</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold);">→ GitHub Repository</a>
+                <h3><i data-lucide="arrow-right-circle" aria-hidden="true" class="icon-inline"></i> Quick Links</h3>
+                <ul class="card-list card-list-mt">
+                    <li class="card-list-item">
+                        <a href="https://github.com/Mostafa-SAID7/Market-Api" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> GitHub Repository</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="/index.html" style="color: var(--accent-gold);">→ Home</a>
+                    <li class="card-list-item">
+                        <a href="/index.html" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> Home</a>
                     </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="/swagger" style="color: var(--accent-gold);">→ API Explorer</a>
+                    <li class="card-list-item">
+                        <a href="/swagger" class="card-list-link"><i data-lucide="arrow-right" aria-hidden="true" class="icon-inline-sm"></i> API Explorer</a>
                     </li>
                 </ul>
             </div>
@@ -336,9 +340,10 @@ Response: 400 Bad Request
     </div>
 
     <footer>
-        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
     </footer>
 
+    <script src="/js/lucide.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

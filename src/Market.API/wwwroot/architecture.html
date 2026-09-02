@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Guide | Market API</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <div class="page-header">
+            <h1 class="page-title page-title-gradient">
+                <i data-lucide="layers" aria-hidden="true" class="icon-title"></i> Clean Architecture & Design Patterns
+            </h1>
+            <p class="page-description">
+                Strict 4-layer separation of concerns powered by CQRS, MediatR, and Entity Framework Core 9
+            </p>
+        </div>
+
+        <div class="card section-mt">
+            <h3><i data-lucide="shield" aria-hidden="true" class="icon-inline"></i> 4-Layer Dependency Rules</h3>
+            <p class="text-mb">Dependencies point inwards only toward the core Domain layer:</p>
+            <pre class="code-block">
+[ Market.API ] Presentation Layer
+      ↓ (depends on Application)
+[ Market.Application ] Use Cases & CQRS Handlers
+      ↓ (depends on Domain)
+[ Market.Domain ] Core Entities, Enums & Interfaces (Zero external dependencies)
+      ↑ (implements Domain interfaces)
+[ Market.Infrastructure ] DbContext, EF Core & Repositories</pre>
+        </div>
+
+        <div class="cards section-mt">
+            <div class="card">
+                <h3><i data-lucide="box" aria-hidden="true" class="icon-inline"></i> 1. Domain Layer</h3>
+                <p class="card-item-desc">Project: <code>Market.Domain</code></p>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Core Domain Entities (Product, Order, User, etc.)</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Value Objects (Slug, Money, Email)</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Repository Interfaces (IProductRepository)</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Zero third-party NuGet dependencies</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="cpu" aria-hidden="true" class="icon-inline"></i> 2. Application Layer</h3>
+                <p class="card-item-desc">Project: <code>Market.Application</code></p>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> MediatR Command & Query Handlers</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> DTOs and API Contract Mappings</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> FluentValidation Pipeline Behaviors</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Orchestrates business workflows</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="database" aria-hidden="true" class="icon-inline"></i> 3. Infrastructure Layer</h3>
+                <p class="card-item-desc">Project: <code>Market.Infrastructure</code></p>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> <code>MarketDbContext</code> (EF Core 9)</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Concrete Repository Implementations</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> SQL Server Fluent API Mappings</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> EF Core Migrations & Seeders</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="globe" aria-hidden="true" class="icon-inline"></i> 4. API Layer</h3>
+                <p class="card-item-desc">Project: <code>Market.API</code></p>
+                <ul class="card-list card-list--muted card-list-mt">
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Thin Controllers delegating to MediatR</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Global Exception Handling Middleware</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> OpenAPI / Swagger Documentation</li>
+                    <li><i data-lucide="check" aria-hidden="true" class="icon-check"></i> Dependency Injection Composition Root</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card section-mt">
+            <h3><i data-lucide="refresh-cw" aria-hidden="true" class="icon-inline"></i> CQRS & Request Lifecycle</h3>
+            <pre class="code-block">
+1. Client Sends HTTP Request -> GET /api/products/123
+2. Controller Delegates -> await _mediator.Send(new GetProductByIdQuery(123))
+3. Validation Pipeline -> Runs FluentValidation rules before execution
+4. MediatR Dispatches -> GetProductByIdQueryHandler handles query
+5. Repository Queries -> IProductRepository reads from SQL Server via EF Core 9
+6. Response returned -> Controller returns 200 OK with ProductResponse DTO</pre>
+        </div>
+    </div>
+
+    <footer class="section-mt-lg">
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

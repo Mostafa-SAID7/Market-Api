@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Explorer | Market API</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <div class="page-header">
+            <h1 class="page-title page-title-gradient">
+                <i data-lucide="terminal" aria-hidden="true" class="icon-title"></i> Interactive API Explorer
+            </h1>
+            <p class="page-description">
+                Test all 7 Market API entities live in your browser against SQL Server & EF Core 9
+            </p>
+        </div>
+
+        <div class="card section-mt">
+            <h3><i data-lucide="sliders" aria-hidden="true" class="icon-inline"></i> Request Workbench</h3>
+            <p class="text-mb">Select an entity preset or construct a custom REST API request:</p>
+            
+            <div class="button-group button-group--wrap text-mb">
+                <button type="button" class="btn btn-primary preset-btn" data-entity="products" data-method="GET" data-path="/api/products">Products</button>
+                <button type="button" class="btn preset-btn" data-entity="categories" data-method="GET" data-path="/api/categories">Categories</button>
+                <button type="button" class="btn preset-btn" data-entity="users" data-method="GET" data-path="/api/users">Users</button>
+                <button type="button" class="btn preset-btn" data-entity="vendors" data-method="GET" data-path="/api/vendors">Vendors</button>
+                <button type="button" class="btn preset-btn" data-entity="orders" data-method="GET" data-path="/api/orders">Orders</button>
+                <button type="button" class="btn preset-btn" data-entity="carts" data-method="GET" data-path="/api/carts/1">Carts</button>
+                <button type="button" class="btn preset-btn" data-entity="reviews" data-method="GET" data-path="/api/reviews">Reviews</button>
+            </div>
+
+            <div class="explorer-form text-mt">
+                <div class="u-row text-mb">
+                    <select id="explorer-method" class="code-inline font-weight-bold">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <input type="text" id="explorer-url" class="code-block w-full" value="/api/products">
+                    <button type="button" id="explorer-send" class="btn btn-primary">
+                        <i data-lucide="send" aria-hidden="true" class="icon-inline-sm"></i> Send
+                    </button>
+                </div>
+
+                <div id="payload-container" class="text-mt">
+                    <label for="explorer-body" class="font-weight-bold">JSON Request Body:</label>
+                    <textarea id="explorer-body" class="code-block w-full" rows="6" placeholder="{}"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card section-mt" id="response-card">
+            <h3><i data-lucide="activity" aria-hidden="true" class="icon-inline"></i> Response Viewer</h3>
+            
+            <div class="u-row text-mb">
+                <span id="response-status-badge" class="status">
+                    <span class="status-dot"></span>
+                    <span id="response-status-text">Ready</span>
+                </span>
+                <span id="response-time" class="text-muted text-xs">0 ms</span>
+            </div>
+
+            <div class="text-mt">
+                <h4 class="subheading-accent">Response Body:</h4>
+                <pre class="code-block"><code id="response-output">// Click "Send" to execute request</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer class="section-mt-lg">
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

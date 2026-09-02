@@ -11,12 +11,16 @@
     <nav>
         <div class="container">
             <a href="/index.html" class="logo">
-                <img src="/images/logo.svg" alt="Market API Logo" style="width: 40px; height: 40px;">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
                 <span>Market API</span>
             </a>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
-                <li><a href="/docs.html">Documentation</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
                 <li><a href="/swagger">Swagger</a></li>
             </ul>
         </div>
@@ -25,81 +29,82 @@
     <div class="error-page">
         <div class="error-code">404</div>
         <h2 class="error-message">Page Not Found</h2>
-        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px;">
+        <p class="page-description">
             The page you're looking for doesn't exist or has been moved.
         </p>
         
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <div class="button-group button-group--center button-group--wrap">
             <a href="/index.html" class="btn btn-primary">Go Home</a>
             <a href="/swagger" class="btn">Try API</a>
             <a href="/docs.html" class="btn">View Docs</a>
         </div>
 
-        <div class="card" style="margin-top: 4rem; max-width: 600px; text-align: left;">
-            <h3>🔍 Looking for something?</h3>
-            <p style="margin-bottom: 1rem;">Here are some helpful links:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 0.8rem;">
-                    <a href="/index.html" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
-                        🏠 Home Page
+        <div class="card card-narrow text-left section-mt-lg">
+            <h3><i data-lucide="search" aria-hidden="true" class="icon-inline"></i> Looking for something?</h3>
+            <p class="text-mb">Here are some helpful links:</p>
+            <ul class="card-list">
+                <li class="card-list-item card-list-item--spacing">
+                    <a href="/index.html" class="card-list-link font-weight-bold">
+                        <i data-lucide="house" aria-hidden="true" class="icon-inline"></i> Home Page
                     </a>
-                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                    <p class="card-item-desc">
                         Overview and quick links
                     </p>
                 </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <a href="/swagger" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
-                        📚 Swagger UI
+                <li class="card-list-item card-list-item--spacing">
+                    <a href="/swagger" class="card-list-link font-weight-bold">
+                        <i data-lucide="code-2" aria-hidden="true" class="icon-inline"></i> Swagger UI
                     </a>
-                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                    <p class="card-item-desc">
                         Interactive API documentation
                     </p>
                 </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <a href="/docs.html" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
-                        📖 Documentation
+                <li class="card-list-item card-list-item--spacing">
+                    <a href="/docs.html" class="card-list-link font-weight-bold">
+                        <i data-lucide="book-open" aria-hidden="true" class="icon-inline"></i> Documentation
                     </a>
-                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                    <p class="card-item-desc">
                         Complete API reference and examples
                     </p>
                 </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <a href="/api/products" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
-                        🛍️ Products API
+                <li class="card-list-item card-list-item--spacing">
+                    <a href="/api/products" class="card-list-link font-weight-bold">
+                        <i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Products API
                     </a>
-                    <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">
+                    <p class="card-item-desc">
                         Direct API endpoint
                     </p>
                 </li>
             </ul>
         </div>
 
-        <div class="card" style="margin-top: 2rem; max-width: 600px; background: rgba(244, 67, 54, 0.1); border-color: var(--error);">
-            <h3 style="color: var(--error);">⚠️ Common Mistakes</h3>
-            <ul style="color: var(--text-secondary); margin-top: 1rem;">
-                <li style="margin-bottom: 0.5rem;">
-                    ❌ Don't try to access <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">http://localhost:27017</code>
-                    <br><span style="font-size: 0.9rem;">That's the MongoDB port, not a web interface</span>
+        <div class="card card-narrow callout-card callout-card--danger section-mt">
+            <h3 class="text-danger"><i data-lucide="alert-triangle" aria-hidden="true" class="icon-inline"></i> Common Mistakes</h3>
+            <ul class="card-list card-list--muted card-list-mt">
+                <li class="card-list-item">
+                    <i data-lucide="circle-x" aria-hidden="true" class="icon-x"></i> Don't try to access <code class="code-inline">http://localhost:1433</code>
+                    <br><span class="text-xs">That's the SQL Server port, not a web interface</span>
                 </li>
-                <li style="margin-bottom: 0.5rem;">
-                    ✅ Use <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">http://localhost:5000</code>
-                    <br><span style="font-size: 0.9rem;">This is the correct API port</span>
+                <li class="card-list-item">
+                    <i data-lucide="check-circle-2" aria-hidden="true" class="icon-check"></i> Use <code class="code-inline">http://localhost:5000</code>
+                    <br><span class="text-xs">This is the correct API port</span>
                 </li>
-                <li style="margin-bottom: 0.5rem;">
-                    ✅ API endpoints start with <code style="background: var(--dark-bg); padding: 0.2rem 0.5rem; border-radius: 3px;">/api/</code>
-                    <br><span style="font-size: 0.9rem;">Example: /api/products</span>
+                <li class="card-list-item">
+                    <i data-lucide="check-circle-2" aria-hidden="true" class="icon-check"></i> API endpoints start with <code class="code-inline">/api/</code>
+                    <br><span class="text-xs">Example: /api/products</span>
                 </li>
             </ul>
         </div>
     </div>
 
-    <footer style="margin-top: 4rem;">
-        <p>&copy; 2026 Market API. Built with ❤️ using ASP.NET Core 9 & MongoDB</p>
-        <p style="margin-top: 0.5rem; color: var(--accent-brown);">
-            <a href="https://github.com/Mostafa-SAID7/Market-Api" style="color: var(--accent-gold); text-decoration: none;">GitHub Repository</a>
+    <footer class="section-mt-lg">
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
         </p>
     </footer>
 
+    <script src="/js/lucide.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

@@ -30,24 +30,23 @@ namespace Market.Application.Features.Products.Queries
         {
             _logger.LogInformation("Handling GetProductByIdQuery for product: {ProductId}", request.Id);
 
-            var product = await _unitOfWork.Products.GetByIdAsync(request.Id);
-            if (product == null)
-                return null;
+            var p = await _unitOfWork.Products.GetByIdAsync(request.Id, cancellationToken);
+            if (p == null) return null;
 
             return new ProductResponse
             {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                DiscountPrice = product.DiscountPrice,
-                ImageUrl = product.ImageUrl,
-                Quantity = product.Quantity,
-                Sold = product.Sold,
-                CategoryId = product.CategoryId,
-                VendorId = product.VendorId,
-                AverageRating = product.AverageRating,
-                ReviewCount = product.ReviewCount
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                DiscountPrice = p.DiscountPrice,
+                ImageUrl = p.ImageUrl,
+                Quantity = p.Quantity,
+                Sold = p.Sold,
+                CategoryId = p.CategoryId,
+                VendorId = p.VendorId,
+                AverageRating = p.AverageRating,
+                ReviewCount = p.ReviewCount
             };
         }
     }

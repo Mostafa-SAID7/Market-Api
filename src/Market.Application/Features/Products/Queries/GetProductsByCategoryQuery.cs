@@ -30,25 +30,22 @@ namespace Market.Application.Features.Products.Queries
         {
             _logger.LogInformation("Handling GetProductsByCategoryQuery for category: {CategoryId}", request.CategoryId);
 
-            var products = await _unitOfWork.Products.GetAllAsync();
-            return products
-                .Where(p => p.CategoryId == request.CategoryId)
-                .Select(p => new ProductResponse
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    DiscountPrice = p.DiscountPrice,
-                    ImageUrl = p.ImageUrl,
-                    Quantity = p.Quantity,
-                    Sold = p.Sold,
-                    CategoryId = p.CategoryId,
-                    VendorId = p.VendorId,
-                    AverageRating = p.AverageRating,
-                    ReviewCount = p.ReviewCount
-                })
-                .ToList();
+            var products = await _unitOfWork.Products.GetByCategoryIdAsync(request.CategoryId, cancellationToken);
+            return products.Select(p => new ProductResponse
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                DiscountPrice = p.DiscountPrice,
+                ImageUrl = p.ImageUrl,
+                Quantity = p.Quantity,
+                Sold = p.Sold,
+                CategoryId = p.CategoryId,
+                VendorId = p.VendorId,
+                AverageRating = p.AverageRating,
+                ReviewCount = p.ReviewCount
+            }).ToList();
         }
     }
 }

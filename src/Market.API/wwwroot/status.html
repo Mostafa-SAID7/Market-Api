@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Status | Market API</title>
+    <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
+                <span>Market API</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/explorer.html">Explorer</a></li>
+                <li><a href="/docs.html">Docs</a></li>
+                <li><a href="/schema.html">Schema</a></li>
+                <li><a href="/architecture.html">Architecture</a></li>
+                <li><a href="/status.html">Status</a></li>
+                <li><a href="/swagger">Swagger</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <div class="page-header">
+            <h1 class="page-title page-title-gradient">
+                <i data-lucide="activity" aria-hidden="true" class="icon-title"></i> Real-Time Platform Status
+            </h1>
+            <p class="page-description">
+                Live operational health dashboard for Market API services and SQL Server database
+            </p>
+        </div>
+
+        <div class="card card-narrow text-center section-mt">
+            <div class="u-center text-mb">
+                <span id="system-overall-badge" class="status status--running">
+                    <span class="status-dot"></span>
+                    <span id="system-overall-text">All Systems Operational</span>
+                </span>
+            </div>
+            <p class="text-muted text-xs">Last Checked: <span id="status-last-checked">Just now</span></p>
+            
+            <div class="button-group button-group--center btn-mt">
+                <button type="button" id="refresh-status-btn" class="btn btn-primary">
+                    <i data-lucide="refresh-cw" aria-hidden="true" class="icon-inline-sm"></i> Run Health Check
+                </button>
+            </div>
+        </div>
+
+        <div class="cards section-mt">
+            <div class="card">
+                <h3><i data-lucide="server" aria-hidden="true" class="icon-inline"></i> REST API Service</h3>
+                <p class="card-item-desc">Port: 5000 / 5001</p>
+                <div class="u-row text-mt">
+                    <span class="status status--running">
+                        <span class="status-dot"></span>
+                        <span>Operational</span>
+                    </span>
+                    <span class="text-muted text-xs" id="api-latency-text">-- ms</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="database" aria-hidden="true" class="icon-inline"></i> SQL Server Database</h3>
+                <p class="card-item-desc">Database: <code>MarketApiDb</code></p>
+                <div class="u-row text-mt">
+                    <span class="status status--running">
+                        <span class="status-dot"></span>
+                        <span>Connected</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="layers" aria-hidden="true" class="icon-inline"></i> EF Core 9 Migrations</h3>
+                <p class="card-item-desc">7 Relational Tables</p>
+                <div class="u-row text-mt">
+                    <span class="status status--running">
+                        <span class="status-dot"></span>
+                        <span>Up to Date</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i data-lucide="code-2" aria-hidden="true" class="icon-inline"></i> Swagger / OpenAPI</h3>
+                <p class="card-item-desc">Endpoint: <code>/swagger</code></p>
+                <div class="u-row text-mt">
+                    <span class="status status--running">
+                        <span class="status-dot"></span>
+                        <span>Operational</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="section-mt-lg">
+        <p>&copy; <span class="copyright-year">2026</span> Market API. Built with <i data-lucide="heart" aria-hidden="true" class="icon-heart"></i> using ASP.NET Core 9 & SQL Server</p>
+        <p class="footer-subtext">
+            <a href="https://github.com/Mostafa-SAID7/Market-Api" class="footer-link">GitHub Repository</a>
+        </p>
+    </footer>
+
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

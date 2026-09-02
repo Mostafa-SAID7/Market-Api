@@ -29,7 +29,7 @@ namespace Market.Application.Features.Products.Queries
         {
             _logger.LogInformation("Handling GetAllProductsQuery");
 
-            var products = await _unitOfWork.Products.GetAllAsync();
+            var products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
             return products.Select(p => new ProductResponse
             {
                 Id = p.Id,
@@ -38,10 +38,10 @@ namespace Market.Application.Features.Products.Queries
                 Price = p.Price,
                 DiscountPrice = p.DiscountPrice,
                 ImageUrl = p.ImageUrl,
-                CategoryId = p.CategoryId,
-                VendorId = p.VendorId,
                 Quantity = p.Quantity,
                 Sold = p.Sold,
+                CategoryId = p.CategoryId,
+                VendorId = p.VendorId,
                 AverageRating = p.AverageRating,
                 ReviewCount = p.ReviewCount
             }).ToList();
