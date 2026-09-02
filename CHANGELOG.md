@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.0.1...v2.1.0) (2026-09-02)
+
+
+### Features
+
+* complete wwwroot UI/UX refactoring + fix product query build errors ([50a8e8e](https://github.com/Mostafa-SAID7/Market-Api/commit/50a8e8edd517dab6e9688319b688a7148764a1ed))
+
 ## [2.0.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.0.0...v2.0.1) (2026-09-01)
 
 
