@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.0...v2.3.1) (2026-09-02)
+
+
+### Bug Fixes
+
+* **ci/cd:** correct flag to --store-password-in-clear-text in nuget-publish workflow ([a09d3f7](https://github.com/Mostafa-SAID7/Market-Api/commit/a09d3f7274eb800a6628c66d0903c1e5c24a2610))
+
 # [2.3.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.2.0...v2.3.0) (2026-09-02)
 
 
