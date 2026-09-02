@@ -1,0 +1,54 @@
+name: Build and Publish NuGet Packages
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  release:
+    types: [ published ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  GITHUB_PACKAGES_SOURCE: 'https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json'
+
+jobs:
+  pack-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Add GitHub Packages Source
+      run: |
+        dotnet nuget add source ${{ env.GITHUB_PACKAGES_SOURCE }} --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text-against-given-source
+
+    - name: Restore Dependencies
+      run: dotnet restore Market.sln
+
+    - name: Build Solution
+      run: dotnet build Market.sln --configuration Release --no-restore
+
+    - name: Run Tests
+      run: dotnet test Market.sln --configuration Release --no-build --verbosity normal
+
+    - name: Pack Projects
+      run: |
+        dotnet pack src/Market.Domain/Market.Domain.csproj --configuration Release --no-build --output nupkgs
+        dotnet pack src/Market.Application/Market.Application.csproj --configuration Release --no-build --output nupkgs
+        dotnet pack src/Market.Infrastructure/Market.Infrastructure.csproj --configuration Release --no-build --output nupkgs
+        dotnet pack src/Market.API/Market.API.csproj --configuration Release --no-build --output nupkgs
+
+    - name: Publish Packages to GitHub Packages
+      if: github.event_name != 'pull_request'
+      run: |
+        dotnet nuget push "nupkgs/*.nupkg" --source github --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

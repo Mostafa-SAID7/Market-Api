@@ -1,0 +1,86 @@
+name: Bug Report
+description: Create a detailed bug report to help us improve Market API
+title: '[BUG]: '
+labels: ['bug', 'triage']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us reproduce and resolve the issue quickly.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Explain how to reproduce the issue step-by-step.
+      placeholder: |
+        1. Start the API with 'dotnet run --project src/Market.API'
+        2. Send POST request to '/api/products'
+        3. See error response...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened instead.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dotnet-version
+    attributes:
+      label: .NET Runtime Version
+      description: Which .NET SDK / Runtime version are you using?
+      options:
+        - .NET 9.0 (Recommended / Target)
+        - .NET 8.0
+        - Docker Container
+        - Other (specified below)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os-environment
+    attributes:
+      label: Operating System
+      options:
+        - Windows 11 / 10
+        - Linux (Ubuntu / Debian / Alpine)
+        - macOS
+        - Docker Desktop / Kubernetes
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs & Stack Trace
+      description: Please paste any relevant error logs or terminal output.
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem (e.g., specific HTTP headers, database connection string setup, screenshots).

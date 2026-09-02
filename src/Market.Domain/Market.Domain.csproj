@@ -4,6 +4,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Market.Domain</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Mostafa SAID</Authors>
+    <Description>Domain models and core enterprise business rules for Market API.</Description>
+    <RepositoryUrl>https://github.com/Mostafa-SAID7/Market-Api</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
+

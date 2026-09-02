@@ -1,0 +1,41 @@
+name: Security Vulnerability Disclosure
+description: Report a security vulnerability found in Market API
+title: '[SECURITY]: '
+labels: ['security', 'priority-high']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Note**: If this vulnerability poses an immediate severe exploit risk, please also review our [SECURITY.md](../SECURITY.md) policy for confidential disclosure channels.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Vulnerability Summary
+      description: A concise overview of the security issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Potential Impact
+      description: What could an attacker achieve by exploiting this vulnerability (e.g. Remote Code Execution, Privilege Escalation, Data Leak)?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Proof of Concept / Reproduction Steps
+      description: Steps or HTTP requests needed to reproduce the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Suggested Fix / Mitigation
+      description: Any recommended code fixes or configuration changes.

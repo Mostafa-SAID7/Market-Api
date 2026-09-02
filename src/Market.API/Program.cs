@@ -1,14 +1,23 @@
 using Market.API;
 using Market.Application;
 using Market.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
 
 // Add services from layers using extension methods
 builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration)
     .AddPresentationServices();
+
 
 var app = builder.Build();
 

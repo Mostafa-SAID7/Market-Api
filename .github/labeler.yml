@@ -1,18 +1,30 @@
 api:
   - any:
-    - 'Market.API/**/*'
+    - 'src/Market.API/**/*'
 
-core:
+domain:
   - any:
-    - 'Market.Core/**/*'
-    - 'Market.Application/**/*'
-    - 'Market.Domain/**/*'
+    - 'src/Market.Domain/**/*'
+
+application:
+  - any:
+    - 'src/Market.Application/**/*'
 
 infrastructure:
   - any:
-    - 'Market.Infrastructure/**/*'
+    - 'src/Market.Infrastructure/**/*'
 
-config:
+tests:
+  - any:
+    - 'tests/**/*'
+
+docker:
+  - any:
+    - 'Dockerfile'
+    - 'docker-compose.yml'
+    - '.dockerignore'
+
+ci-cd:
   - any:
     - '.github/**/*'
     - '*.json'

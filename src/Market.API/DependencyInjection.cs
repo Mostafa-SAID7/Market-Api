@@ -14,6 +14,9 @@ public static class DependencyInjection
         // Add controllers
         services.AddControllers();
 
+        // Add Health Checks
+        services.AddHealthChecks();
+
         // Add endpoints API explorer and Swagger
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
@@ -29,6 +32,32 @@ public static class DependencyInjection
                     Url = new Uri("https://github.com/Mostafa-SAID7/Market-Api")
                 }
             });
+
+            // Add JWT Security Definition to Swagger UI
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter 'Bearer' followed by your JWT token."
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
 
         // Response compression for faster Swagger + API responses
@@ -39,6 +68,7 @@ public static class DependencyInjection
 
         return services;
     }
+
 
     public static WebApplication UseSwaggerDocumentation(this WebApplication app)
     {
@@ -101,6 +131,9 @@ public static class DependencyInjection
 
     public static WebApplication MapApplicationRoutes(this WebApplication app)
     {
+        // Map Health Check endpoint
+        app.MapHealthChecks("/health");
+
         // Redirect root to index.html
         app.MapGet("/", context =>
         {
@@ -116,8 +149,8 @@ public static class DependencyInjection
         {
             var path = context.Request.Path.Value;
 
-            // Don't handle API or Swagger routes - let them 404 naturally
-            if (path?.StartsWith("/api") == true || path?.StartsWith("/swagger") == true)
+            // Don't handle API, Swagger, or Health routes - let them handle or 404 naturally
+            if (path?.StartsWith("/api") == true || path?.StartsWith("/swagger") == true || path?.StartsWith("/health") == true)
             {
                 context.Response.StatusCode = 404;
                 return;
@@ -131,4 +164,5 @@ public static class DependencyInjection
 
         return app;
     }
+
 }

@@ -1,0 +1,66 @@
+name: Feature Request
+description: Suggest an idea or new capability for Market API
+title: '[FEATURE]: '
+labels: ['enhancement', 'triage']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please provide details about the feature request below.
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem or limitation?
+      placeholder: I am frustrated when trying to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution or new feature you would like to see added.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions Considered
+      description: Describe any alternative solutions or workarounds you've considered.
+
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: Affected Component / Architecture Layer
+      options:
+        - Market.API (Presentation / Endpoints / Middleware)
+        - Market.Application (Business Logic / CQRS Commands / Handlers)
+        - Market.Domain (Entities / Value Objects / Domain Events)
+        - Market.Infrastructure (EF Core / Persistence / External Services)
+        - CI/CD & DevOps (Docker / GitHub Actions / Deployment)
+        - Documentation / Testing
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Implementation Priority
+      options:
+        - High (Critical for project milestones)
+        - Medium (Significant usability or performance improvement)
+        - Low (Nice to have / minor enhancement)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution-readiness
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a Pull Request to implement this feature.

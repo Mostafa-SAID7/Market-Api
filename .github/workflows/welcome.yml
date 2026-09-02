@@ -1,0 +1,65 @@
+name: Welcome First-Time Contributors
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - name: Welcome First-Time Issue Contributor
+      if: github.event_name == 'issues'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const issue = context.payload.issue;
+          const author = issue.user.login;
+
+          const issues = await github.rest.issues.listForRepo({
+            owner,
+            repo,
+            creator: author,
+            state: 'all'
+          });
+
+          if (issues.data.length === 1) {
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: issue.number,
+              body: `🎉 Welcome @${author}! Thank you for opening your first issue in **Market API**. Our maintainers will review it shortly.`
+            });
+          }
+
+    - name: Welcome First-Time PR Contributor
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { owner, repo } = context.repo;
+          const pr = context.payload.pull_request;
+          const author = pr.user.login;
+
+          const prs = await github.rest.pulls.list({
+            owner,
+            repo,
+            creator: author,
+            state: 'all'
+          });
+
+          if (prs.data.length === 1) {
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pr.number,
+              body: `🚀 Welcome @${author}! Thank you for your first Pull Request in **Market API**. Automated checks are running and a code review will follow soon!`
+            });
+          }
