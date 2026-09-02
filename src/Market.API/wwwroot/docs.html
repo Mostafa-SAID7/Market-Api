@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market API - Documentation</title>
+    <meta name="description" content="Full API documentation for Market API v2.0 — endpoints, request/response examples, and architecture overview.">
     <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <nav>
-        <div class="container">
+        <div class="nav-inner">
             <a href="/index.html" class="logo">
                 <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
                 <span>Market API</span>
             </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+                <i data-lucide="menu" aria-hidden="true"></i>
+            </button>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
                 <li><a href="/explorer.html">Explorer</a></li>
@@ -78,6 +85,7 @@
             <h2><i data-lucide="server" aria-hidden="true" class="icon-inline"></i> Endpoints Quick Reference</h2>
             <p class="section-subtitle">All 7 entities support CRUD operations. For detailed endpoint documentation, see <a href="https://github.com/Mostafa-SAID7/Market-Api/blob/main/docs/API.md" class="link-accent">API.md</a>.</p>
 
+            <div class="endpoint-grid">
             <!-- Products -->
             <div class="endpoint-group endpoint-group--gold">
                 <h3 class="endpoint-group-title"><i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Products</h3>
@@ -197,6 +205,7 @@
                     <p class="endpoint-desc">Create review</p>
                 </div>
             </div>
+            </div>
         </div>
 
         <div class="card section-mt">
@@ -216,12 +225,14 @@
             <p class="text-secondary-mt">Business logic is isolated in services with comprehensive logging for debugging and monitoring. All services use dependency injection and follow SOLID principles.</p>
         </div>
 
-        <div class="card section-mt">
-            <h3><i data-lucide="code" aria-hidden="true" class="icon-inline"></i> Request/Response Examples</h3>
-            <p class="text-mb">Here are examples of how to interact with the API:</p>
+        <div class="section-mt">
+            <h2 class="page-title" style="font-size: 2.2rem; margin-bottom: 1rem;"><i data-lucide="code" aria-hidden="true" class="icon-title"></i> Request/Response Examples</h2>
+            <p class="section-subtitle" style="margin-bottom: 2rem;">Here are examples of how to interact with the API:</p>
             
-            <h4 class="subheading-accent">Get All Products</h4>
-            <pre class="code-block">
+            <div class="cards example-grid" style="margin-top: 0;">
+                <div class="card">
+                    <h4 class="subheading-accent mt-0">Get All Products</h4>
+                    <pre class="code-block">
 curl -X GET http://localhost:5000/api/products
 
 Response: 200 OK
@@ -234,9 +245,11 @@ Response: 200 OK
     "quantity": 50
   }
 ]</pre>
+                </div>
 
-            <h4 class="subheading-accent">Create Product (with validation)</h4>
-            <pre class="code-block">
+                <div class="card">
+                    <h4 class="subheading-accent mt-0">Create Product (with validation)</h4>
+                    <pre class="code-block">
 curl -X POST http://localhost:5000/api/products \
   -H "Content-Type: application/json" \
   -d '{
@@ -254,9 +267,11 @@ Response: 201 Created
   "name": "Gaming Keyboard",
   "price": 149.99
 }</pre>
+                </div>
 
-            <h4 class="subheading-accent">Create User</h4>
-            <pre class="code-block">
+                <div class="card">
+                    <h4 class="subheading-accent mt-0">Create User</h4>
+                    <pre class="code-block">
 curl -X POST http://localhost:5000/api/users \
   -H "Content-Type: application/json" \
   -d '{
@@ -267,9 +282,11 @@ curl -X POST http://localhost:5000/api/users \
   }'
 
 Response: 201 Created</pre>
+                </div>
 
-            <h4 class="subheading-accent">Create Order</h4>
-            <pre class="code-block">
+                <div class="card">
+                    <h4 class="subheading-accent mt-0">Create Order</h4>
+                    <pre class="code-block">
 curl -X POST http://localhost:5000/api/orders \
   -H "Content-Type: application/json" \
   -d '{
@@ -281,9 +298,11 @@ curl -X POST http://localhost:5000/api/orders \
   }'
 
 Response: 201 Created</pre>
+                </div>
 
-            <h4 class="subheading-accent">Validation Error Example</h4>
-            <pre class="code-block">
+                <div class="card">
+                    <h4 class="subheading-accent mt-0">Validation Error Example</h4>
+                    <pre class="code-block">
 # Missing required fields
 curl -X POST http://localhost:5000/api/products \
   -H "Content-Type: application/json" \
@@ -297,6 +316,8 @@ Response: 400 Bad Request
     "category": "Category is required"
   }
 }</pre>
+                </div>
+            </div>
         </div>
 
         <div class="cards section-mt">

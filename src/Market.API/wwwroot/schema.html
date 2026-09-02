@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Schema | Market API</title>
+    <title>Market API - Data Schema</title>
+    <meta name="description" content="Entity schemas and relational specifications for all 7 Market API entities.">
     <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <nav>
-        <div class="container">
+        <div class="nav-inner">
             <a href="/index.html" class="logo">
                 <img src="/images/logo.svg" alt="Market API Logo" class="logo-img">
                 <span>Market API</span>
             </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+                <i data-lucide="menu" aria-hidden="true"></i>
+            </button>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
                 <li><a href="/explorer.html">Explorer</a></li>
@@ -51,6 +58,7 @@
         <div class="endpoints section-mt">
             <h2><i data-lucide="table" aria-hidden="true" class="icon-inline"></i> 7 Relational Entity Specifications</h2>
 
+            <div class="endpoint-grid">
             <!-- Product Entity -->
             <div class="endpoint-group endpoint-group--gold">
                 <h3 class="endpoint-group-title"><i data-lucide="package" aria-hidden="true" class="icon-inline"></i> Product Entity</h3>
@@ -112,6 +120,7 @@ Id            | Guid (PK)      | No       | Primary Key
 StoreName     | string         | No       | Unique, Max length 150
 UserId        | Guid (FK)      | No       | Foreign Key -> Users.Id
 ApprovalStatus| ApprovalStatus | No       | Enum (Pending, Approved, Suspended)</pre>
+            </div>
             </div>
         </div>
 

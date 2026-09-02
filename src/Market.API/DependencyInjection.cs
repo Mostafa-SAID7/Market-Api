@@ -1,4 +1,5 @@
 using Market.API.Middleware;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 namespace Market.API;
@@ -30,6 +31,12 @@ public static class DependencyInjection
             });
         });
 
+        // Response compression for faster Swagger + API responses
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+        });
+
         return services;
     }
 
@@ -40,6 +47,11 @@ public static class DependencyInjection
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Market API v1");
             options.RoutePrefix = "swagger";
+            // Enable deep linking and persist authorization
+            options.EnableDeepLinking();
+            options.DisplayRequestDuration();
+            // Inject custom CSS to speed up perceived load
+            options.InjectStylesheet("/css/swagger-override.css");
         });
 
         return app;
@@ -58,8 +70,22 @@ public static class DependencyInjection
             await next();
         });
 
-        // Serve static files
-        app.UseStaticFiles();
+        // Response compression FIRST - wraps everything below
+        app.UseResponseCompression();
+
+        // Serve static files with aggressive caching for assets
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            OnPrepareResponse = ctx =>
+            {
+                var path = ctx.File.Name;
+                // Cache JS/CSS/images for 7 days (they're fingerprinted or rarely change)
+                if (path.EndsWith(".js") || path.EndsWith(".css") || path.EndsWith(".svg") || path.EndsWith(".png"))
+                {
+                    ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=604800, immutable";
+                }
+            }
+        });
 
         // Apply custom middleware (error handling, logging, validation, correlation ID)
         app.UseCustomMiddleware();

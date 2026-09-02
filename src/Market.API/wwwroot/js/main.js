@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initCardObserver();
     initCodeCopyButtons();
     checkApiStatus();
+    initMobileMenu();
+    initNavScroll();
 });
 
 // Dynamic copyright year in footers
@@ -17,6 +19,41 @@ function updateCopyrightYear() {
     years.forEach(el => {
         el.textContent = currentYear;
     });
+}
+
+// Mobile Menu Toggle
+function initMobileMenu() {
+    const toggleBtn = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+    }
+}
+
+// Nav Scroll Animation (Optimized with requestAnimationFrame)
+function initNavScroll() {
+    const nav = document.querySelector('nav');
+    if (nav) {
+        let isScrolled = false;
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const shouldBeScrolled = window.scrollY > 20;
+                    if (isScrolled !== shouldBeScrolled) {
+                        isScrolled = shouldBeScrolled;
+                        nav.classList.toggle('scrolled', isScrolled);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    }
 }
 
 // Initialize Lucide icons
