@@ -29,7 +29,7 @@ namespace Market.Application.Features.Vendors.Commands
 
         public async Task<VendorResponse> Handle(UpdateVendorRatingCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Updating vendor {VendorId} rating to {AverageRating} with {TotalReviews} total reviews", 
+            _logger.LogInformation("Updating vendor {VendorId} rating to {AverageRating} with {TotalReviews} total reviews",
                 request.Id, request.AverageRating, request.TotalReviews);
 
             var vendor = await _unitOfWork.Vendors.GetByIdAsync(request.Id, cancellationToken);

@@ -32,7 +32,7 @@ namespace Market.Application.Features.Carts.Queries
 
             var carts = await _unitOfWork.Carts.GetAllAsync();
             var cart = carts.FirstOrDefault(c => c.UserId == request.UserId);
-            
+
             if (cart == null)
                 return null;
 

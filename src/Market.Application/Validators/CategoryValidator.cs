@@ -42,7 +42,7 @@ namespace Market.Application.Validators
 
         private bool IsValidSlug(string slug)
         {
-            return !string.IsNullOrEmpty(slug) && 
+            return !string.IsNullOrEmpty(slug) &&
                    System.Text.RegularExpressions.Regex.IsMatch(slug, @"^[a-z0-9]+(?:-[a-z0-9]+)*$");
         }
     }

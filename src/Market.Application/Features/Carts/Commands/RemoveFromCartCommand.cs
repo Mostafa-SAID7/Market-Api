@@ -28,11 +28,11 @@ namespace Market.Application.Features.Carts.Commands
 
         public async Task<CartResponse> Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handling RemoveFromCartCommand for user: {UserId}, product: {ProductId}", 
+            _logger.LogInformation("Handling RemoveFromCartCommand for user: {UserId}, product: {ProductId}",
                 request.UserId, request.ProductId);
 
             var result = await _mediator.Send(
-                new RemoveFromCartInternalCommand { UserId = request.UserId, ProductId = request.ProductId }, 
+                new RemoveFromCartInternalCommand { UserId = request.UserId, ProductId = request.ProductId },
                 cancellationToken);
 
             return result;
