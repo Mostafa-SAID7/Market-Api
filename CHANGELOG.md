@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.3...v2.4.0) (2026-09-22)
+
+
+### Features
+
+* **db:** complete Phase 1 database audit investigation ([ca86c21](https://github.com/Mostafa-SAID7/Market-Api/commit/ca86c2161634c977932c3323a6f2b7e161415766))
+
 ## [2.3.3](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.2...v2.3.3) (2026-09-02)
 
 
