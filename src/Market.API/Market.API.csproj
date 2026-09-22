@@ -24,7 +24,7 @@
     <!-- Entity Framework Core for SQL Server -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.19" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.19" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.20" />
     
     <!-- Authentication & Security -->
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.19" />
