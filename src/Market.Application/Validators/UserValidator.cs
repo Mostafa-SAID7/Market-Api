@@ -7,7 +7,7 @@ namespace Market.Application.Validators
     /// </summary>
     public class UserValidator : IValidator<User>
     {
-        private static readonly System.Text.RegularExpressions.Regex EmailRegex = 
+        private static readonly System.Text.RegularExpressions.Regex EmailRegex =
             new(@"^[^\s@]+@[^\s@]+\.[^\s@]+$");
 
         public ValidationResult Validate(User entity)

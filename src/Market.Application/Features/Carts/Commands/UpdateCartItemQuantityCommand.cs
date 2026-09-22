@@ -29,7 +29,7 @@ namespace Market.Application.Features.Carts.Commands
 
         public async Task<CartResponse> Handle(UpdateCartItemQuantityCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Updating cart item quantity for user {UserId}, product {ProductId} to {Quantity}", 
+            _logger.LogInformation("Updating cart item quantity for user {UserId}, product {ProductId} to {Quantity}",
                 request.UserId, request.ProductId, request.Quantity);
 
             if (request.Quantity <= 0)

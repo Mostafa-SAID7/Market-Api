@@ -59,13 +59,13 @@ public static class DependencyInjection
             try
             {
                 logger.LogInformation("Initializing database...");
-                
+
                 // Apply any pending migrations and create database
                 await context.Database.MigrateAsync();
-                
+
                 // Seed data
                 await seeder.SeedAsync();
-                
+
                 logger.LogInformation("Database initialization completed.");
             }
             catch (Exception ex)

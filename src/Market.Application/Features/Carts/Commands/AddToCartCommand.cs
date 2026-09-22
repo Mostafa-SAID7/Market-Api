@@ -34,7 +34,7 @@ namespace Market.Application.Features.Carts.Commands
 
         public async Task<CartResponse> Handle(AddToCartCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handling AddToCartCommand for user: {UserId}, product: {ProductId}", 
+            _logger.LogInformation("Handling AddToCartCommand for user: {UserId}, product: {ProductId}",
                 request.UserId, request.ProductId);
 
             var cartItem = new CartItem
@@ -48,7 +48,7 @@ namespace Market.Application.Features.Carts.Commands
             };
 
             var result = await _mediator.Send(
-                new AddToCartInternalCommand { UserId = request.UserId, Item = cartItem }, 
+                new AddToCartInternalCommand { UserId = request.UserId, Item = cartItem },
                 cancellationToken);
 
             return result;
