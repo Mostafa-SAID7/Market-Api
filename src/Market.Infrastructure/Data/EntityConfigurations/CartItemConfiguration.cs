@@ -30,6 +30,11 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.HasIndex(ci => ci.ProductId);
             builder.HasIndex(ci => ci.VendorId);
 
+            // Business rule: One cart item per (Cart, Product, Vendor) combination
+            // This prevents duplicate rows and ensures quantity increments work correctly
+            builder.HasIndex(ci => new { ci.CartId, ci.ProductId, ci.VendorId })
+                .IsUnique();
+
             // Relationships
             builder.HasOne(ci => ci.Cart)
                 .WithMany(c => c.Items)

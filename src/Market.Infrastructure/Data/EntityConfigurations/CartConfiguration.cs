@@ -16,7 +16,8 @@ namespace Market.Infrastructure.Data.EntityConfigurations
 
             // Indexes
             builder.HasIndex(c => c.UserId)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             // Cart → User (one-to-one, Cart is dependent — owns UserId FK)
             // WithOne(u => u.Cart) ties to User.Cart navigation; prevents EF convention
