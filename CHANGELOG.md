@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.0...v3.0.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* protect write flows and enforce order pricing ([13d6908](https://github.com/Mostafa-SAID7/Market-Api/commit/13d690829eeffd4509a2d4600b8f276844cfb774))
+
 # [3.0.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.5.1...v3.0.0) (2026-09-23)
 
 
