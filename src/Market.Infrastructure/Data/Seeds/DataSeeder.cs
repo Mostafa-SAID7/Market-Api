@@ -164,7 +164,7 @@ namespace Market.Infrastructure.Data.Seeds
                 CommissionRate = 0.10m,
                 IsApproved = true,
                 IsActive = true,
-                AverageRating = 4.5
+                AverageRating = 4.50m
             };
 
             await _context.Vendors.AddAsync(vendor);
@@ -184,7 +184,7 @@ namespace Market.Infrastructure.Data.Seeds
                 Quantity = 100,
                 SKU = "WH-001",
                 Status = ProductStatus.Active,
-                AverageRating = 4.5,
+                AverageRating = 4.50m,
                 ReviewCount = 10
             };
 

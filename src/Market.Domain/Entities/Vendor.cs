@@ -25,7 +25,7 @@ namespace Market.Domain.Entities
         public bool IsApproved { get; set; } = false;
         public bool IsActive { get; set; } = true;
 
-        public double AverageRating { get; set; } = 0.0;
+        public decimal AverageRating { get; set; } = 0.00m;
         public int TotalReviews { get; set; } = 0;
 
         // Navigation properties

@@ -9,7 +9,7 @@ namespace Market.Application.Features.Vendors.Commands
     public class UpdateVendorRatingCommand : IRequest<VendorResponse>
     {
         public int Id { get; set; }
-        public double AverageRating { get; set; }
+        public decimal AverageRating { get; set; }
         public int TotalReviews { get; set; }
     }
 
