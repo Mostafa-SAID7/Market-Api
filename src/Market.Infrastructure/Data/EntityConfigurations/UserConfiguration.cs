@@ -43,30 +43,17 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .IsUnique()
                 .HasFilter("[IsDeleted] = 0");
 
-            // Relationships
-            // One user can have many orders
-            builder.HasMany<Order>()
-                .WithOne(o => o.Customer)
-                .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // User.VendorId is a denormalized cache/reference field, NOT a FK column.
+            // Explicitly map it as a plain scalar to prevent EF convention from treating
+            // it as a FK to the Vendors table and creating a duplicate User→Vendor relationship.
+            builder.Property(u => u.VendorId);
+            builder.Ignore(u => u.Vendor);  // Vendor navigation managed by VendorConfiguration
 
-            // One user can have one cart
-            builder.HasOne<Cart>()
-                .WithOne(c => c.User)
-                .HasForeignKey<Cart>(c => c.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // One user can have many reviews
-            builder.HasMany<Review>()
-                .WithOne(r => r.Customer)
-                .HasForeignKey(r => r.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // One user can have one vendor profile
-            builder.HasOne<Vendor>()
-                .WithOne(v => v.User)
-                .HasForeignKey<Vendor>(v => v.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // NOTE: Order→User is configured in OrderConfiguration (dependent-side).
+            // NOTE: Review→User is configured in ReviewConfiguration (dependent-side).
+            // NOTE: Cart→User is configured in CartConfiguration (dependent-side).
+            // NOTE: Vendor→User is configured in VendorConfiguration (dependent-side).
+            // User.Vendor navigation is Ignored above; User.VendorId is a denormalized field.
 
             // Table
             builder.ToTable("Users");

@@ -43,12 +43,9 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relationships
-            // One category can have many products
-            builder.HasMany<Product>()
-                .WithOne(p => p.Category)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // NOTE: Product→Category relationship is configured in ProductConfiguration
+            // (dependent-side). Configuring it here from the Category side creates a
+            // duplicate shadow FK column (Product.CategoryId1).
 
             // Table
             builder.ToTable("Categories");

@@ -60,13 +60,14 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.HasIndex(o => o.CreatedAt);
 
             // Relationships
-            // Order -> Customer (User) configured in UserConfiguration
+            // Order → User/Customer (Order is dependent, owns CustomerId FK)
+            builder.HasOne(o => o.Customer)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // One order can have many items
-            builder.HasMany<OrderItem>()
-                .WithOne(oi => oi.Order)
-                .HasForeignKey(oi => oi.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // NOTE: OrderItem→Order relationship is configured in OrderItemConfiguration
+            // (dependent-side). Configuring HasMany<OrderItem> here creates a duplicate.
 
             // Table
             builder.ToTable("Orders");

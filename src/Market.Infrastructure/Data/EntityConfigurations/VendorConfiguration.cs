@@ -53,18 +53,18 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.HasIndex(v => v.UserId)
                 .IsUnique();
 
-            // Relationships - configured in UserConfiguration
-            // One vendor can have many products
-            builder.HasMany<Product>()
-                .WithOne(p => p.Vendor)
-                .HasForeignKey(p => p.VendorId)
+            // Vendor → User (one-to-one, Vendor is dependent — owns UserId FK)
+            builder.HasOne(v => v.User)
+                .WithOne()
+                .HasForeignKey<Vendor>(v => v.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // One vendor can have many reviews
-            builder.HasMany<Review>()
-                .WithOne(r => r.Vendor)
-                .HasForeignKey(r => r.VendorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // NOTE: Product→Vendor relationship is configured in ProductConfiguration
+            // (dependent-side). Configuring HasMany<Product> here from the Vendor side
+            // creates a duplicate shadow FK column (Product.VendorId1).
+
+            // NOTE: Review→Vendor relationship is configured in ReviewConfiguration
+            // (dependent-side only). Configuring it here would create VendorId1 shadow FK.
 
             // Table
             builder.ToTable("Vendors");

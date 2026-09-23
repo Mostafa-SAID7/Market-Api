@@ -70,7 +70,8 @@ public static class DependencyInjection
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error initializing database");
+                logger.LogError(ex, "Error initializing database. Application startup aborted.");
+                throw; // Re-throw: a database failure must not appear as a successful startup
             }
         }
     }

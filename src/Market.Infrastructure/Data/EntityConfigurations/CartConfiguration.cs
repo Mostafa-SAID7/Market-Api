@@ -18,8 +18,13 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.HasIndex(c => c.UserId)
                 .IsUnique();
 
-            // Relationships
-            // Cart -> User (one-to-one) configured in UserConfiguration
+            // Cart → User (one-to-one, Cart is dependent — owns UserId FK)
+            // WithOne(u => u.Cart) ties to User.Cart navigation; prevents EF convention
+            // from discovering a second relationship through User.Cart and creating Cart.UserId1.
+            builder.HasOne(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // One cart can have many items
             builder.HasMany<CartItem>()

@@ -32,16 +32,29 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.HasIndex(r => r.RatingValue);
             builder.HasIndex(r => r.CreatedAt);
 
-            // Relationships
-            // Review -> Product (configured in ProductConfiguration)
-            // Review -> Vendor (configured in VendorConfiguration)
-            // Review -> Customer (User) (configured in UserConfiguration)
+            // NOTE: ReviewImage→Review relationship is configured in ReviewImageConfiguration
+            // (dependent-side). Configuring HasMany<ReviewImage> here from the Review side
+            // creates a duplicate shadow FK column (ReviewImage.ReviewId1).
+            // NOTE: Review→Product, Review→Vendor, Review→Customer(User) relationships
+            // are configured in ReviewConfiguration as the dependent owns those FKs.
 
-            // One review can have many images
-            builder.HasMany<ReviewImage>()
-                .WithOne(ri => ri.Review)
-                .HasForeignKey(ri => ri.ReviewId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // Review → Product (Review is dependent, owns ProductId FK)
+            builder.HasOne(r => r.Product)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey(r => r.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Review → Vendor (Review is dependent, owns VendorId FK)
+            builder.HasOne(r => r.Vendor)
+                .WithMany(v => v.Reviews)
+                .HasForeignKey(r => r.VendorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Review → User/Customer (Review is dependent, owns CustomerId FK)
+            builder.HasOne(r => r.Customer)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Table
             builder.ToTable("Reviews");

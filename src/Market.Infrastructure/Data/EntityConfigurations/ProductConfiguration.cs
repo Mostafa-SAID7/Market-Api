@@ -51,33 +51,29 @@ namespace Market.Infrastructure.Data.EntityConfigurations
 
             builder.HasIndex(p => p.Status);
 
-            // Relationships
-            // Product -> Category (configured in CategoryConfiguration)
-            // Product -> Vendor (configured in VendorConfiguration)
+            // Relationships — all configured here on the dependent (Product) side
+            // Product → Category (Product is dependent, owns CategoryId FK)
+            builder.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // One product can have many tags
-            builder.HasMany<ProductTag>()
+            // Product → Vendor (Product is dependent, owns VendorId FK)
+            builder.HasOne(p => p.Vendor)
+                .WithMany(v => v.Products)
+                .HasForeignKey(p => p.VendorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ProductTag → Product (ProductTag is dependent, owns ProductId FK)
+            // Not configured in ProductTagConfiguration — single source of truth here.
+            builder.HasMany(p => p.Tags)
                 .WithOne(pt => pt.Product)
                 .HasForeignKey(pt => pt.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // One product can have many reviews
-            builder.HasMany<Review>()
-                .WithOne(r => r.Product)
-                .HasForeignKey(r => r.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // One product can appear in many order items
-            builder.HasMany<OrderItem>()
-                .WithOne(oi => oi.Product)
-                .HasForeignKey(oi => oi.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // One product can appear in many cart items
-            builder.HasMany<CartItem>()
-                .WithOne(ci => ci.Product)
-                .HasForeignKey(ci => ci.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // NOTE: CartItem→Product, OrderItem→Product, and Review→Product relationships
+            // are configured in CartItemConfiguration, OrderItemConfiguration, and
+            // ReviewConfiguration respectively (dependent-side only).
 
             // Table
             builder.ToTable("Products");

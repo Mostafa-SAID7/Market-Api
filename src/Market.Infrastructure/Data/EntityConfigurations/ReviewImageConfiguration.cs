@@ -22,7 +22,13 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             // Indexes
             builder.HasIndex(ri => ri.ReviewId);
 
-            // Relationships configured in ReviewConfiguration
+            // ReviewImage → Review (ReviewImage is dependent, owns ReviewId FK)
+            // Single authoritative definition — prevents ReviewImage.ReviewId1 shadow FK
+            // that occurs when ReviewConfiguration also configures HasMany<ReviewImage>.
+            builder.HasOne(ri => ri.Review)
+                .WithMany(r => r.Images)
+                .HasForeignKey(ri => ri.ReviewId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Table
             builder.ToTable("ReviewImages");
