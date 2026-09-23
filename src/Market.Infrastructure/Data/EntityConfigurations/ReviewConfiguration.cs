@@ -25,12 +25,20 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.Property(r => r.RatingValue)
                 .HasConversion<int>();
 
+            // CHECK constraint for rating value (1-5)
+            // Modern approach using ToTable with lambda
+
             // Indexes
             builder.HasIndex(r => r.ProductId);
             builder.HasIndex(r => r.VendorId);
             builder.HasIndex(r => r.CustomerId);
             builder.HasIndex(r => r.RatingValue);
             builder.HasIndex(r => r.CreatedAt);
+
+            // Business rule: One active review per customer per product
+            builder.HasIndex(r => new { r.CustomerId, r.ProductId })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             // NOTE: ReviewImage→Review relationship is configured in ReviewImageConfiguration
             // (dependent-side). Configuring HasMany<ReviewImage> here from the Review side
@@ -56,8 +64,10 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .HasForeignKey(r => r.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Table
-            builder.ToTable("Reviews");
+            // Table with CHECK constraint
+            builder.ToTable("Reviews", t =>
+                t.HasCheckConstraint("CK_Reviews_RatingValue_Range",
+                    "[RatingValue] >= 1 AND [RatingValue] <= 5"));
         }
     }
 }

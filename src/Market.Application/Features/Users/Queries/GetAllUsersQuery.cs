@@ -38,7 +38,6 @@ namespace Market.Application.Features.Users.Queries
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
                 Role = u.Role.ToString(),
-                VendorId = u.VendorId,
                 IsActive = u.IsActive,
                 IsEmailVerified = u.IsEmailVerified,
                 CreatedAt = u.CreatedAt,

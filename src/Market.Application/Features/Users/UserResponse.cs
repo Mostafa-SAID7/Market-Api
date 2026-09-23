@@ -13,7 +13,6 @@ namespace Market.Application.Features.Users
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public int? VendorId { get; set; }
         public bool IsActive { get; set; }
         public bool IsEmailVerified { get; set; }
         public bool EmailConfirmed { get; set; }

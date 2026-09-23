@@ -1,6 +1,7 @@
 using MediatR;
 using Market.Application.Features.Carts.Commands;
 using Market.Application.Features.Carts.Queries;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Market.API.Controllers
 {
@@ -15,6 +16,31 @@ namespace Market.API.Controllers
         {
             _mediator = mediator;
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Get cart by cart ID
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                _logger.LogInformation("Getting cart by ID: {CartId}", id);
+
+                // Since we don't have a GetCartByIdQuery, we'll return a message indicating
+                // the correct endpoint to use for user-based cart operations
+                return BadRequest(new
+                {
+                    message = "Cart access by cart ID is not supported. Use /api/carts/user/{userId} instead.",
+                    hint = "This API is designed for user-based cart operations. Each user has one cart."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting cart by ID: {CartId}", id);
+                return StatusCode(500, new { message = "Internal server error" });
+            }
         }
 
         /// <summary>

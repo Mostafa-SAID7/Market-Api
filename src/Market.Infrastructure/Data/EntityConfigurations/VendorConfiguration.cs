@@ -46,12 +46,16 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             builder.Property(v => v.CommissionRate)
                 .HasPrecision(5, 2);  // Up to 999.99%
 
+            // CHECK constraint for commission rate (0% to 50%)
+            // Modern approach using ToTable with lambda
+
             builder.Property(v => v.AverageRating)
                 .HasPrecision(3, 2);  // Ratings are stored exactly to two decimal places.
 
             // Indexes
             builder.HasIndex(v => v.UserId)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             // Vendor → User (one-to-one, Vendor is dependent — owns UserId FK)
             builder.HasOne(v => v.User)
@@ -66,8 +70,10 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             // NOTE: Review→Vendor relationship is configured in ReviewConfiguration
             // (dependent-side only). Configuring it here would create VendorId1 shadow FK.
 
-            // Table
-            builder.ToTable("Vendors");
+            // Table with CHECK constraint
+            builder.ToTable("Vendors", t =>
+                t.HasCheckConstraint("CK_Vendors_CommissionRate_Range",
+                    "[CommissionRate] >= 0.00 AND [CommissionRate] <= 0.50"));
         }
     }
 }
