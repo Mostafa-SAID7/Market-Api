@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.2...v3.0.3) (2026-09-23)
+
+
+### Bug Fixes
+
+* simplify database model tests to avoid design-time model access issues ([be27b3e](https://github.com/Mostafa-SAID7/Market-Api/commit/be27b3ee705877d89d190a14fffd1d53f6520676))
+
 ## [3.0.2](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.1...v3.0.2) (2026-09-23)
 
 
