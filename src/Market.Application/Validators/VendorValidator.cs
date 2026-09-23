@@ -32,8 +32,8 @@ namespace Market.Application.Validators
                 result.AddError(nameof(Vendor.StoreDescription), "Store description cannot exceed 2000 characters");
 
             // CommissionRate validation
-            if (entity.CommissionRate < 0 || entity.CommissionRate > 1)
-                result.AddError(nameof(Vendor.CommissionRate), "Commission rate must be between 0 and 1");
+            if (entity.CommissionRate < 0 || entity.CommissionRate > 0.50m)
+                result.AddError(nameof(Vendor.CommissionRate), "Commission rate must be between 0 and 0.50");
 
             // PhoneNumber validation
             if (!string.IsNullOrWhiteSpace(entity.PhoneNumber))
@@ -54,5 +54,4 @@ namespace Market.Application.Validators
         }
     }
 }
-
 

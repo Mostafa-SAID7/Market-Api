@@ -36,12 +36,12 @@ namespace Market.Application.Features.Orders.Commands
     /// </summary>
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderResponse>
     {
-        private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateOrderCommandHandler> _logger;
 
-        public CreateOrderCommandHandler(IMediator mediator, ILogger<CreateOrderCommandHandler> logger)
+        public CreateOrderCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateOrderCommandHandler> logger)
         {
-            _mediator = mediator;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -49,19 +49,42 @@ namespace Market.Application.Features.Orders.Commands
         {
             _logger.LogInformation("Handling CreateOrderCommand for customer: {CustomerId}", request.CustomerId);
 
+            if (request.CustomerId <= 0 || !await _unitOfWork.Users.ExistsAsync(request.CustomerId, cancellationToken))
+                throw new KeyNotFoundException($"Customer with ID {request.CustomerId} not found");
+            if (request.Items.Count == 0)
+                throw new ArgumentException("Order must contain at least one item.", nameof(request.Items));
+            if (string.IsNullOrWhiteSpace(request.ShippingAddress) || request.ShippingAddress.Length < 10)
+                throw new ArgumentException("Shipping address must be at least 10 characters.", nameof(request.ShippingAddress));
+            if (request.ShippingCost < 0 || request.Tax < 0)
+                throw new ArgumentException("Shipping cost and tax cannot be negative.");
+
+            var items = new List<OrderItem>();
+            foreach (var input in request.Items)
+            {
+                if (input.ProductId <= 0 || input.Quantity <= 0)
+                    throw new ArgumentException("Each order item must have a valid product ID and positive quantity.");
+
+                var product = await _unitOfWork.Products.GetByIdAsync(input.ProductId, cancellationToken)
+                    ?? throw new KeyNotFoundException($"Product with ID {input.ProductId} not found");
+                if (!product.IsInStock || product.Quantity < input.Quantity)
+                    throw new InvalidOperationException($"Product with ID {input.ProductId} does not have sufficient stock.");
+
+                product.Quantity -= input.Quantity;
+                product.Sold += input.Quantity;
+                await _unitOfWork.Products.UpdateAsync(product, cancellationToken);
+                items.Add(new OrderItem
+                {
+                    ProductId = product.Id, ProductName = product.Name, VendorId = product.VendorId,
+                    Price = product.DiscountPrice ?? product.Price, Quantity = input.Quantity
+                });
+            }
+
             var order = new Order
             {
                 CustomerId = request.CustomerId,
                 OrderNumber = Order.GenerateOrderNumber(),
-                Items = request.Items.Select(i => new OrderItem
-                {
-                    ProductId = i.ProductId,
-                    ProductName = i.ProductName,
-                    VendorId = i.VendorId,
-                    Price = i.Price,
-                    Quantity = i.Quantity
-                }).ToList(),
-                SubTotal = request.SubTotal,
+                Items = items,
+                SubTotal = 0,
                 ShippingCost = request.ShippingCost,
                 Tax = request.Tax,
                 ShippingAddress = request.ShippingAddress,
@@ -72,19 +95,23 @@ namespace Market.Application.Features.Orders.Commands
 
             order.CalculateTotal();
 
-            var result = await _mediator.Send(new CreateOrderInternalCommand { Order = order }, cancellationToken);
-            return result;
+            await _unitOfWork.Orders.CreateAsync(order, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
+
+            return new OrderResponse
+            {
+                Id = order.Id, CustomerId = order.CustomerId, OrderNumber = order.OrderNumber,
+                SubTotal = order.SubTotal, ShippingCost = order.ShippingCost, Tax = order.Tax,
+                TotalPrice = order.TotalPrice, OrderStatus = order.OrderStatus, PaymentStatus = order.PaymentStatus,
+                ShippingAddress = order.ShippingAddress, Notes = order.Notes, CreatedAt = order.CreatedAt,
+                Items = order.Items.Select(item => new OrderItemResponse
+                {
+                    ProductId = item.ProductId, ProductName = item.ProductName, VendorId = item.VendorId,
+                    Price = item.Price, Quantity = item.Quantity, SubTotal = item.SubTotal
+                }).ToList()
+            };
         }
     }
-
-    /// <summary>
-    /// Internal command for creating order
-    /// </summary>
-    internal class CreateOrderInternalCommand : IRequest<OrderResponse>
-    {
-        public Order Order { get; set; } = null!;
-    }
 }
-
 
 

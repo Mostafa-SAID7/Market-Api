@@ -5,5 +5,6 @@ global using System.Linq;
 global using System.Threading.Tasks;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.RateLimiting;
 global using Market.Application.Features;
 global using Market.Infrastructure;

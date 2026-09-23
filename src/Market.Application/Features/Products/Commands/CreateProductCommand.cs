@@ -25,12 +25,12 @@ namespace Market.Application.Features.Products.Commands
     /// </summary>
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductResponse>
     {
-        private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateProductCommandHandler> _logger;
 
-        public CreateProductCommandHandler(IMediator mediator, ILogger<CreateProductCommandHandler> logger)
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateProductCommandHandler> logger)
         {
-            _mediator = mediator;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -51,20 +51,29 @@ namespace Market.Application.Features.Products.Commands
                 SKU = request.SKU
             };
 
-            // Send query to validate then create
-            var result = await _mediator.Send(new CreateProductInternalCommand { Product = product }, cancellationToken);
-            return result;
+            var validation = new Validators.ProductValidator().Validate(product);
+            if (!validation.IsValid)
+                throw new ArgumentException(string.Join(" ", validation.Errors.Select(error => error.Message)));
+
+            if (!await _unitOfWork.Vendors.ExistsAsync(product.VendorId, cancellationToken))
+                throw new KeyNotFoundException($"Vendor with ID {product.VendorId} not found");
+            if (!await _unitOfWork.Categories.ExistsAsync(product.CategoryId, cancellationToken))
+                throw new KeyNotFoundException($"Category with ID {product.CategoryId} not found");
+            if (!string.IsNullOrWhiteSpace(product.SKU) && await _unitOfWork.Products.GetBySkuAsync(product.SKU, cancellationToken) != null)
+                throw new InvalidOperationException("A product with this SKU already exists.");
+
+            await _unitOfWork.Products.CreateAsync(product, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
+
+            return new ProductResponse
+            {
+                Id = product.Id, Name = product.Name, Description = product.Description,
+                Price = product.Price, DiscountPrice = product.DiscountPrice, ImageUrl = product.ImageUrl,
+                Quantity = product.Quantity, Sold = product.Sold, CategoryId = product.CategoryId,
+                VendorId = product.VendorId, AverageRating = product.AverageRating, ReviewCount = product.ReviewCount
+            };
         }
     }
-
-    /// <summary>
-    /// Internal command for creating product (handles actual creation)
-    /// </summary>
-    internal class CreateProductInternalCommand : IRequest<ProductResponse>
-    {
-        public Product Product { get; set; } = null!;
-    }
 }
-
 
 
