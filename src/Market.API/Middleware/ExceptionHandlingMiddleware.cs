@@ -42,35 +42,30 @@ namespace Market.API.Middleware
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     response.Message = "Required field is missing.";
-                    response.Details = exception.Message;
                     break;
 
                 case ArgumentException:
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     response.Message = "Invalid argument provided.";
-                    response.Details = exception.Message;
                     break;
 
                 case KeyNotFoundException:
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     response.Message = "Resource not found.";
-                    response.Details = exception.Message;
                     break;
 
                 case UnauthorizedAccessException:
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     response.Message = "You are not authorized to access this resource.";
-                    response.Details = exception.Message;
                     break;
 
                 default:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     response.Message = "An unexpected error occurred.";
-                    response.Details = exception.Message;
                     break;
             }
 
@@ -85,7 +80,6 @@ namespace Market.API.Middleware
     {
         public int StatusCode { get; set; }
         public string Message { get; set; } = string.Empty;
-        public string Details { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

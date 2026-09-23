@@ -1,6 +1,7 @@
 using Market.API.Middleware;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
 
 namespace Market.API;
 
@@ -16,6 +17,23 @@ public static class DependencyInjection
 
         // Add Health Checks
         services.AddHealthChecks();
+
+        // State-changing public endpoints are protected from basic abuse. The partition is
+        // intentionally based on remote IP because this API does not yet have authentication.
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.AddPolicy("write", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 30,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        AutoReplenishment = true
+                    }));
+        });
 
         // Add endpoints API explorer and Swagger
         services.AddEndpointsApiExplorer();
@@ -89,16 +107,9 @@ public static class DependencyInjection
 
     public static WebApplication UseApplicationMiddleware(this WebApplication app)
     {
-        // Add security headers to all responses
-        app.Use(async (context, next) =>
-        {
-            context.Response.Headers["X-Frame-Options"] = "DENY";
-            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-            context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
-            context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
-            context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
-            await next();
-        });
+        // Add security headers to all responses. X-XSS-Protection is intentionally omitted:
+        // modern browsers ignore it and its legacy behavior can create vulnerabilities.
+        app.UseMiddleware<SecurityHeadersMiddleware>();
 
         // Response compression FIRST - wraps everything below
         app.UseResponseCompression();
@@ -122,6 +133,8 @@ public static class DependencyInjection
 
         // Enable HTTPS redirection
         app.UseHttpsRedirection();
+
+        app.UseRateLimiter();
 
         // Enable authorization
         app.UseAuthorization();
