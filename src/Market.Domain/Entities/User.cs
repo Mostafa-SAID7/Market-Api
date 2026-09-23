@@ -20,12 +20,11 @@ namespace Market.Domain.Entities
         public bool IsEmailVerified { get; set; } = false;
         public bool EmailConfirmed { get; set; } = false;
 
-        public int? VendorId { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
 
         // Navigation properties
-        public Vendor? Vendor { get; set; }
+
         public Cart? Cart { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
