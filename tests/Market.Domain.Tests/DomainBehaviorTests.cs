@@ -1,3 +1,4 @@
+using Xunit;
 using Market.Domain.Entities;
 using Market.Domain.Enums;
 using Market.Domain.ValueObjects;
@@ -57,7 +58,7 @@ public class DomainBehaviorTests
     {
         var product = new Product { Quantity = 1, Status = ProductStatus.Active };
         Assert.True(product.IsInStock);
-        product.Status = ProductStatus.Draft;
+        product.Status = ProductStatus.Inactive;
         Assert.False(product.IsInStock);
         product.Status = ProductStatus.Active;
         product.Quantity = 0;

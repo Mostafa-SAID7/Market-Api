@@ -1,3 +1,4 @@
+using Xunit;
 using System.Text;
 using Market.API.Middleware;
 using Microsoft.AspNetCore.Http;

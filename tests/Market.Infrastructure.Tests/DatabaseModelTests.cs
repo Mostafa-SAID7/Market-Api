@@ -1,3 +1,4 @@
+using Xunit;
 using Market.Domain.Entities;
 using Market.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
