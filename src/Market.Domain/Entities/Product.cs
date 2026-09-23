@@ -25,7 +25,7 @@ namespace Market.Domain.Entities
 
         public ProductStatus Status { get; set; } = ProductStatus.Active;
 
-        public double AverageRating { get; set; } = 0.0;
+        public decimal AverageRating { get; set; } = 0.00m;
         public int ReviewCount { get; set; } = 0;
 
         // Navigation properties

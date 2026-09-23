@@ -15,7 +15,7 @@ namespace Market.Application.Features.Products
         public int Sold { get; set; }
         public int CategoryId { get; set; }
         public int VendorId { get; set; }
-        public double AverageRating { get; set; }
+        public decimal AverageRating { get; set; }
         public int ReviewCount { get; set; }
     }
 }

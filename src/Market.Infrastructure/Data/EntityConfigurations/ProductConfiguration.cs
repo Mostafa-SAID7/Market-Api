@@ -39,7 +39,7 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .HasConversion<int>();
 
             builder.Property(p => p.AverageRating)
-                .HasPrecision(3, 2);  // 0.00 to 9.99
+                .HasPrecision(3, 2);  // Ratings are stored exactly to two decimal places.
 
             // Indexes
             builder.HasIndex(p => p.VendorId);
