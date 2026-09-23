@@ -27,7 +27,7 @@ namespace Market.Infrastructure.Data.EntityConfigurations
 
             // CHECK constraint for rating value (1-5)
             // Modern approach using ToTable with lambda
-            
+
             // Indexes
             builder.HasIndex(r => r.ProductId);
             builder.HasIndex(r => r.VendorId);
@@ -65,8 +65,8 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Table with CHECK constraint
-            builder.ToTable("Reviews", t => 
-                t.HasCheckConstraint("CK_Reviews_RatingValue_Range", 
+            builder.ToTable("Reviews", t =>
+                t.HasCheckConstraint("CK_Reviews_RatingValue_Range",
                     "[RatingValue] >= 1 AND [RatingValue] <= 5"));
         }
     }

@@ -71,8 +71,8 @@ namespace Market.Infrastructure.Data.EntityConfigurations
             // (dependent-side only). Configuring it here would create VendorId1 shadow FK.
 
             // Table with CHECK constraint
-            builder.ToTable("Vendors", t => 
-                t.HasCheckConstraint("CK_Vendors_CommissionRate_Range", 
+            builder.ToTable("Vendors", t =>
+                t.HasCheckConstraint("CK_Vendors_CommissionRate_Range",
                     "[CommissionRate] >= 0.00 AND [CommissionRate] <= 0.50"));
         }
     }

@@ -84,7 +84,7 @@ namespace Market.Application.Features.Carts.Commands
                 request.UserId, request.Item.ProductId, request.Item.VendorId);
 
             // Get or create cart for user
-            var cart = await _unitOfWork.Carts.GetByUserIdAsync(request.UserId) 
+            var cart = await _unitOfWork.Carts.GetByUserIdAsync(request.UserId)
                       ?? new Domain.Entities.Cart { UserId = request.UserId };
 
             // Use domain method to add item - this will handle the (ProductId, VendorId) uniqueness logic

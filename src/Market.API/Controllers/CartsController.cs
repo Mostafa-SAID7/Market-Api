@@ -27,10 +27,11 @@ namespace Market.API.Controllers
             try
             {
                 _logger.LogInformation("Getting cart by ID: {CartId}", id);
-                
+
                 // Since we don't have a GetCartByIdQuery, we'll return a message indicating
                 // the correct endpoint to use for user-based cart operations
-                return BadRequest(new { 
+                return BadRequest(new
+                {
                     message = "Cart access by cart ID is not supported. Use /api/carts/user/{userId} instead.",
                     hint = "This API is designed for user-based cart operations. Each user has one cart."
                 });

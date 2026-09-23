@@ -34,13 +34,13 @@ namespace Market.Application.Features.Reviews.Commands
 
         public async Task<ReviewResponse> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handling CreateReviewCommand for product: {ProductId} by customer: {CustomerId}", 
+            _logger.LogInformation("Handling CreateReviewCommand for product: {ProductId} by customer: {CustomerId}",
                 request.ProductId, request.CustomerId);
 
             // Check if customer already reviewed this product
             var existingReview = await _unitOfWork.Reviews.CustomerReviewedProductAsync(
                 request.ProductId, request.CustomerId, cancellationToken);
-            
+
             if (existingReview)
             {
                 throw new InvalidOperationException(
