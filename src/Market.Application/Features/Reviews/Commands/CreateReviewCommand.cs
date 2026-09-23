@@ -23,18 +23,29 @@ namespace Market.Application.Features.Reviews.Commands
     /// </summary>
     public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, ReviewResponse>
     {
-        private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateReviewCommandHandler> _logger;
 
-        public CreateReviewCommandHandler(IMediator mediator, ILogger<CreateReviewCommandHandler> logger)
+        public CreateReviewCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateReviewCommandHandler> logger)
         {
-            _mediator = mediator;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
         public async Task<ReviewResponse> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handling CreateReviewCommand for product: {ProductId}", request.ProductId);
+            _logger.LogInformation("Handling CreateReviewCommand for product: {ProductId} by customer: {CustomerId}", 
+                request.ProductId, request.CustomerId);
+
+            // Check if customer already reviewed this product
+            var existingReview = await _unitOfWork.Reviews.CustomerReviewedProductAsync(
+                request.ProductId, request.CustomerId, cancellationToken);
+            
+            if (existingReview)
+            {
+                throw new InvalidOperationException(
+                    $"Customer {request.CustomerId} has already reviewed product {request.ProductId}");
+            }
 
             var review = new Review
             {
@@ -52,17 +63,25 @@ namespace Market.Application.Features.Reviews.Commands
                 review.Images.Add(new ReviewImage { ImageUrl = imageUrl });
             }
 
-            var result = await _mediator.Send(new CreateReviewInternalCommand { Review = review }, cancellationToken);
-            return result;
-        }
-    }
+            await _unitOfWork.Reviews.CreateAsync(review, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
 
-    /// <summary>
-    /// Internal command for creating review
-    /// </summary>
-    internal class CreateReviewInternalCommand : IRequest<ReviewResponse>
-    {
-        public Review Review { get; set; } = null!;
+            return new ReviewResponse
+            {
+                Id = review.Id,
+                ProductId = review.ProductId,
+                VendorId = review.VendorId,
+                CustomerId = review.CustomerId,
+                RatingValue = review.RatingValue,
+                Title = review.Title,
+                Comment = review.Comment,
+                ImageUrls = review.Images.Select(i => i.ImageUrl).ToList(),
+                HelpfulCount = review.HelpfulCount,
+                IsVerifiedPurchase = review.IsVerifiedPurchase,
+                CreatedAt = review.CreatedAt,
+                UpdatedAt = review.UpdatedAt
+            };
+        }
     }
 }
 
