@@ -21,7 +21,7 @@ namespace Market.Application.Features.Vendors
         public decimal CommissionRate { get; set; }
         public bool IsApproved { get; set; }
         public bool IsActive { get; set; }
-        public double AverageRating { get; set; }
+        public decimal AverageRating { get; set; }
         public int TotalReviews { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

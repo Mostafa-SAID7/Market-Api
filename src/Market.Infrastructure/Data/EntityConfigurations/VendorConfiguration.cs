@@ -47,7 +47,7 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .HasPrecision(5, 2);  // Up to 999.99%
 
             builder.Property(v => v.AverageRating)
-                .HasPrecision(3, 2);  // 0.00 to 9.99
+                .HasPrecision(3, 2);  // Ratings are stored exactly to two decimal places.
 
             // Indexes
             builder.HasIndex(v => v.UserId)

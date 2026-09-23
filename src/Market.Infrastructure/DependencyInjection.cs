@@ -25,7 +25,19 @@ public static class DependencyInjection
         }
 
         services.AddDbContext<MarketDbContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseSqlServer(
+                connectionString,
+                sqlServerOptions =>
+                {
+                    // Keep migration discovery anchored to the DbContext assembly rather than
+                    // the API startup assembly.
+                    sqlServerOptions.MigrationsAssembly(typeof(MarketDbContext).Assembly.FullName);
+
+                    // SQL Server can still be completing its startup sequence when the API
+                    // container begins. Retry transient connection failures so startup can
+                    // reach MigrateAsync and apply the initial schema.
+                    sqlServerOptions.EnableRetryOnFailure();
+                }));
 
         // Register repositories
         services.AddScoped<IProductRepository, ProductRepository>();

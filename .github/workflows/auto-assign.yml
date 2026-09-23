@@ -1,4 +1,4 @@
-name: Auto Assign Author
+name: Auto Assign Eligible Authors
 
 on:
   issues:
@@ -6,42 +6,78 @@ on:
   pull_request_target:
     types: [opened]
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   auto-assign:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-
     steps:
-    - name: Assign Issue Creator
-      if: github.event_name == 'issues' && github.actor != 'dependabot[bot]'
-      uses: actions/github-script@v9
-      with:
-        script: |
-          const { owner, repo } = context.repo;
-          const issue = context.payload.issue;
-          const author = issue.user.login;
-          
-          await github.rest.issues.addAssignees({
-            owner,
-            repo,
-            issue_number: issue.number,
-            assignees: [author]
-          });
+      - name: Assign eligible issue author
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+            const eligibleAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            const eligiblePermissions = new Set(['admin', 'maintain', 'write', 'triage']);
 
-    - name: Assign PR Author
-      if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
-      uses: actions/github-script@v9
-      with:
-        script: |
-          const { owner, repo } = context.repo;
-          const pr = context.payload.pull_request;
-          const author = pr.user.login;
-          
-          await github.rest.issues.addAssignees({
-            owner,
-            repo,
-            issue_number: pr.number,
-            assignees: [author]
-          });
+            if (!eligibleAssociations.has(issue.author_association)) {
+              core.info(`Skipping @${author}: ${issue.author_association} authors are not repository assignees.`);
+              return;
+            }
+
+            const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner,
+              repo,
+              username: author
+            });
+
+            if (!eligiblePermissions.has(data.permission)) {
+              core.info(`Skipping @${author}: repository permission is ${data.permission}.`);
+              return;
+            }
+
+            await github.rest.issues.addAssignees({
+              owner,
+              repo,
+              issue_number: issue.number,
+              assignees: [author]
+            });
+
+      - name: Assign eligible pull request author
+        if: github.event_name == 'pull_request_target'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pullRequest = context.payload.pull_request;
+            const author = pullRequest.user.login;
+            const eligibleAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            const eligiblePermissions = new Set(['admin', 'maintain', 'write', 'triage']);
+
+            if (!eligibleAssociations.has(pullRequest.author_association)) {
+              core.info(`Skipping @${author}: ${pullRequest.author_association} authors are not repository assignees.`);
+              return;
+            }
+
+            const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner,
+              repo,
+              username: author
+            });
+
+            if (!eligiblePermissions.has(data.permission)) {
+              core.info(`Skipping @${author}: repository permission is ${data.permission}.`);
+              return;
+            }
+
+            await github.rest.issues.addAssignees({
+              owner,
+              repo,
+              issue_number: pullRequest.number,
+              assignees: [author]
+            });

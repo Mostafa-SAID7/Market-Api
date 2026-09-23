@@ -16,6 +16,12 @@ services:
       - mssql_data:/var/opt/mssql
     networks:
       - market-api-network
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "YourPassword@123" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
   # Market API Application
   market-api:
@@ -32,7 +38,8 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=mssql;Database=MarketDb;User Id=sa;Password=YourPassword@123;Encrypt=False;TrustServerCertificate=True;
     depends_on:
-      - mssql
+      mssql:
+        condition: service_healthy
     networks:
       - market-api-network
 
