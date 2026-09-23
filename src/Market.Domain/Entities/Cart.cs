@@ -22,7 +22,7 @@ namespace Market.Domain.Entities
         /// </summary>
         public void AddItem(CartItem item)
         {
-            var existingItem = Items.FirstOrDefault(x => x.ProductId == item.ProductId && x.VendorId == item.VendorId);
+            var existingItem = Items.FirstOrDefault(x => x.ProductId == item.ProductId);
 
             if (existingItem != null)
             {
@@ -102,5 +102,4 @@ namespace Market.Domain.Entities
         public Vendor Vendor { get; set; } = null!;
     }
 }
-
 

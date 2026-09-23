@@ -116,6 +116,7 @@ namespace Market.API.Controllers
         /// Create a new order
         /// </summary>
         [HttpPost]
+        [EnableRateLimiting("write")]
         public async Task<IActionResult> Create([FromBody] CreateOrderCommand command)
         {
             if (!ModelState.IsValid)
@@ -262,4 +263,3 @@ namespace Market.API.Controllers
         }
     }
 }
-

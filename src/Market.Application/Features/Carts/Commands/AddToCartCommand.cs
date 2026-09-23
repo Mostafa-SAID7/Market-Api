@@ -87,7 +87,7 @@ namespace Market.Application.Features.Carts.Commands
             var cart = await _unitOfWork.Carts.GetByUserIdAsync(request.UserId)
                       ?? new Domain.Entities.Cart { UserId = request.UserId };
 
-            // Use domain method to add item - this will handle the (ProductId, VendorId) uniqueness logic
+            // Use domain method to add item - this will handle the ProductId uniqueness logic.
             cart.AddItem(request.Item);
 
             if (cart.Id == 0)
@@ -126,5 +126,4 @@ namespace Market.Application.Features.Carts.Commands
         }
     }
 }
-
 

@@ -67,13 +67,13 @@ dotnet restore Market.sln
 
 ### 3. Database Configuration
 
-Update your SQL Server connection string in `src/Market.API/appsettings.json`:
+Set the connection string outside tracked configuration. For local development, use .NET user secrets or an environment variable:
 
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=.;Database=MarketApiDb;Trusted_Connection=true;TrustServerCertificate=true;"
-}
+```bash
+dotnet user-secrets set --project src/Market.API "ConnectionStrings:DefaultConnection" "Server=.;Database=MarketApiDb;Trusted_Connection=true;TrustServerCertificate=true;"
 ```
+
+For Docker Compose, copy `.env.example` to `.env`, replace its placeholder with a unique local password, and keep `.env` untracked.
 
 ### 4. Run the API
 

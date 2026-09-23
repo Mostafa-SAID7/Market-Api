@@ -9,7 +9,7 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "YourPassword@123"
+      SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in your environment or .env file}
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
     volumes:
@@ -17,7 +17,7 @@ services:
     networks:
       - market-api-network
     healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "YourPassword@123" -Q "SELECT 1" || exit 1
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$${SA_PASSWORD}" -Q "SELECT 1" || exit 1
       interval: 10s
       timeout: 5s
       retries: 12
@@ -36,7 +36,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__DefaultConnection=Server=mssql;Database=MarketDb;User Id=sa;Password=YourPassword@123;Encrypt=False;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=mssql;Database=MarketDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in your environment or .env file};Encrypt=False;TrustServerCertificate=True;
     depends_on:
       mssql:
         condition: service_healthy

@@ -142,6 +142,7 @@ namespace Market.API.Controllers
         /// Create a new review
         /// </summary>
         [HttpPost]
+        [EnableRateLimiting("write")]
         public async Task<IActionResult> Create([FromBody] CreateReviewCommand command)
         {
             if (!ModelState.IsValid)
@@ -231,4 +232,3 @@ namespace Market.API.Controllers
         }
     }
 }
-
