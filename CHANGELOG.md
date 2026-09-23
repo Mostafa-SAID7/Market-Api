@@ -1,3 +1,15 @@
+# [2.5.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.4.0...v2.5.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **db:** resolve shadow FK columns and centralize repository persistence ([60c39cf](https://github.com/Mostafa-SAID7/Market-Api/commit/60c39cfa1dd0a57c5ceeead2bbb8de4c48a793f6))
+
+
+### Features
+
+* **db:** add initial EF Core migration ([2ff414c](https://github.com/Mostafa-SAID7/Market-Api/commit/2ff414cc35e0404794358434aeb1b683c13affde))
+
 # [2.4.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.3.3...v2.4.0) (2026-09-22)
 
 
