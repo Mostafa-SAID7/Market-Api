@@ -1,3 +1,28 @@
+# [3.0.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.5.1...v3.0.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* **api:** resolve CartsController routing and add missing using ([030ce90](https://github.com/Mostafa-SAID7/Market-Api/commit/030ce903fec74bc0165f2abaa1925b13463a904b))
+
+
+### Code Refactoring
+
+* **domain:** remove unused User.VendorId relationship ([c9f517a](https://github.com/Mostafa-SAID7/Market-Api/commit/c9f517ab2673df2078d425a19ea395fe7b5712e8))
+
+
+### Features
+
+* **application:** implement database integrity business logic ([fed9588](https://github.com/Mostafa-SAID7/Market-Api/commit/fed9588853a575211dabfaec1ebd84c031bb5483))
+* **infrastructure:** add comprehensive database integrity constraints ([31081ec](https://github.com/Mostafa-SAID7/Market-Api/commit/31081ec50522784da5bd4cbb973e142fc74842a1))
+* **migration:** database integrity hardening migration ([cd91b23](https://github.com/Mostafa-SAID7/Market-Api/commit/cd91b233e25a0abbdac741aaca83953647566334))
+
+
+### BREAKING CHANGES
+
+* **domain:** User.VendorId property removed
+Related: Database integrity hardening initiative
+
 ## [2.5.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.5.0...v2.5.1) (2026-09-23)
 
 
