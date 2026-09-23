@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.1...v3.0.2) (2026-09-23)
+
+
+### Bug Fixes
+
+* add missing xunit using statements and fix ProductStatus enum reference in tests ([8830df9](https://github.com/Mostafa-SAID7/Market-Api/commit/8830df978007f02be7871ad9d592b6235c65975d))
+
 ## [3.0.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.0...v3.0.1) (2026-09-23)
 
 
