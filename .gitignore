@@ -10,3 +10,7 @@ package-lock.json
 .idea/
 .vscode/
 .env
+
+# Test results
+TestResults/
+*.trx
