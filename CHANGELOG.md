@@ -1,3 +1,11 @@
+## [2.5.1](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.5.0...v2.5.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ci:** skip ineligible auto-assignees ([74d285d](https://github.com/Mostafa-SAID7/Market-Api/commit/74d285da99d90d2f8b8bb170e2bc9475af0acde9))
+* **db:** add rating precision migration ([283a573](https://github.com/Mostafa-SAID7/Market-Api/commit/283a573e2c612dc7e1129eba70b913816935e1fe))
+
 # [2.5.0](https://github.com/Mostafa-SAID7/Market-Api/compare/v2.4.0...v2.5.0) (2026-09-23)
 
 
