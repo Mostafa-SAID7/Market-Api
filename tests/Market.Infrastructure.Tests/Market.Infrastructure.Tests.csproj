@@ -14,11 +14,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.19" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="../../src/Market.Infrastructure/Market.Infrastructure.csproj" />
+    <ProjectReference Include="../Market.Tests.Common/Market.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>
