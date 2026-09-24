@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.3...v3.0.4) (2026-09-24)
+
+
+### Bug Fixes
+
+* correct User-Vendor relationship from one-to-one to one-to-many ([7c4d531](https://github.com/Mostafa-SAID7/Market-Api/commit/7c4d531a108b481f9baa40a00aba0fffaead9008))
+
 ## [3.0.3](https://github.com/Mostafa-SAID7/Market-Api/compare/v3.0.2...v3.0.3) (2026-09-23)
 
 
