@@ -66,4 +66,24 @@ public class CreateOrderHandlerTests
 
         unitOfWork.Verify(value => value.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
+
+    [Fact]
+    public async Task Handle_WhenProductDoesNotExist_DoesNotPersistOrder()
+    {
+        var users = new Mock<IUserRepository>(MockBehavior.Strict);
+        var products = new Mock<IProductRepository>(MockBehavior.Strict);
+        var unitOfWork = new Mock<IUnitOfWork>(MockBehavior.Strict);
+        users.Setup(repository => repository.ExistsAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        products.Setup(repository => repository.GetByIdAsync(10, It.IsAny<CancellationToken>())).ReturnsAsync((Product?)null);
+        unitOfWork.SetupGet(value => value.Users).Returns(users.Object);
+        unitOfWork.SetupGet(value => value.Products).Returns(products.Object);
+        var handler = new CreateOrderCommandHandler(unitOfWork.Object, NullLogger<CreateOrderCommandHandler>.Instance);
+
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => handler.Handle(new CreateOrderCommand
+        {
+            CustomerId = 3, ShippingAddress = "123 Market Street", Items = [new OrderItemInput { ProductId = 10, Quantity = 1 }]
+        }, CancellationToken.None));
+
+        unitOfWork.Verify(value => value.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
 }

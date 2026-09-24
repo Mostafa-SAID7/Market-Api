@@ -43,7 +43,7 @@ public class UniqueConstraintTests : IntegrationTestBase
         };
         var vendorUser = new User
         {
-            Email = "vendor@example.test", PasswordHash = "hash", FirstName = "Vendor", LastName = "One"
+            Email = "review-vendor@example.test", PasswordHash = "hash", FirstName = "Vendor", LastName = "One"
         };
         var category = Category.Create("Testing", "Products used for persistence testing.");
         DbContext.AddRange(customer, vendorUser, category);
