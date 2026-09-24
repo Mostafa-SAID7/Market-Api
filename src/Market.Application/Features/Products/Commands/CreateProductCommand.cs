@@ -67,10 +67,18 @@ namespace Market.Application.Features.Products.Commands
 
             return new ProductResponse
             {
-                Id = product.Id, Name = product.Name, Description = product.Description,
-                Price = product.Price, DiscountPrice = product.DiscountPrice, ImageUrl = product.ImageUrl,
-                Quantity = product.Quantity, Sold = product.Sold, CategoryId = product.CategoryId,
-                VendorId = product.VendorId, AverageRating = product.AverageRating, ReviewCount = product.ReviewCount
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                DiscountPrice = product.DiscountPrice,
+                ImageUrl = product.ImageUrl,
+                Quantity = product.Quantity,
+                Sold = product.Sold,
+                CategoryId = product.CategoryId,
+                VendorId = product.VendorId,
+                AverageRating = product.AverageRating,
+                ReviewCount = product.ReviewCount
             };
         }
     }

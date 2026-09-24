@@ -9,8 +9,12 @@ public class ReviewValidatorTests
     {
         var review = new Review
         {
-            ProductId = 1, CustomerId = 2, VendorId = 3, RatingValue = 5,
-            Title = "Excellent", Comment = "This product exceeded my expectations.",
+            ProductId = 1,
+            CustomerId = 2,
+            VendorId = 3,
+            RatingValue = 5,
+            Title = "Excellent",
+            Comment = "This product exceeded my expectations.",
             Images = [new ReviewImage { ImageUrl = "https://example.test/review.jpg" }]
         };
 
@@ -24,8 +28,12 @@ public class ReviewValidatorTests
     {
         var review = new Review
         {
-            ProductId = 1, CustomerId = 2, VendorId = 3, RatingValue = 6,
-            Title = "Excellent", Comment = "This product exceeded my expectations.",
+            ProductId = 1,
+            CustomerId = 2,
+            VendorId = 3,
+            RatingValue = 6,
+            Title = "Excellent",
+            Comment = "This product exceeded my expectations.",
             Images = [new ReviewImage { ImageUrl = "javascript:alert(1)" }]
         };
 

@@ -24,7 +24,7 @@ public class ExceptionHandlingMiddlewareTests : TestBase
 
         context.Response.Body.Position = 0;
         var body = await new StreamReader(context.Response.Body, Encoding.UTF8).ReadToEndAsync();
-        
+
         Assert.Equal(StatusCodes.Status500InternalServerError, context.Response.StatusCode);
         Assert.Contains("An unexpected error occurred.", body);
         Assert.DoesNotContain("Password", body, StringComparison.OrdinalIgnoreCase);
@@ -44,7 +44,7 @@ public class ExceptionHandlingMiddlewareTests : TestBase
 
         context.Response.Body.Position = 0;
         var body = await new StreamReader(context.Response.Body).ReadToEndAsync();
-        
+
         Assert.Equal(StatusCodes.Status404NotFound, context.Response.StatusCode);
         Assert.Contains("Resource not found.", body);
         Assert.DoesNotContain("internal resource key", body);

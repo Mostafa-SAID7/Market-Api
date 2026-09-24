@@ -9,8 +9,13 @@ public class ProductValidatorTests
     {
         var product = new Product
         {
-            Name = "Wireless keyboard", Description = "A reliable wireless keyboard.", VendorId = 1,
-            CategoryId = 1, Price = 40m, Quantity = 0, AverageRating = 0
+            Name = "Wireless keyboard",
+            Description = "A reliable wireless keyboard.",
+            VendorId = 1,
+            CategoryId = 1,
+            Price = 40m,
+            Quantity = 0,
+            AverageRating = 0
         };
 
         var result = _validator.Validate(product);
@@ -24,8 +29,14 @@ public class ProductValidatorTests
     {
         var product = new Product
         {
-            Name = "x", Description = "short", VendorId = 0, CategoryId = 0, Price = 0,
-            DiscountPrice = 1m, Quantity = -1, AverageRating = 6m
+            Name = "x",
+            Description = "short",
+            VendorId = 0,
+            CategoryId = 0,
+            Price = 0,
+            DiscountPrice = 1m,
+            Quantity = -1,
+            AverageRating = 6m
         };
 
         var result = _validator.Validate(product);

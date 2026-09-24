@@ -12,8 +12,12 @@ public class VendorValidatorTests
     {
         var vendor = new Vendor
         {
-            UserId = 1, StoreName = "Market Store", StoreDescription = "A dependable online market store.",
-            CommissionRate = (decimal)rate, AverageRating = 0, TotalReviews = 0
+            UserId = 1,
+            StoreName = "Market Store",
+            StoreDescription = "A dependable online market store.",
+            CommissionRate = (decimal)rate,
+            AverageRating = 0,
+            TotalReviews = 0
         };
 
         var result = _validator.Validate(vendor);
@@ -26,8 +30,13 @@ public class VendorValidatorTests
     {
         var vendor = new Vendor
         {
-            UserId = 0, StoreName = "x", StoreDescription = "short", CommissionRate = .51m,
-            PhoneNumber = "invalid", AverageRating = 6, TotalReviews = -1
+            UserId = 0,
+            StoreName = "x",
+            StoreDescription = "short",
+            CommissionRate = .51m,
+            PhoneNumber = "invalid",
+            AverageRating = 6,
+            TotalReviews = -1
         };
 
         var result = _validator.Validate(vendor);

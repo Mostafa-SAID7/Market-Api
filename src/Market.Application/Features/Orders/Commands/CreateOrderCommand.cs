@@ -74,8 +74,11 @@ namespace Market.Application.Features.Orders.Commands
                 await _unitOfWork.Products.UpdateAsync(product, cancellationToken);
                 items.Add(new OrderItem
                 {
-                    ProductId = product.Id, ProductName = product.Name, VendorId = product.VendorId,
-                    Price = product.DiscountPrice ?? product.Price, Quantity = input.Quantity
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    VendorId = product.VendorId,
+                    Price = product.DiscountPrice ?? product.Price,
+                    Quantity = input.Quantity
                 });
             }
 
@@ -100,14 +103,26 @@ namespace Market.Application.Features.Orders.Commands
 
             return new OrderResponse
             {
-                Id = order.Id, CustomerId = order.CustomerId, OrderNumber = order.OrderNumber,
-                SubTotal = order.SubTotal, ShippingCost = order.ShippingCost, Tax = order.Tax,
-                TotalPrice = order.TotalPrice, OrderStatus = order.OrderStatus, PaymentStatus = order.PaymentStatus,
-                ShippingAddress = order.ShippingAddress, Notes = order.Notes, CreatedAt = order.CreatedAt,
+                Id = order.Id,
+                CustomerId = order.CustomerId,
+                OrderNumber = order.OrderNumber,
+                SubTotal = order.SubTotal,
+                ShippingCost = order.ShippingCost,
+                Tax = order.Tax,
+                TotalPrice = order.TotalPrice,
+                OrderStatus = order.OrderStatus,
+                PaymentStatus = order.PaymentStatus,
+                ShippingAddress = order.ShippingAddress,
+                Notes = order.Notes,
+                CreatedAt = order.CreatedAt,
                 Items = order.Items.Select(item => new OrderItemResponse
                 {
-                    ProductId = item.ProductId, ProductName = item.ProductName, VendorId = item.VendorId,
-                    Price = item.Price, Quantity = item.Quantity, SubTotal = item.SubTotal
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    VendorId = item.VendorId,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    SubTotal = item.SubTotal
                 }).ToList()
             };
         }

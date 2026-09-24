@@ -10,8 +10,14 @@ public class CreateOrderHandlerTests
     {
         var product = new Product
         {
-            Id = 10, Name = "Persisted product", VendorId = 7, Price = 25m, DiscountPrice = 20m,
-            Quantity = 5, Sold = 2, Status = ProductStatus.Active
+            Id = 10,
+            Name = "Persisted product",
+            VendorId = 7,
+            Price = 25m,
+            DiscountPrice = 20m,
+            Quantity = 5,
+            Sold = 2,
+            Status = ProductStatus.Active
         };
         var users = new Mock<IUserRepository>(MockBehavior.Strict);
         var products = new Mock<IProductRepository>(MockBehavior.Strict);
@@ -29,7 +35,10 @@ public class CreateOrderHandlerTests
         var handler = new CreateOrderCommandHandler(unitOfWork.Object, NullLogger<CreateOrderCommandHandler>.Instance);
         var command = new CreateOrderCommand
         {
-            CustomerId = 3, ShippingAddress = "123 Market Street", ShippingCost = 4m, Tax = 2m,
+            CustomerId = 3,
+            ShippingAddress = "123 Market Street",
+            ShippingCost = 4m,
+            Tax = 2m,
             Items = [new OrderItemInput { ProductId = 10, ProductName = "Forged", VendorId = 99, Price = .01m, Quantity = 2 }]
         };
 
@@ -61,7 +70,9 @@ public class CreateOrderHandlerTests
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(new CreateOrderCommand
         {
-            CustomerId = 3, ShippingAddress = "123 Market Street", Items = [new OrderItemInput { ProductId = 10, Quantity = 2 }]
+            CustomerId = 3,
+            ShippingAddress = "123 Market Street",
+            Items = [new OrderItemInput { ProductId = 10, Quantity = 2 }]
         }, CancellationToken.None));
 
         unitOfWork.Verify(value => value.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
@@ -81,7 +92,9 @@ public class CreateOrderHandlerTests
 
         await Assert.ThrowsAsync<KeyNotFoundException>(() => handler.Handle(new CreateOrderCommand
         {
-            CustomerId = 3, ShippingAddress = "123 Market Street", Items = [new OrderItemInput { ProductId = 10, Quantity = 1 }]
+            CustomerId = 3,
+            ShippingAddress = "123 Market Street",
+            Items = [new OrderItemInput { ProductId = 10, Quantity = 1 }]
         }, CancellationToken.None));
 
         unitOfWork.Verify(value => value.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
