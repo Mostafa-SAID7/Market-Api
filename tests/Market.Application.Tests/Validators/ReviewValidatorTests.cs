@@ -1,26 +1,38 @@
 namespace Market.Application.Tests.Validators;
 
-/// <summary>
-/// Tests for ReviewValidator rating bounds and security checks.
-/// NOTE: These tests are placeholders for future validator implementation.
-/// Currently disabled as validators have not been implemented yet.
-/// </summary>
 public class ReviewValidatorTests
 {
-    // TODO: Implement ReviewValidator with FluentValidation
-    // Then uncomment and complete these tests
-    
-    /*
+    private readonly ReviewValidator _validator = new();
+
     [Fact]
-    public void Validate_WithInvalidRatingAndUnsafeUrl_Fails()
+    public void Validate_WithValidReviewAndHttpsImage_ReturnsValidResult()
     {
-        // Test implementation pending
+        var review = new Review
+        {
+            ProductId = 1, CustomerId = 2, VendorId = 3, RatingValue = 5,
+            Title = "Excellent", Comment = "This product exceeded my expectations.",
+            Images = [new ReviewImage { ImageUrl = "https://example.test/review.jpg" }]
+        };
+
+        var result = _validator.Validate(review);
+
+        Assert.True(result.IsValid);
     }
 
     [Fact]
-    public void Validate_WithValidReview_Passes()
+    public void Validate_WithInvalidRatingAndImageUrl_ReturnsExpectedErrors()
     {
-        // Test implementation pending
+        var review = new Review
+        {
+            ProductId = 1, CustomerId = 2, VendorId = 3, RatingValue = 6,
+            Title = "Excellent", Comment = "This product exceeded my expectations.",
+            Images = [new ReviewImage { ImageUrl = "javascript:alert(1)" }]
+        };
+
+        var result = _validator.Validate(review);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => error.Field == nameof(Review.RatingValue));
+        Assert.Contains(result.Errors, error => error.Field == nameof(Review.Images));
     }
-    */
 }
