@@ -1,5 +1,5 @@
 using MediatR;
-using Market.Domain.Repositories;
+using Market.Application.Abstractions.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Market.Application.Features.Products.Queries
@@ -17,12 +17,12 @@ namespace Market.Application.Features.Products.Queries
     /// </summary>
     public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCategoryQuery, List<ProductResponse>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductReadService _productReadService;
         private readonly ILogger<GetProductsByCategoryQueryHandler> _logger;
 
-        public GetProductsByCategoryQueryHandler(IUnitOfWork unitOfWork, ILogger<GetProductsByCategoryQueryHandler> logger)
+        public GetProductsByCategoryQueryHandler(IProductReadService productReadService, ILogger<GetProductsByCategoryQueryHandler> logger)
         {
-            _unitOfWork = unitOfWork;
+            _productReadService = productReadService;
             _logger = logger;
         }
 
@@ -30,22 +30,8 @@ namespace Market.Application.Features.Products.Queries
         {
             _logger.LogInformation("Handling GetProductsByCategoryQuery for category: {CategoryId}", request.CategoryId);
 
-            var products = await _unitOfWork.Products.GetByCategoryIdAsync(request.CategoryId, cancellationToken);
-            return products.Select(p => new ProductResponse
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                DiscountPrice = p.DiscountPrice,
-                ImageUrl = p.ImageUrl,
-                Quantity = p.Quantity,
-                Sold = p.Sold,
-                CategoryId = p.CategoryId,
-                VendorId = p.VendorId,
-                AverageRating = p.AverageRating,
-                ReviewCount = p.ReviewCount
-            }).ToList();
+            var products = await _productReadService.GetProductsByCategoryAsync(request.CategoryId, cancellationToken);
+            return products.ToList();
         }
     }
 }

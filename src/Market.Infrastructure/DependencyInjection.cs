@@ -1,4 +1,6 @@
 using Market.Domain.Repositories;
+using Market.Application.Abstractions.Services;
+using Market.Infrastructure.Persistence.Services;
 using Market.Infrastructure.Data;
 using Market.Infrastructure.Data.Seeds;
 using Market.Infrastructure.Persistence.Repositories;
@@ -47,6 +49,9 @@ public static class DependencyInjection
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
+
+        // Register Application read services (implemented in Infrastructure with EF Core)
+        services.AddScoped<IProductReadService, ProductReadService>();
 
         // Register Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

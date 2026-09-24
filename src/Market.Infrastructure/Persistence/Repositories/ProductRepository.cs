@@ -1,15 +1,16 @@
 using Market.Domain.Repositories;
 using Market.Domain.Entities;
-using Market.Application.Features.Products;
 using Microsoft.EntityFrameworkCore;
 using Market.Infrastructure.Data;
 
 namespace Market.Infrastructure.Persistence.Repositories
 {
     /// <summary>
-    /// Product repository implementation for EF Core
+    /// Product repository implementation for EF Core.
+    /// Handles entity-level operations (CRUD, filtering by business rules).
+    /// Does NOT implement Application.Features interfaces or return Application DTOs.
     /// </summary>
-    public class ProductRepository : Repository<Product>, IProductRepository, IProductQueryRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
         public ProductRepository(MarketDbContext context) : base(context)
         {
@@ -45,6 +46,7 @@ namespace Market.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+
         /// <summary>
         /// Search products by name
         /// </summary>
@@ -62,86 +64,6 @@ namespace Market.Infrastructure.Persistence.Repositories
         {
             return await _dbSet
                 .FirstOrDefaultAsync(x => x.SKU == sku && !x.IsDeleted, cancellationToken);
-        }
-
-        /// <summary>
-        /// Get all products as DTOs with SQL-side filtering and projection
-        /// Avoids loading entire entity graph into memory
-        /// </summary>
-        public async Task<IEnumerable<ProductResponse>> GetAllProductsAsResponseAsync(CancellationToken cancellationToken = default)
-        {
-            return await _dbSet
-                .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .Select(p => new ProductResponse
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    DiscountPrice = p.DiscountPrice,
-                    ImageUrl = p.ImageUrl,
-                    Quantity = p.Quantity,
-                    Sold = p.Sold,
-                    CategoryId = p.CategoryId,
-                    VendorId = p.VendorId,
-                    AverageRating = p.AverageRating,
-                    ReviewCount = p.ReviewCount
-                })
-                .ToListAsync(cancellationToken);
-        }
-
-        /// <summary>
-        /// Get products by category as DTOs with SQL-side filtering and projection
-        /// Filters at database level, returns only required columns
-        /// </summary>
-        public async Task<IEnumerable<ProductResponse>> GetProductsByCategoryAsResponseAsync(int categoryId, CancellationToken cancellationToken = default)
-        {
-            return await _dbSet
-                .AsNoTracking()
-                .Where(x => x.CategoryId == categoryId && !x.IsDeleted)
-                .Select(p => new ProductResponse
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    DiscountPrice = p.DiscountPrice,
-                    ImageUrl = p.ImageUrl,
-                    Quantity = p.Quantity,
-                    Sold = p.Sold,
-                    CategoryId = p.CategoryId,
-                    VendorId = p.VendorId,
-                    AverageRating = p.AverageRating,
-                    ReviewCount = p.ReviewCount
-                })
-                .ToListAsync(cancellationToken);
-        }
-
-        /// <summary>
-        /// Get product by ID as DTO with SQL-side projection
-        /// </summary>
-        public async Task<ProductResponse?> GetProductByIdAsResponseAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await _dbSet
-                .AsNoTracking()
-                .Where(x => x.Id == id && !x.IsDeleted)
-                .Select(p => new ProductResponse
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    DiscountPrice = p.DiscountPrice,
-                    ImageUrl = p.ImageUrl,
-                    Quantity = p.Quantity,
-                    Sold = p.Sold,
-                    CategoryId = p.CategoryId,
-                    VendorId = p.VendorId,
-                    AverageRating = p.AverageRating,
-                    ReviewCount = p.ReviewCount
-                })
-                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }
