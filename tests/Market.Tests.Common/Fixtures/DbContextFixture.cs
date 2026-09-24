@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace Market.Tests.Common.Fixtures;
 
@@ -9,12 +10,14 @@ namespace Market.Tests.Common.Fixtures;
 public class DbContextFixture : IDisposable, IAsyncDisposable
 {
     private MarketDbContext? _context;
+    private readonly SqliteConnection? _sqliteConnection;
     private readonly bool _isInMemory;
 
-    private DbContextFixture(MarketDbContext context, bool isInMemory)
+    private DbContextFixture(MarketDbContext context, bool isInMemory, SqliteConnection? sqliteConnection = null)
     {
         _context = context;
         _isInMemory = isInMemory;
+        _sqliteConnection = sqliteConnection;
     }
 
     /// <summary>
@@ -23,15 +26,15 @@ public class DbContextFixture : IDisposable, IAsyncDisposable
     /// </summary>
     public static DbContextFixture CreateInMemory()
     {
+        var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
         var options = new DbContextOptionsBuilder<MarketDbContext>()
-            .UseSqlite("Data Source=:memory:")
-            .LogTo(Console.WriteLine)
-            .EnableSensitiveDataLogging()
+            .UseSqlite(connection)
             .Options;
 
         var context = new MarketDbContext(options);
         context.Database.EnsureCreated();
-        return new DbContextFixture(context, isInMemory: true);
+        return new DbContextFixture(context, isInMemory: true, connection);
     }
 
     /// <summary>
@@ -142,6 +145,7 @@ public class DbContextFixture : IDisposable, IAsyncDisposable
             {
                 _context.Dispose();
                 _context = null;
+                _sqliteConnection?.Dispose();
             }
         }
     }
@@ -164,6 +168,10 @@ public class DbContextFixture : IDisposable, IAsyncDisposable
             {
                 await _context.DisposeAsync();
                 _context = null;
+                if (_sqliteConnection != null)
+                {
+                    await _sqliteConnection.DisposeAsync();
+                }
             }
         }
     }
