@@ -27,7 +27,14 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     
     - name: Test
-      run: dotnet test --no-restore --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
+      run: dotnet test --no-restore --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage" /p:CoverletOutputFormat="opencover"
+
+    - name: Generate coverage report
+      if: always()
+      run: |
+        mkdir -p ./CoverageReports
+        find ./TestResults -name "coverage.cobertura.xml" -exec cp {} ./CoverageReports/ \;
+        ls -la ./CoverageReports/ || true
 
     - name: Upload test results
       if: always()
@@ -36,6 +43,24 @@ jobs:
         name: test-results
         path: ./TestResults
         if-no-files-found: error
+
+    - name: Upload code coverage reports
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: code-coverage-reports
+        path: ./TestResults/**/coverage.*.xml
+        if-no-files-found: warn
+
+    - name: Upload to Codecov
+      if: always()
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./TestResults/**/coverage.cobertura.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        verbose: true
 
     
     - name: Publish

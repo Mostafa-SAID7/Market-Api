@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "cleanupOnSuccessfulRun": false,
+  "deterministic": true,
+  "exclude": [
+    "[Market.Tests*]*",
+    "[Market.*.Tests]*",
+    "[*]Program",
+    "[*]GlobalUsings",
+    "**/bin/**",
+    "**/obj/**",
+    "**/*.Designer.cs",
+    "**/Migrations/**"
+  ],
+  "excludeByAttribute": [
+    "ExcludeFromCodeCoverageAttribute",
+    "GeneratedCodeAttribute",
+    "CompilerGeneratedAttribute"
+  ],
+  "excludeByFile": [
+    "**/obj/**",
+    "**/bin/**",
+    "**/*.Designer.cs",
+    "**/Migrations/**",
+    "**/*GlobalUsings.cs"
+  ],
+  "include": [
+    "[Market.Domain]*",
+    "[Market.Application]*",
+    "[Market.Infrastructure]*",
+    "[Market.API]*"
+  ],
+  "includeTestAssembly": false,
+  "logLevel": "verbose",
+  "mergeWith": "",
+  "skipAutoProps": false,
+  "singleHit": false,
+  "sourceLink": false,
+  "useSourceLink": true,
+  "format": [
+    "opencover",
+    "json"
+  ],
+  "reportGeneratorTool": "ReportGenerator",
+  "reportGeneratorToolVersion": "latest"
+}

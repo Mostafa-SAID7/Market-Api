@@ -11,6 +11,20 @@ package-lock.json
 .vscode/
 .env
 
-# Test results
+# Test results and coverage
 TestResults/
 *.trx
+coverage/
+*.cobertura.xml
+.coverage
+*.cover
+*.coveragexml
+opencover.xml
+codecov.yml
+
+# Code coverage tools
+/coverage-reports/
+**/coverage-report/
+
+# Test artifacts
+*.testlog
