@@ -26,6 +26,7 @@ namespace Market.Domain.Entities
         // Navigation properties
 
         public Cart? Cart { get; set; }
+        public ICollection<Vendor> Vendors { get; set; } = new List<Vendor>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }

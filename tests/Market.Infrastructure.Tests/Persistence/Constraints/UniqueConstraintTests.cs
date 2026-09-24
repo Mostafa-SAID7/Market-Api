@@ -20,15 +20,17 @@ public class UniqueConstraintTests : IntegrationTestBase
         DbContext.Users.Add(user);
         await DbContext.SaveChangesAsync();
 
+        var userId = user.Id;
+
         DbContext.Vendors.Add(new Vendor
         {
-            UserId = user.Id, StoreName = "First Store", StoreDescription = "The first test store for this user."
+            UserId = userId, StoreName = "First Store", StoreDescription = "The first test store for this user."
         });
         await DbContext.SaveChangesAsync();
 
         DbContext.Vendors.Add(new Vendor
         {
-            UserId = user.Id, StoreName = "Second Store", StoreDescription = "The second test store for this user."
+            UserId = userId, StoreName = "Second Store", StoreDescription = "The second test store for this user."
         });
 
         await Assert.ThrowsAsync<DbUpdateException>(() => DbContext.SaveChangesAsync());

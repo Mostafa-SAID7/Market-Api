@@ -57,10 +57,10 @@ namespace Market.Infrastructure.Data.EntityConfigurations
                 .IsUnique()
                 .HasFilter("[IsDeleted] = 0");
 
-            // Vendor → User (one-to-one, Vendor is dependent — owns UserId FK)
+            // Vendor → User (one-to-many, Vendor is dependent — owns UserId FK)
             builder.HasOne(v => v.User)
-                .WithOne()
-                .HasForeignKey<Vendor>(v => v.UserId)
+                .WithMany(u => u.Vendors)
+                .HasForeignKey(v => v.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // NOTE: Product→Vendor relationship is configured in ProductConfiguration
