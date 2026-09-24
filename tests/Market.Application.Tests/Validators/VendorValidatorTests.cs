@@ -1,29 +1,41 @@
 namespace Market.Application.Tests.Validators;
 
-/// <summary>
-/// Tests for VendorValidator commission rate and business constraints.
-/// NOTE: These tests are placeholders for future validator implementation.
-/// Currently disabled as validators have not been implemented yet.
-/// </summary>
 public class VendorValidatorTests
 {
-    // TODO: Implement VendorValidator with FluentValidation
-    // Then uncomment and complete these tests
-    
-    /*
+    private readonly VendorValidator _validator = new();
+
     [Theory]
     [InlineData(0.00)]
     [InlineData(0.15)]
     [InlineData(0.50)]
-    public void Validate_WithValidCommissionRate_Passes(decimal rate)
+    public void Validate_WithCommissionRateInSupportedRange_ReturnsValidResult(double rate)
     {
-        // Test implementation pending
+        var vendor = new Vendor
+        {
+            UserId = 1, StoreName = "Market Store", StoreDescription = "A dependable online market store.",
+            CommissionRate = (decimal)rate, AverageRating = 0, TotalReviews = 0
+        };
+
+        var result = _validator.Validate(vendor);
+
+        Assert.True(result.IsValid);
     }
 
     [Fact]
-    public void Validate_WithCommissionRateAboveConstraint_Fails()
+    public void Validate_WithInvalidBusinessValues_ReturnsErrorsForAffectedFields()
     {
-        // Test implementation pending
+        var vendor = new Vendor
+        {
+            UserId = 0, StoreName = "x", StoreDescription = "short", CommissionRate = .51m,
+            PhoneNumber = "invalid", AverageRating = 6, TotalReviews = -1
+        };
+
+        var result = _validator.Validate(vendor);
+
+        Assert.False(result.IsValid);
+        Assert.Equal(
+            [nameof(Vendor.UserId), nameof(Vendor.StoreName), nameof(Vendor.StoreDescription), nameof(Vendor.CommissionRate),
+             nameof(Vendor.PhoneNumber), nameof(Vendor.AverageRating), nameof(Vendor.TotalReviews)],
+            result.Errors.Select(error => error.Field));
     }
-    */
 }
