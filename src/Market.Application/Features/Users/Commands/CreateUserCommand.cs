@@ -1,5 +1,6 @@
-using MediatR;
 using Market.Domain.Entities;
+using Market.Domain.Repositories;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Market.Application.Features.Users.Commands
@@ -20,12 +21,12 @@ namespace Market.Application.Features.Users.Commands
     /// </summary>
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserResponse>
     {
-        private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateUserCommandHandler> _logger;
 
-        public CreateUserCommandHandler(IMediator mediator, ILogger<CreateUserCommandHandler> logger)
+        public CreateUserCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateUserCommandHandler> logger)
         {
-            _mediator = mediator;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -41,18 +42,24 @@ namespace Market.Application.Features.Users.Commands
                 PhoneNumber = request.PhoneNumber
             };
 
-            // Send internal command to create
-            var result = await _mediator.Send(new CreateUserInternalCommand { User = user }, cancellationToken);
-            return result;
-        }
-    }
+            await _unitOfWork.Users.CreateAsync(user, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
 
-    /// <summary>
-    /// Internal command for creating user (handles actual creation)
-    /// </summary>
-    internal class CreateUserInternalCommand : IRequest<UserResponse>
-    {
-        public User User { get; set; } = null!;
+            return new UserResponse
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                IsEmailVerified = user.IsEmailVerified,
+                EmailConfirmed = user.EmailConfirmed,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt
+            };
+        }
     }
 }
 

@@ -1,3 +1,5 @@
+using Market.Domain.Enums;
+using Market.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +18,12 @@ namespace Market.Application.Features.Orders.Commands
     /// </summary>
     public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, bool>
     {
-        private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<DeleteOrderCommandHandler> _logger;
 
-        public DeleteOrderCommandHandler(IMediator mediator, ILogger<DeleteOrderCommandHandler> logger)
+        public DeleteOrderCommandHandler(IUnitOfWork unitOfWork, ILogger<DeleteOrderCommandHandler> logger)
         {
-            _mediator = mediator;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -29,17 +31,34 @@ namespace Market.Application.Features.Orders.Commands
         {
             _logger.LogInformation("Handling DeleteOrderCommand for order: {OrderId}", request.Id);
 
-            var result = await _mediator.Send(new DeleteOrderInternalCommand { Id = request.Id }, cancellationToken);
-            return result;
-        }
-    }
+            var order = await _unitOfWork.Orders.GetByIdAsync(request.Id, cancellationToken);
+            if (order == null)
+                return false;
 
-    /// <summary>
-    /// Internal command for deleting order
-    /// </summary>
-    internal class DeleteOrderInternalCommand : IRequest<bool>
-    {
-        public int Id { get; set; }
+            // Only allow deletion of pending or cancelled orders
+            if (order.OrderStatus != OrderStatus.Pending && order.OrderStatus != OrderStatus.Cancelled)
+            {
+                _logger.LogWarning("Cannot delete order {OrderId} with status {Status}", request.Id, order.OrderStatus);
+                return false;
+            }
+
+            // Restore inventory before deleting
+            foreach (var item in order.Items)
+            {
+                var product = await _unitOfWork.Products.GetByIdAsync(item.ProductId, cancellationToken);
+                if (product != null)
+                {
+                    product.Quantity += item.Quantity;
+                    product.Sold -= item.Quantity;
+                    await _unitOfWork.Products.UpdateAsync(product, cancellationToken);
+                }
+            }
+
+            await _unitOfWork.Orders.DeleteAsync(request.Id, cancellationToken);
+            await _unitOfWork.SaveAsync(cancellationToken);
+
+            return true;
+        }
     }
 }
 
